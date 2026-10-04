@@ -1,9 +1,0 @@
-{
-  "languages_covered": 2000,
-  "scripts_covered": 158,
-  "corpus_size_tb": 2,
-  "papers_published": 8,
-  "github_stars": 800,
-  "venues": ["EMNLP 2023", "ACL 2023", "LREC-COLING 2024", "NeurIPS 2024", "WWW 2026", "ICML 2026 Workshop"],
-  "downloads": 125000
-}

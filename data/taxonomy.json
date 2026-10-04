@@ -1,0 +1,68 @@
+{
+  "macroareas": {
+    "Africa": { "color": "#e8590c" },
+    "Eurasia": { "color": "#0078bf" },
+    "Papunesia": { "color": "#2f9e44" },
+    "Australia": { "color": "#c2255c" },
+    "North America": { "color": "#e0a800" },
+    "South America": { "color": "#7048e8" }
+  },
+  "endangerment": {
+    "1": { "label": "not endangered", "short": "safe", "color": "#2f9e44" },
+    "2": { "label": "threatened", "short": "threatened", "color": "#94b500" },
+    "3": { "label": "shifting", "short": "shifting", "color": "#e0a800" },
+    "4": { "label": "moribund", "short": "moribund", "color": "#e8590c" },
+    "5": { "label": "nearly extinct", "short": "nearly extinct", "color": "#c92a2a" },
+    "6": { "label": "extinct", "short": "extinct", "color": "#495057" }
+  },
+  "endangerment_names": {
+    "not endangered": "1", "threatened": "2", "shifting": "3", "moribund": "4", "nearly extinct": "5", "extinct": "6"
+  },
+  "documentation": {
+    "long grammar": "Grammar of more than 300 pages",
+    "grammar": "Grammar of fewer than 300 pages",
+    "grammar sketch": "Grammar sketch",
+    "phonology/text": "Phonology, texts or a study of a specific feature",
+    "Wordlist or less": "Wordlist or less"
+  },
+  "coverage": {
+    "L": { "label": "GlotLID", "long": "Identified by GlotLID v3", "project": "glotlid", "color": "pink" },
+    "S": { "label": "GlotScript", "long": "Writing system recorded in GlotScript-R", "project": "glotscript", "color": "yellow" },
+    "G": { "label": "Glot500", "long": "Included in Glot500", "project": "glot500", "color": "blue" },
+    "O": { "label": "OCR bench", "long": "Its script is benchmarked in GlotOCR Bench", "project": "glotocr-bench", "color": "green" }
+  },
+  "script_types": {
+    "alphabet": "Separate letters for consonants and vowels",
+    "abjad": "Consonants written, vowels mostly optional",
+    "abugida": "Consonant letters with inherent vowels modified by marks",
+    "syllabary": "One symbol per syllable",
+    "logographic": "Symbols stand for words or morphemes",
+    "featural": "Symbol shapes encode phonetic features",
+    "other": "Notation systems and special Unicode codes"
+  },
+  "ocr_tiers": {
+    "high": { "label": "High resource", "color": "green" },
+    "mid": { "label": "Mid resource", "color": "yellow" },
+    "low": { "label": "Low resource", "color": "pink" }
+  },
+  "project_kinds": {
+    "model": "Model",
+    "tool": "Tool",
+    "corpus": "Corpus",
+    "benchmark": "Benchmark"
+  },
+  "external_language_links": [
+    { "label": "Glottolog", "url": "https://glottolog.org/resource/languoid/id/{glottocode}", "needs": "glottocode" },
+    { "label": "Ethnologue", "url": "https://www.ethnologue.com/language/{iso}/", "needs": "iso" },
+    { "label": "ISO 639-3 (SIL)", "url": "https://iso639-3.sil.org/code/{iso}", "needs": "iso" },
+    { "label": "Wikidata", "url": "https://www.wikidata.org/wiki/{wikidata}", "needs": "wikidata" },
+    { "label": "OLAC resources", "url": "http://www.language-archives.org/language/{iso}", "needs": "iso" },
+    { "label": "Hugging Face models", "url": "https://huggingface.co/models?other={iso}", "needs": "iso" },
+    { "label": "Hugging Face datasets", "url": "https://huggingface.co/datasets?search={iso}", "needs": "iso" }
+  ],
+  "external_script_links": [
+    { "label": "ScriptSource", "url": "https://scriptsource.org/scr/{code}", "needs": "code" },
+    { "label": "Unicode charts", "url": "https://www.unicode.org/charts/", "needs": "code" },
+    { "label": "Wikipedia (ISO 15924)", "url": "https://en.wikipedia.org/wiki/ISO_15924", "needs": "code" }
+  ]
+}

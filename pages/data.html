@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>GlotSuite — CommonGlot</title>
-  <meta name="description" content="GlotSuite: the family of open research releases behind CommonGlot, and how they fit together.">
+  <title>Open data — CommonGlot</title>
+  <meta name="description" content="Download the JSON behind every page of CommonGlot and rebuild it from public sources.">
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'sha256-NBrBS0QH+oPLLHYW9Dbq4b4noKdB8RLG3k0J1wMUdQ8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com https://cdnjs.cloudflare.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -16,19 +16,16 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <script>try{var t=localStorage.getItem('cg-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
-<body data-page="glotsuite">
+<body data-page="data">
 <main id="main">
-  <section class="page-hero"><div class="container hero-grid" id="gs-hero"></div></section>
-  <section class="section section--band"><div class="container">
-    <div class="section-head" id="pipeline-head"></div>
-    <div class="pipeline" id="pipeline"></div>
-  </div></section>
+  <section class="page-hero"><div class="container" id="data-hero"></div></section>
+  <section class="section--tight"><div class="container grid grid-2" id="data-files"></div></section>
   <section class="section"><div class="container grid grid-2" style="align-items:start">
-    <div><h2 id="timeline-title"></h2><div class="timeline" id="timeline"></div></div>
-    <div><h2 id="adoption-title"></h2><div class="grid" id="adoption"></div></div>
+    <div id="data-rebuild"></div>
+    <div id="data-sources"></div>
   </div></section>
 </main>
   <script src="../assets/js/main.js"></script>
-  <script src="../assets/js/pages/glotsuite.js"></script>
+  <script src="../assets/js/pages/data.js"></script>
 </body>
 </html>
