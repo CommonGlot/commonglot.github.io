@@ -1,0 +1,184 @@
+[
+  {
+    "display": "Gemini 3.1 Flash-Lite",
+    "type": "api",
+    "overall": 61.92,
+    "high": 95.35,
+    "mid": 82.72,
+    "low": 7.69,
+    "macro_cer": 74.22,
+    "id": "gemini-3.1-flash-lite-preview"
+  },
+  {
+    "display": "dots.mocr",
+    "type": "open",
+    "overall": 59.63,
+    "high": 93.1,
+    "mid": 78.11,
+    "low": 7.67,
+    "macro_cer": 79.15,
+    "id": "dots-mocr",
+    "old": {
+      "overall": 49.72,
+      "high": 79.97,
+      "mid": 63.17,
+      "low": 6.01,
+      "macro_cer": 77.92
+    }
+  },
+  {
+    "display": "dots.ocr",
+    "type": "open",
+    "overall": 59.3,
+    "high": 91.85,
+    "mid": 78.33,
+    "low": 7.7,
+    "macro_cer": 77.67,
+    "id": "dots-ocr",
+    "old": {
+      "overall": 43.03,
+      "high": 74.38,
+      "mid": 50.64,
+      "low": 4.09,
+      "macro_cer": 78.84
+    }
+  },
+  {
+    "display": "HunyuanOCR",
+    "type": "open",
+    "overall": 54.18,
+    "high": 85.3,
+    "mid": 73.86,
+    "low": 3.39,
+    "macro_cer": 82.17,
+    "id": "hunyuan-ocr",
+    "old": {
+      "overall": 42.88,
+      "high": 72.1,
+      "mid": 54.67,
+      "low": 1.87,
+      "macro_cer": 84.39
+    }
+  },
+  {
+    "display": "Qwen3-VL-8B",
+    "type": "open",
+    "overall": 52.44,
+    "high": 89.48,
+    "mid": 67.06,
+    "low": 0.78,
+    "macro_cer": 84.58,
+    "id": "qwen3-vl-8b"
+  },
+  {
+    "display": "olmOCR-2",
+    "type": "open",
+    "overall": 51.53,
+    "high": 90.53,
+    "mid": 63.78,
+    "low": 0.3,
+    "macro_cer": 84.97,
+    "id": "olmocr2-vllm",
+    "old": {
+      "overall": 39.33,
+      "high": 72.78,
+      "mid": 45.06,
+      "low": 0.17,
+      "macro_cer": 86.1
+    }
+  },
+  {
+    "display": "RolmOCR",
+    "type": "open",
+    "overall": 50.56,
+    "high": 89.65,
+    "mid": 61.78,
+    "low": 0.25,
+    "macro_cer": 86.72,
+    "id": "rolm-ocr"
+  },
+  {
+    "display": "GPT-4.1",
+    "type": "api",
+    "overall": 50.48,
+    "high": 83.2,
+    "mid": 66.67,
+    "low": 1.58,
+    "macro_cer": 80.88,
+    "id": "gpt-4.1",
+    "old": {
+      "overall": 41.18,
+      "high": 71.7,
+      "mid": 50.83,
+      "low": 1.02,
+      "macro_cer": 81.65
+    }
+  },
+  {
+    "display": "LightOnOCR-2-1B",
+    "type": "open",
+    "overall": 47.37,
+    "high": 89.8,
+    "mid": 51.58,
+    "low": 0.74,
+    "macro_cer": 86.59,
+    "id": "lighton-ocr2"
+  },
+  {
+    "display": "Nanonets-OCR2-3B",
+    "type": "open",
+    "overall": 46.61,
+    "high": 88.58,
+    "mid": 51.08,
+    "low": 0.18,
+    "macro_cer": 86.83,
+    "id": "nanonets-ocr2"
+  },
+  {
+    "display": "PaddleOCR-VL-1.5",
+    "type": "open",
+    "overall": 43.49,
+    "high": 79.85,
+    "mid": 48.64,
+    "low": 1.97,
+    "macro_cer": 87.54,
+    "id": "paddleocr-vl-1.5"
+  },
+  {
+    "display": "FireRed-OCR",
+    "type": "open",
+    "overall": 43.43,
+    "high": 83.6,
+    "mid": 46.5,
+    "low": 0.18,
+    "macro_cer": 87.23,
+    "id": "firered-ocr"
+  },
+  {
+    "display": "GLM-OCR",
+    "type": "open",
+    "overall": 39.76,
+    "high": 89.53,
+    "mid": 29.75,
+    "low": 0.0,
+    "macro_cer": 87.19,
+    "id": "glm-ocr-v2",
+    "old": {
+      "overall": 32.65,
+      "high": 76.17,
+      "mid": 21.78,
+      "low": 0.0,
+      "macro_cer": 87.54
+    }
+  },
+  {
+    "display": "DeepSeek-OCR-2",
+    "type": "open",
+    "overall": 38.72,
+    "high": 76.2,
+    "mid": 39.69,
+    "low": 0.26,
+    "macro_cer": 87.59,
+    "id": "deepseek-ocr2-vllm"
+  }
+]

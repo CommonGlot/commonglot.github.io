@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Projects — CommonGlot</title>
-  <meta name="description" content="All GlotSuite projects: language identification, script detection, corpora, models and benchmarks.">
+  <title>Language booklet — CommonGlot</title>
+  <meta name="description" content="Everything CommonGlot knows about a language: where it is spoken, how it is written and which technology supports it.">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6efe2" media="(prefers-color-scheme: light)">
@@ -13,13 +13,16 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script>try{var t=localStorage.getItem('cg-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
-<body data-page="projects">
+<body data-page="languages">
 <main id="main">
-  <section class="page-hero"><div class="container" id="projects-hero"></div></section>
-  <section class="section--tight"><div class="container" id="projects-tabs"><div class="loading">Loading projects</div></div></section>
+  <section class="page-hero"><div class="container" id="lang-head"><div class="loading">Loading</div></div></section>
+  <section class="section--tight"><div class="container booklet" id="lang-body"></div></section>
 </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="../assets/js/main.js"></script>
-  <script src="../assets/js/pages/projects.js"></script>
+  <script src="../assets/js/blocks.js"></script>
+  <script src="../assets/js/pages/language.js"></script>
 </body>
 </html>

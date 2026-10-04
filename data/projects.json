@@ -2,137 +2,349 @@
   {
     "id": "glotlid",
     "name": "GlotLID",
-    "tagline": "Language identification for 2,000+ labels",
-    "description": "GlotLID is a language identification model that supports over 2,000 labels, covering both high-resource and low-resource languages. Built on fastText, it provides reliable language detection across a wide spectrum of the world's linguistic diversity. It has been adopted by major projects including FineWeb2 and MaskLID.",
+    "kind": "model",
+    "stage": "identify",
+    "color": "pink",
+    "year": 2023,
+    "venue": "EMNLP 2023",
     "logo": "glotlid-mark.svg",
     "logoFull": "glotlid.svg",
-    "venue": "EMNLP",
-    "year": 2023,
-    "paperUrl": "https://aclanthology.org/2023.emnlp-main.751/",
-    "codeUrl": "https://github.com/cisnlp/GlotLID",
-    "demoUrl": "https://huggingface.co/spaces/cis-lmu/glotlid-space",
-    "modelUrl": "https://huggingface.co/cis-lmu/glotlid",
-    "dataUrl": null,
-    "category": "tool",
-    "stars": 210
+    "tagline": "Language identification with support for more than 2,000 labels.",
+    "description": "GlotLID is an open-source language identification (LID) model built on fastText. Version 3 supports 2,102 labels, each an ISO 639-3 code paired with an ISO 15924 script, and adds “zxx” labels for non-linguistic web noise and “und” labels for undetermined text. It is the language filter behind GlotCC and is widely used for cleaning multilingual web corpora.",
+    "numbers": [
+      {
+        "value": "2,102",
+        "label": "labels in v3"
+      },
+      {
+        "value": "1,800+",
+        "label": "languages"
+      },
+      {
+        "value": "3",
+        "label": "model versions"
+      }
+    ],
+    "features": [
+      "Language identification for 2,000+ language–script labels",
+      "Sentence vectors for many languages",
+      "Restrict predictions to a subset of languages without retraining",
+      "Explicit noise (zxx) and undetermined (und) labels"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "# pip install fasttext huggingface_hub\nimport fasttext\nfrom huggingface_hub import hf_hub_download\n\nmodel_path = hf_hub_download(repo_id=\"cis-lmu/glotlid\", filename=\"model.bin\")\nmodel = fasttext.load_model(model_path)\nmodel.predict(\"Hello, world!\")\n# (('__label__eng_Latn',), array([0.9985]))"
+    },
+    "links": {
+      "paper": "https://arxiv.org/abs/2310.16248",
+      "code": "https://github.com/cisnlp/GlotLID",
+      "demo": "https://huggingface.co/spaces/cis-lmu/glotlid-space",
+      "model": "https://huggingface.co/cis-lmu/glotlid",
+      "data": "https://huggingface.co/datasets/cis-lmu/glotlid-corpus"
+    },
+    "directory": "glotlid",
+    "citation": "@inproceedings{kargaran2023glotlid,\n  title={{G}lot{LID}: Language Identification for Low-Resource Languages},\n  author={Kargaran, Amir Hossein and Imani, Ayyoob and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  booktitle={The 2023 Conference on Empirical Methods in Natural Language Processing},\n  year={2023},\n  url={https://openreview.net/forum?id=dl4e3EBz5j}\n}"
   },
   {
     "id": "glot500",
     "name": "Glot500",
-    "tagline": "Language model and corpus for 500+ languages",
-    "description": "Glot500 extends multilingual language models to cover more than 500 languages. By curating corpora and continued pre-training of XLM-R, Glot500 brings NLP capabilities to hundreds of previously unsupported languages, enabling downstream tasks like text classification and NER.",
+    "kind": "model",
+    "stage": "model",
+    "color": "blue",
+    "year": 2023,
+    "venue": "ACL 2023",
     "logo": "glotsuite-mark.svg",
     "logoFull": "glotsuite.svg",
-    "venue": "ACL",
-    "year": 2023,
-    "paperUrl": "https://aclanthology.org/2023.acl-long.61/",
-    "codeUrl": "https://github.com/cisnlp/Glot500",
-    "demoUrl": null,
-    "modelUrl": "https://huggingface.co/cis-lmu/glot500-base",
-    "dataUrl": null,
-    "category": "model",
-    "stars": 155
+    "tagline": "Scaling multilingual corpora and language models to 500+ languages.",
+    "description": "Glot500-m extends XLM-R-base from 104 to more than 500 languages through continued pretraining on Glot500-c, a corpus drawn from Glot2000-c (2,000+ languages). The model outperforms XLM-R-base on head and tail languages across sequence labelling, retrieval and classification tasks.",
+    "numbers": [
+      {
+        "value": "500+",
+        "label": "languages in Glot500-m"
+      },
+      {
+        "value": "2,000+",
+        "label": "languages in Glot2000-c"
+      },
+      {
+        "value": "534",
+        "label": "language–script labels"
+      }
+    ],
+    "features": [
+      "Glot500-m: masked language model for 500+ languages",
+      "Glot500-c: training corpus with 30,000+ sentences per language",
+      "Redistributable subset published on Hugging Face",
+      "Evaluation code for head vs. tail languages"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "from transformers import pipeline\n\nunmasker = pipeline(\"fill-mask\", model=\"cis-lmu/glot500-base\")\nunmasker(\"Hello I'm a <mask> model.\")"
+    },
+    "links": {
+      "paper": "https://aclanthology.org/2023.acl-long.61",
+      "code": "https://github.com/cisnlp/Glot500",
+      "model": "https://huggingface.co/cis-lmu/glot500-base",
+      "data": "https://huggingface.co/datasets/cis-lmu/Glot500"
+    },
+    "directory": "glot500",
+    "citation": "@inproceedings{imanigooghari-etal-2023-glot500,\n  title={Glot500: Scaling Multilingual Corpora and Language Models to 500 Languages},\n  author={ImaniGooghari, Ayyoob and Lin, Peiqin and Kargaran, Amir Hossein and Severini, Silvia and Jalili Sabet, Masoud and Kassner, Nora and Ma, Chunlan and Schmid, Helmut and Martins, Andr{\\'e} and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  booktitle={Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},\n  year={2023},\n  pages={1082--1117},\n  url={https://aclanthology.org/2023.acl-long.61}\n}"
   },
   {
     "id": "glotscript",
     "name": "GlotScript",
-    "tagline": "Writing system identification using ISO 15924",
-    "description": "GlotScript provides tools for identifying writing systems at the character and text level following the ISO 15924 standard. It maps languages to their scripts and enables script-aware processing, crucial for multilingual NLP pipelines that must handle diverse orthographies.",
+    "kind": "tool",
+    "stage": "identify",
+    "color": "yellow",
+    "year": 2024,
+    "venue": "LREC-COLING 2024",
     "logo": "glotscript-mark.svg",
     "logoFull": "glotscript.svg",
-    "venue": "LREC-COLING",
-    "year": 2024,
-    "paperUrl": "https://aclanthology.org/2024.lrec-main.244/",
-    "codeUrl": "https://github.com/cisnlp/GlotScript",
-    "demoUrl": null,
-    "modelUrl": null,
-    "dataUrl": null,
-    "category": "tool",
-    "stars": 85
+    "tagline": "A resource and tool for writing system identification.",
+    "description": "GlotScript has two parts. GlotScript-R is a resource listing the writing systems used by more than 8,000 languages, compiled from Wikipedia, SIL and other sources. GlotScript-T is a Python library that detects the ISO 15924 script of any text and can separate mixed-script sentences, covering every script in Unicode.",
+    "numbers": [
+      {
+        "value": "8,000+",
+        "label": "languages mapped to scripts"
+      },
+      {
+        "value": "175",
+        "label": "ISO 15924 codes detected"
+      },
+      {
+        "value": "pip",
+        "label": "install GlotScript"
+      }
+    ],
+    "features": [
+      "Script detection with confidence scores",
+      "Script separation for mixed text",
+      "Language → script resource (core and auxiliary scripts)",
+      "Up to date with recent Unicode versions"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "# pip install GlotScript\nfrom GlotScript import sp, sc\n\nsp(\"これは日本人です\")\n# ('Hira', 0.625, {...})\nsc(\"Hello سلام 你好\")\n# {\"Latn\": \"Hello\", \"Arab\": \"سلام\", \"Hani\": \"你好\"}"
+    },
+    "links": {
+      "paper": "https://aclanthology.org/2024.lrec-main.687",
+      "code": "https://github.com/cisnlp/GlotScript",
+      "package": "https://pypi.org/project/GlotScript/"
+    },
+    "directory": "glotscript",
+    "citation": "@inproceedings{kargaran-etal-2024-glotscript-resource,\n  title={{G}lot{S}cript: A Resource and Tool for Low Resource Writing System Identification},\n  author={Kargaran, Amir Hossein and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  booktitle={Proceedings of the 2024 Joint International Conference on Computational Linguistics, Language Resources and Evaluation (LREC-COLING 2024)},\n  year={2024},\n  pages={7774--7784},\n  url={https://aclanthology.org/2024.lrec-main.687}\n}"
   },
   {
     "id": "glotcc",
     "name": "GlotCC",
-    "tagline": "Open CommonCrawl corpus for 1,000+ languages, 2TB",
-    "description": "GlotCC is a massive open corpus extracted from CommonCrawl, covering over 1,000 languages with approximately 2TB of text data. It uses GlotLID for language identification and careful quality filtering to produce clean, usable corpora for low-resource language research.",
+    "kind": "corpus",
+    "stage": "collect",
+    "color": "green",
+    "year": 2024,
+    "venue": "NeurIPS 2024",
     "logo": "glotcc-mark.svg",
     "logoFull": "glotcc.svg",
-    "venue": "NeurIPS",
-    "year": 2024,
-    "paperUrl": "https://openreview.net/forum?id=glotcc2024",
-    "codeUrl": "https://github.com/cisnlp/GlotCC",
-    "demoUrl": null,
-    "modelUrl": null,
-    "dataUrl": "https://huggingface.co/datasets/cis-lmu/GlotCC-V1",
-    "category": "corpus",
-    "stars": 130
+    "tagline": "An open, broad-coverage CommonCrawl corpus and pipeline for minority languages.",
+    "description": "GlotCC is a document-level corpus extracted from CommonCrawl with GlotLID and an open fork of the Ungoliant pipeline. The latest version covers more than 1,000 languages and applies quality filters adopted from C4, CCNet, MADLAD-400, RedPajama-v2, FineWeb, Dolma and others.",
+    "numbers": [
+      {
+        "value": "1,000+",
+        "label": "languages"
+      },
+      {
+        "value": "CC0",
+        "label": "packaging & metadata"
+      },
+      {
+        "value": "open",
+        "label": "pipeline (Ungoliant fork)"
+      }
+    ],
+    "features": [
+      "Document-level text for 1,000+ languages",
+      "Reproducible open pipeline built on Ungoliant",
+      "Language identification by GlotLID",
+      "Filters adopted from major web corpora"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "from datasets import load_dataset\n\n# GlotCC is split by language–script subset;\n# see the dataset card for the list of subsets.\nds = load_dataset(\"cis-lmu/GlotCC-V1\", streaming=True)\nds"
+    },
+    "links": {
+      "paper": "https://arxiv.org/abs/2410.23825",
+      "code": "https://github.com/cisnlp/GlotCC",
+      "data": "https://huggingface.co/datasets/cis-lmu/GlotCC-V1",
+      "pipeline": "https://github.com/cisnlp/ungoliant"
+    },
+    "directory": null,
+    "citation": "@article{kargaran2024glotcc,\n  title={Glot{CC}: An Open Broad-Coverage CommonCrawl Corpus and Pipeline for Minority Languages},\n  author={Kargaran, Amir Hossein and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  journal={Advances in Neural Information Processing Systems},\n  year={2024},\n  url={https://arxiv.org/abs/2410.23825}\n}"
   },
   {
     "id": "glotweb",
     "name": "GlotWeb",
-    "tagline": "Web indexing for 400+ minority languages",
-    "description": "GlotWeb indexes the web to find content in over 400 minority and low-resource languages. It provides a searchable directory of web resources, helping researchers and community members discover online content in their languages.",
+    "kind": "tool",
+    "stage": "collect",
+    "color": "pink",
+    "year": 2026,
+    "venue": "WWW 2026",
     "logo": "glotweb-mark.svg",
     "logoFull": "glotweb.svg",
-    "venue": "WWW",
-    "year": 2026,
-    "paperUrl": "https://dl.acm.org/doi/10.1145/glotweb2026",
-    "codeUrl": "https://github.com/cisnlp/GlotWeb",
-    "demoUrl": "https://huggingface.co/spaces/cis-lmu/GlotWeb",
-    "modelUrl": null,
-    "dataUrl": null,
-    "category": "tool",
-    "stars": 75
+    "tagline": "Web indexing for minority languages.",
+    "description": "GlotWeb finds, validates and catalogues web pages written in minority languages. It aggregates search results from several engines, verifies each page with GlotLID, filters for quality while reducing religious-text bias, and publishes a browsable index — 47% of its links are in languages absent from major multilingual datasets.",
+    "numbers": [
+      {
+        "value": "402+",
+        "label": "languages"
+      },
+      {
+        "value": "169,155+",
+        "label": "verified web links"
+      },
+      {
+        "value": "47%",
+        "label": "in languages missing elsewhere"
+      }
+    ],
+    "features": [
+      "Four-step pipeline: search, seed, crawl, clean",
+      "Language validation with GlotLID",
+      "Covers languages missing from FLORES-200, MADLAD-400 and Glot500",
+      "Interactive demo for browsing sites per language"
+    ],
+    "usage": {
+      "lang": "bash",
+      "code": "git clone https://github.com/cisnlp/GlotWeb\ncd GlotWeb && pip install -r requirements.txt\n# 1. search  2. seed  3. crawl  4. clean\npython pipeline/search_service.py"
+    },
+    "links": {
+      "paper": "https://dl.acm.org/doi/abs/10.1145/3774904.3792887",
+      "code": "https://github.com/cisnlp/GlotWeb",
+      "demo": "https://huggingface.co/spaces/cis-lmu/GlotWeb"
+    },
+    "directory": null,
+    "citation": "@inproceedings{sefat2026glotweb,\n  title={Glot{W}eb: Web Indexing for Minority Languages},\n  author={Sefat, Abdullah Al and Kargaran, Amir Hossein and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  booktitle={Proceedings of the ACM Web Conference 2026},\n  pages={8469--8472},\n  year={2026},\n  url={https://dl.acm.org/doi/abs/10.1145/3774904.3792887}\n}"
   },
   {
     "id": "glotocr-bench",
     "name": "GlotOCR Bench",
-    "tagline": "OCR benchmark across 158 Unicode scripts",
-    "description": "GlotOCR Bench is a comprehensive benchmark for evaluating optical character recognition systems across 158 Unicode scripts. It provides standardized test data and evaluation metrics to assess OCR quality for diverse writing systems, from Latin to rare scripts.",
+    "kind": "benchmark",
+    "stage": "evaluate",
+    "color": "blue",
+    "year": 2026,
+    "venue": "arXiv 2026",
     "logo": "glotocr-bench-mark.svg",
     "logoFull": "glotocr-bench.svg",
-    "venue": "ICML Workshop",
-    "year": 2026,
-    "paperUrl": null,
-    "codeUrl": "https://github.com/cisnlp/glotocr-bench",
-    "demoUrl": null,
-    "modelUrl": null,
-    "dataUrl": "https://huggingface.co/datasets/cis-lmu/GlotOCR-bench",
-    "category": "benchmark",
-    "stars": 45
+    "tagline": "OCR models still struggle beyond a handful of Unicode scripts.",
+    "description": "GlotOCR Bench renders text in 150+ Unicode scripts with Google Fonts, in clean and degraded “old document” styles, and evaluates open and proprietary OCR models with CER, Acc@k and script accuracy. Results are broken down by script and by resource tier, revealing a steep drop beyond Latin and a few major scripts.",
+    "numbers": [
+      {
+        "value": "157",
+        "label": "scripts benchmarked"
+      },
+      {
+        "value": "14",
+        "label": "OCR models evaluated"
+      },
+      {
+        "value": "2",
+        "label": "rendering profiles"
+      }
+    ],
+    "features": [
+      "Per-script and per-language results",
+      "High / mid / low resource tiers",
+      "Plain and old-document rendering profiles",
+      "Public leaderboard and released model outputs"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "from datasets import load_dataset\n\nbench = load_dataset(\"cis-lmu/GlotOCR-bench\")\nbench  # images + reference text, per script"
+    },
+    "links": {
+      "paper": "https://arxiv.org/abs/2604.12978",
+      "code": "https://github.com/cisnlp/GlotOCR-bench",
+      "data": "https://huggingface.co/datasets/cis-lmu/GlotOCR-bench",
+      "leaderboard": "https://cisnlp.github.io/GlotOCR-bench/",
+      "results": "https://huggingface.co/datasets/cis-lmu/GlotOCR-bench-v1.0-results"
+    },
+    "directory": "ocr",
+    "citation": "@misc{kargaran2026glotocrbench,\n  title={GlotOCR Bench: OCR Models Still Struggle Beyond a Handful of Unicode Scripts},\n  author={Amir Hossein Kargaran and Nafiseh Nikeghbal and Jana Diesner and François Yvon and Hinrich Schütze},\n  year={2026},\n  eprint={2604.12978},\n  archivePrefix={arXiv},\n  primaryClass={cs.CL},\n  url={https://arxiv.org/abs/2604.12978}\n}"
   },
   {
     "id": "glotstorybook",
     "name": "GlotStoryBook",
-    "tagline": "Children's storybooks in 180 languages",
-    "description": "GlotStoryBook collects and curates children's storybooks across 180 languages, providing parallel and comparable reading material. This resource supports literacy research, language documentation, and educational technology for underserved language communities.",
+    "kind": "corpus",
+    "stage": "collect",
+    "color": "yellow",
+    "year": 2023,
+    "venue": "with GlotLID",
     "logo": "glotstorybook-mark.svg",
     "logoFull": "glotstorybook.svg",
-    "venue": null,
-    "year": 2024,
-    "paperUrl": null,
-    "codeUrl": "https://github.com/cisnlp/GlotStoryBook",
-    "demoUrl": null,
-    "modelUrl": null,
-    "dataUrl": "https://huggingface.co/datasets/cis-lmu/GlotStoryBook",
-    "category": "corpus",
-    "stars": 60
+    "tagline": "Openly licensed storybooks for 180 languages.",
+    "description": "GlotStoryBook gathers children’s storybooks from the Global African Storybook Project family of repositories into one dataset. Every text keeps its source and Creative Commons licence. It was released as part of the GlotLID project.",
+    "numbers": [
+      {
+        "value": "180",
+        "label": "ISO 639-3 codes"
+      },
+      {
+        "value": "CC",
+        "label": "licensed texts"
+      },
+      {
+        "value": "CSV",
+        "label": "single-file download"
+      }
+    ],
+    "features": [
+      "Parallel-style stories across many languages",
+      "Source and licence tracked per text",
+      "Hugging Face loader and direct CSV download"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "from datasets import load_dataset\n\nds = load_dataset(\"cis-lmu/GlotStoryBook\")\nds[\"train\"][0]"
+    },
+    "links": {
+      "code": "https://github.com/cisnlp/GlotStoryBook",
+      "data": "https://huggingface.co/datasets/cis-lmu/GlotStoryBook"
+    },
+    "directory": null,
+    "citation": "@inproceedings{kargaran2023glotlid,\n  title={{G}lot{LID}: Language Identification for Low-Resource Languages},\n  author={Kargaran, Amir Hossein and Imani, Ayyoob and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  booktitle={The 2023 Conference on Empirical Methods in Natural Language Processing},\n  year={2023},\n  url={https://openreview.net/forum?id=dl4e3EBz5j}\n}"
   },
   {
     "id": "glotsparse",
     "name": "GlotSparse",
-    "tagline": "News corpora for under-resourced languages",
-    "description": "GlotSparse provides curated news corpora for under-resourced languages, sourced from diverse news outlets. It addresses the data scarcity problem by collecting, cleaning, and organizing news text for languages that lack large-scale text resources.",
+    "kind": "corpus",
+    "stage": "collect",
+    "color": "green",
+    "year": 2023,
+    "venue": "with GlotLID",
     "logo": "glotsparse-mark.svg",
     "logoFull": "glotsparse.svg",
-    "venue": null,
-    "year": 2024,
-    "paperUrl": null,
-    "codeUrl": null,
-    "demoUrl": null,
-    "modelUrl": null,
-    "dataUrl": "https://huggingface.co/datasets/cis-lmu/GlotSparse",
-    "category": "corpus",
-    "stars": 40
+    "tagline": "Text for sparsely resourced languages.",
+    "description": "GlotSparse collects text in low-resource languages from openly available web sources, released alongside GlotLID to support language identification and corpus building for languages with very little digital text.",
+    "numbers": [
+      {
+        "value": "HF",
+        "label": "dataset"
+      },
+      {
+        "value": "low",
+        "label": "resource languages"
+      }
+    ],
+    "features": [
+      "Text for languages with little online presence",
+      "Released with the GlotLID project"
+    ],
+    "usage": {
+      "lang": "python",
+      "code": "from datasets import load_dataset\n\nds = load_dataset(\"cis-lmu/GlotSparse\")"
+    },
+    "links": {
+      "data": "https://huggingface.co/datasets/cis-lmu/GlotSparse"
+    },
+    "directory": null,
+    "citation": "@inproceedings{kargaran2023glotlid,\n  title={{G}lot{LID}: Language Identification for Low-Resource Languages},\n  author={Kargaran, Amir Hossein and Imani, Ayyoob and Yvon, Fran{\\c{c}}ois and Sch{\\\"u}tze, Hinrich},\n  booktitle={The 2023 Conference on Empirical Methods in Natural Language Processing},\n  year={2023},\n  url={https://openreview.net/forum?id=dl4e3EBz5j}\n}"
   }
 ]

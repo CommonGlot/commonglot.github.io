@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Not found — CommonGlot</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <base href="/">
+  <link rel="icon" href="assets/img/glotsuite-mark.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script>try{var t=localStorage.getItem('cg-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body data-page="">
+<main id="main"><section class="page-hero"><div class="container" id="nf"></div></section></main>
+  <script src="assets/js/main.js"></script>
+  <script>
+    CG.data.site().then(site => {
+      const n = site.not_found;
+      document.getElementById('nf').innerHTML = `<span class="kicker">404</span><h1>${CG.esc(n.title)}</h1><p class="lead">${CG.esc(n.text)}</p>
+        <div class="btn-row" style="margin-top:24px">${n.links.map(l => `<a class="btn${l.style !== 'plain' ? ' btn--' + l.style : ''}" href="${CG.href(l.href)}">${CG.esc(l.label)}</a>`).join('')}</div>`;
+    }).catch(e => CG.showError(document.getElementById('nf'), e));
+  </script>
+</body>
+</html>
