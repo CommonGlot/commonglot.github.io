@@ -1,0 +1,701 @@
+{
+  "brand": {
+    "name": "CommonGlot",
+    "tagline": "Open language technology for every language",
+    "logo": "assets/img/glotsuite-mark.svg",
+    "github": "https://github.com/CommonGlot",
+    "description": "CommonGlot is the open home of GlotSuite: language identification, script detection, web corpora, models and benchmarks for the world's under-served languages, plus a public directory of what technology exists for each language and script."
+  },
+  "nav": [
+    {
+      "key": "home",
+      "label": "Home",
+      "href": "index.html"
+    },
+    {
+      "key": "mission",
+      "label": "Mission",
+      "href": "pages/mission.html"
+    },
+    {
+      "key": "projects",
+      "label": "Projects",
+      "href": "pages/projects.html"
+    },
+    {
+      "key": "languages",
+      "label": "Languages",
+      "href": "pages/languages.html"
+    },
+    {
+      "key": "scripts",
+      "label": "Scripts",
+      "href": "pages/scripts.html"
+    },
+    {
+      "key": "glotsuite",
+      "label": "GlotSuite",
+      "href": "pages/glotsuite.html"
+    },
+    {
+      "key": "data",
+      "label": "Open data",
+      "href": "pages/data.html"
+    },
+    {
+      "key": "about",
+      "label": "About",
+      "href": "pages/about.html"
+    }
+  ],
+  "home": {
+    "kicker": "Open infrastructure · 7,000+ languages · 170+ scripts",
+    "title": [
+      "Language tech",
+      "for the",
+      "long tail."
+    ],
+    "lead": "Most language technology serves a few dozen languages. CommonGlot builds and documents the open tools, corpora and benchmarks that reach the rest — and keeps a public record of what exists for every language and every script.",
+    "ctas": [
+      {
+        "label": "Browse languages",
+        "href": "pages/languages.html",
+        "style": "pink"
+      },
+      {
+        "label": "Explore GlotSuite",
+        "href": "pages/glotsuite.html",
+        "style": "yellow"
+      },
+      {
+        "label": "Get the data",
+        "href": "pages/data.html",
+        "style": "plain"
+      }
+    ],
+    "numbers_title": "The directory in numbers",
+    "numbers": [
+      {
+        "stat": "languages_in_directory",
+        "label": "languages in the directory"
+      },
+      {
+        "stat": "scripts_in_glotscript",
+        "label": "writing systems tracked"
+      },
+      {
+        "stat": "glotlid_labels",
+        "label": "GlotLID language labels"
+      },
+      {
+        "stat": "scripts_in_ocr_bench",
+        "label": "scripts with OCR benchmarks"
+      },
+      {
+        "stat": "families",
+        "label": "language families"
+      }
+    ],
+    "directory_teaser": {
+      "kicker": "The directory",
+      "title": "A booklet for every language and script",
+      "text": "Like Glottolog or Ethnologue, but focused on technology: each language and writing system gets its own page listing where it is spoken, how it is written, how endangered it is, and which identification models, corpora, language models and OCR systems support it today.",
+      "examples_title": "Open a booklet",
+      "language_examples": [
+        "haw",
+        "yor",
+        "quy",
+        "bod",
+        "ckb",
+        "mri"
+      ],
+      "script_examples": [
+        "Adlm",
+        "Cher",
+        "Tfng",
+        "Nkoo",
+        "Mong",
+        "Cans"
+      ]
+    },
+    "projects_title": "Projects",
+    "projects_text": "Eight open releases, one pipeline. Every model, dataset and tool is free to use.",
+    "cta": {
+      "title": "Is your language missing?",
+      "text": "Corrections, data and evaluations from language communities are the fastest way to improve coverage. Open an issue or send a pull request — every booklet links to its sources.",
+      "button": {
+        "label": "How to contribute",
+        "href": "pages/about.html#contribute"
+      }
+    },
+    "hero_scripts": [
+      "Arab",
+      "Deva",
+      "Ethi",
+      "Cher",
+      "Hang",
+      "Tibt"
+    ]
+  },
+  "mission": {
+    "kicker": "Our mission",
+    "title": "Every language deserves working technology.",
+    "statement": "We build and maintain free, open language technology for the thousands of languages that commercial systems ignore — and we publish an honest, inspectable record of what does and doesn't exist for each of them.",
+    "paragraphs": [
+      "Over 7,000 languages are spoken today, yet the web corpora, language models and OCR engines that power modern NLP cover only a small fraction of them. When a language can't be identified, it can't be collected; when it can't be collected, no model learns it; when no model learns it, its speakers are left out.",
+      "CommonGlot breaks that chain at each link. GlotLID and GlotScript identify languages and writing systems. GlotCC, GlotWeb and our smaller corpora collect text. Glot500 turns it into models. GlotOCR Bench measures how well today's systems read the world's scripts. Everything is released under open licences.",
+      "Alongside the tools, we maintain a directory that is part catalogue and part audit: one booklet per language and per script, built from public sources, showing exactly which technologies support it."
+    ],
+    "pillars": [
+      {
+        "icon": "◎",
+        "title": "Identify",
+        "text": "Know which language and script a text is in — the first step for any corpus.",
+        "color": "pink"
+      },
+      {
+        "icon": "⌘",
+        "title": "Collect",
+        "text": "Find and clean web text for languages that big crawls miss.",
+        "color": "yellow"
+      },
+      {
+        "icon": "◆",
+        "title": "Model",
+        "text": "Train and release multilingual models that include the long tail.",
+        "color": "blue"
+      },
+      {
+        "icon": "▲",
+        "title": "Evaluate",
+        "text": "Benchmark systems per language and per script so gaps are visible.",
+        "color": "green"
+      },
+      {
+        "icon": "▤",
+        "title": "Document",
+        "text": "Keep a public directory of what technology exists for each language.",
+        "color": "pink"
+      }
+    ],
+    "principles_title": "Principles",
+    "principles": [
+      {
+        "title": "Open by default",
+        "text": "Code, models and data packaging are released under permissive licences (Apache-2.0, MIT, CC0) wherever the source allows."
+      },
+      {
+        "title": "Every claim has a source",
+        "text": "Directory entries are generated from Glottolog, GlotScript, LinguaMeta and our own releases, and link back to them."
+      },
+      {
+        "title": "Coverage over headlines",
+        "text": "We report per-language and per-script results, not just averages that hide the long tail."
+      },
+      {
+        "title": "Communities first",
+        "text": "Speakers know their languages best. Corrections and contributions from communities take priority."
+      }
+    ],
+    "deliverables_kicker": "What we deliver",
+    "deliverables_title": "Four kinds of open deliverables",
+    "deliverables": [
+      {
+        "id": "identify",
+        "label": "Identification",
+        "color": "pink",
+        "title": "Language & script identification",
+        "text": "Models and libraries that tell you what language and writing system a piece of text is in — for 2,000+ language labels and every Unicode script.",
+        "projects": [
+          "glotlid",
+          "glotscript"
+        ],
+        "outputs": [
+          "fastText LID model (v1–v3)",
+          "Python script detector on PyPI",
+          "Language→script resource for 8,000+ languages"
+        ]
+      },
+      {
+        "id": "collect",
+        "label": "Corpora",
+        "color": "yellow",
+        "title": "Web-scale and curated corpora",
+        "text": "Clean, documented text for minority languages: a CommonCrawl corpus for 1,000+ languages, a web index for 400+, and smaller curated collections.",
+        "projects": [
+          "glotcc",
+          "glotweb",
+          "glotstorybook",
+          "glotsparse"
+        ],
+        "outputs": [
+          "GlotCC-V1 on Hugging Face",
+          "169,155+ verified web links",
+          "Storybooks in 180 languages"
+        ]
+      },
+      {
+        "id": "model",
+        "label": "Models",
+        "color": "blue",
+        "title": "Multilingual language models",
+        "text": "Pretrained encoders that extend coverage from about a hundred languages to more than five hundred.",
+        "projects": [
+          "glot500"
+        ],
+        "outputs": [
+          "Glot500-m (XLM-R-base extended)",
+          "Glot500-c training corpus",
+          "Head vs. tail evaluation suite"
+        ]
+      },
+      {
+        "id": "evaluate",
+        "label": "Benchmarks",
+        "color": "green",
+        "title": "Benchmarks and leaderboards",
+        "text": "Evaluation that is broken down by script and language, so you can see who is served and who is not.",
+        "projects": [
+          "glotocr-bench"
+        ],
+        "outputs": [
+          "OCR benchmark across 150+ scripts",
+          "Results for 14 OCR models",
+          "Public leaderboard"
+        ]
+      },
+      {
+        "id": "directory",
+        "label": "Directory",
+        "color": "pink",
+        "title": "The language & script directory",
+        "text": "A booklet per language and per script, combining Glottolog metadata with GlotSuite coverage. Browse it on this site or download it as JSON.",
+        "projects": [],
+        "outputs": [
+          "Language booklets",
+          "Script booklets",
+          "Downloadable JSON"
+        ],
+        "links": [
+          {
+            "label": "Languages",
+            "href": "pages/languages.html"
+          },
+          {
+            "label": "Scripts",
+            "href": "pages/scripts.html"
+          },
+          {
+            "label": "Open data",
+            "href": "pages/data.html"
+          }
+        ]
+      }
+    ]
+  },
+  "glotsuite": {
+    "kicker": "The research suite",
+    "title": "GlotSuite",
+    "lead": "GlotSuite is the family of research releases at the heart of CommonGlot. Each project solves one link in the chain from raw web text to working language technology, and each one feeds the next.",
+    "home_url": "https://kargaranamir.github.io/glotsuite/",
+    "home_label": "Visit the GlotSuite homepage",
+    "logo": "assets/img/glotsuite.svg",
+    "pipeline_title": "How the pieces fit",
+    "pipeline": [
+      {
+        "id": "identify",
+        "label": "Identify",
+        "text": "GlotLID labels the language, GlotScript the writing system."
+      },
+      {
+        "id": "collect",
+        "label": "Collect",
+        "text": "GlotCC and GlotWeb gather and filter web text with those labels."
+      },
+      {
+        "id": "model",
+        "label": "Model",
+        "text": "Glot500 learns from the collected corpora."
+      },
+      {
+        "id": "evaluate",
+        "label": "Evaluate",
+        "text": "GlotOCR Bench and per-language results show where gaps remain."
+      }
+    ],
+    "timeline_title": "Timeline",
+    "adoption_title": "Used in the wild",
+    "adoption": [
+      {
+        "title": "Corpus filtering",
+        "text": "GlotLID is used as a language filter in large open multilingual web corpora, including FineWeb-2."
+      },
+      {
+        "title": "Research baselines",
+        "text": "Glot500-m is a standard baseline for massively multilingual evaluation of tail languages."
+      },
+      {
+        "title": "Script-aware pipelines",
+        "text": "GlotScript is installed from PyPI to detect and split scripts in multilingual preprocessing."
+      }
+    ]
+  },
+  "data_page": {
+    "kicker": "Open data",
+    "title": "Everything on this site is a JSON file.",
+    "lead": "The site is static and every page renders from the files below. Use them directly, mirror them, or rebuild them from the upstream sources with one script.",
+    "files": [
+      {
+        "path": "data/languages/index.json",
+        "title": "Language index",
+        "text": "One compact row per language: ISO 639-3, name, macroarea, family, endangerment, scripts, coordinates, speakers and GlotSuite coverage flags.",
+        "keys": {
+          "i": "ISO 639-3",
+          "n": "name",
+          "m": "macroarea",
+          "f": "family",
+          "e": "endangerment level (1–6)",
+          "s": "scripts (ISO 15924)",
+          "t": "coverage flags",
+          "y": "latitude",
+          "x": "longitude",
+          "p": "speakers"
+        }
+      },
+      {
+        "path": "data/languages/details/{letter}.json",
+        "title": "Language details",
+        "text": "Booklet data sharded by the first letter of the ISO code: endonym, countries, Glottocode, Wikidata ID, documentation level, auxiliary scripts, GlotLID per-label metrics and Glot500 labels."
+      },
+      {
+        "path": "data/scripts.json",
+        "title": "Scripts",
+        "text": "One record per ISO 15924 script: name, type, direction, Unicode ranges, specimen, languages using it, GlotLID label count and per-model OCR results."
+      },
+      {
+        "path": "data/ocr_models.json",
+        "title": "OCR models",
+        "text": "GlotOCR Bench summary per model: overall, high/mid/low-tier accuracy and macro CER."
+      },
+      {
+        "path": "data/projects.json",
+        "title": "Projects",
+        "text": "GlotSuite projects with descriptions, links, usage snippets and BibTeX."
+      },
+      {
+        "path": "data/generated_stats.json",
+        "title": "Statistics",
+        "text": "Counts derived when the data was last built."
+      },
+      {
+        "path": "data/site.json",
+        "title": "Site copy",
+        "text": "All page text, navigation and team information."
+      },
+      {
+        "path": "data/taxonomy.json",
+        "title": "Vocabularies",
+        "text": "Labels and colours for macroareas, endangerment levels, coverage flags and script types."
+      }
+    ],
+    "rebuild_title": "Rebuild from source",
+    "rebuild_code": "git clone --depth 1 https://github.com/glottolog/glottolog-cldf src/glottolog-cldf\nfor r in GlotScript GlotLID GlotWeb GlotOCR-bench; do\n  git clone --depth 1 https://github.com/cisnlp/$r src/$r\ndone\npip install pycountry\npython3 tools/build_data.py --sources src",
+    "sources_title": "Sources & licences"
+  },
+  "sources": [
+    {
+      "name": "Glottolog",
+      "url": "https://glottolog.org",
+      "license": "CC BY 4.0",
+      "use": "Names, Glottocodes, families, macroareas, coordinates, endangerment, documentation level"
+    },
+    {
+      "name": "GlotScript-R",
+      "url": "https://github.com/cisnlp/GlotScript",
+      "license": "MIT",
+      "use": "Writing systems per language, Unicode ranges per script"
+    },
+    {
+      "name": "GlotLID v3",
+      "url": "https://github.com/cisnlp/GlotLID",
+      "license": "Apache-2.0",
+      "use": "Supported labels and per-label F1 / precision / recall"
+    },
+    {
+      "name": "LinguaMeta (via GlotWeb)",
+      "url": "https://github.com/cisnlp/GlotWeb",
+      "license": "CC BY 4.0",
+      "use": "Endonyms, speaker estimates, Wikidata IDs"
+    },
+    {
+      "name": "Glot500 label list (via GlotWeb)",
+      "url": "https://github.com/cisnlp/GlotWeb",
+      "license": "Apache-2.0",
+      "use": "Languages covered by Glot500"
+    },
+    {
+      "name": "GlotOCR Bench",
+      "url": "https://cisnlp.github.io/GlotOCR-bench/",
+      "license": "see repository",
+      "use": "Per-script OCR accuracy and CER for 14 models"
+    }
+  ],
+  "about": {
+    "kicker": "About",
+    "title": "Who we are",
+    "lead": "CommonGlot grew out of the GlotSuite research line at the Center for Information and Language Processing (CIS), LMU Munich, in collaboration with Sorbonne Université and CNRS. It brings those releases under one open roof.",
+    "team_title": "People behind GlotSuite",
+    "team": [
+      {
+        "name": "Amir Hossein Kargaran",
+        "role": "Lead of GlotLID, GlotScript, GlotCC, GlotOCR Bench",
+        "affiliation": "LMU Munich",
+        "url": "https://github.com/kargaranamir"
+      },
+      {
+        "name": "Hinrich Schütze",
+        "role": "Co-author across GlotSuite",
+        "affiliation": "LMU Munich",
+        "url": null
+      },
+      {
+        "name": "François Yvon",
+        "role": "Co-author across GlotSuite",
+        "affiliation": "Sorbonne Université, CNRS",
+        "url": null
+      },
+      {
+        "name": "Ayyoob Imani",
+        "role": "Lead of Glot500, co-author of GlotLID",
+        "affiliation": "LMU Munich",
+        "url": null
+      },
+      {
+        "name": "Nafiseh Nikeghbal",
+        "role": "Co-author of GlotOCR Bench",
+        "affiliation": null,
+        "url": null
+      },
+      {
+        "name": "Abdullah Al Sefat",
+        "role": "Lead of GlotWeb",
+        "affiliation": null,
+        "url": null
+      }
+    ],
+    "team_note": "Plus the many co-authors of Glot500 and the open-source contributors who report issues and send data.",
+    "affiliations_title": "Affiliations",
+    "affiliations": [
+      {
+        "name": "CIS, LMU Munich",
+        "url": "https://www.cis.lmu.de/"
+      },
+      {
+        "name": "Sorbonne Université",
+        "url": "https://www.sorbonne-universite.fr/"
+      },
+      {
+        "name": "CNRS",
+        "url": "https://www.cnrs.fr/"
+      }
+    ],
+    "contribute_title": "How to contribute",
+    "contribute": [
+      {
+        "title": "Report an error",
+        "text": "Wrong name, script or coverage flag? Open an issue on the site repository and link the booklet."
+      },
+      {
+        "title": "Share data",
+        "text": "Point us to openly licensed text in your language, or to websites GlotWeb should index."
+      },
+      {
+        "title": "Evaluate",
+        "text": "Test GlotLID, Glot500 or OCR models on your language and share the results."
+      },
+      {
+        "title": "Improve the site",
+        "text": "Everything is static HTML + JSON. Pull requests are welcome."
+      }
+    ],
+    "issues_url": "https://github.com/CommonGlot/commonglot.github.io/issues",
+    "faq_title": "Questions",
+    "faq": [
+      {
+        "q": "Is CommonGlot a company?",
+        "a": "No. It is an open umbrella for research releases and community work on language technology for minority languages."
+      },
+      {
+        "q": "Where does the directory data come from?",
+        "a": "From Glottolog, GlotScript, LinguaMeta and GlotSuite releases, combined by a public build script. See the Open data page for every source and licence."
+      },
+      {
+        "q": "A language says “not covered” but I know a model exists.",
+        "a": "The directory currently tracks GlotSuite coverage plus OCR benchmark results. Please open an issue — adding other open technologies is on the roadmap."
+      },
+      {
+        "q": "How do I cite this?",
+        "a": "Each project page has a BibTeX entry with a copy button. Please cite the specific project you use."
+      }
+    ]
+  },
+  "footer": {
+    "blurb": "Open tools, corpora, models and benchmarks for the world's under-served languages — and a public directory of what exists for each one.",
+    "columns": [
+      {
+        "title": "Directory",
+        "links": [
+          {
+            "label": "Languages",
+            "href": "pages/languages.html"
+          },
+          {
+            "label": "Scripts",
+            "href": "pages/scripts.html"
+          },
+          {
+            "label": "Open data",
+            "href": "pages/data.html"
+          }
+        ]
+      },
+      {
+        "title": "GlotSuite",
+        "links": [
+          {
+            "label": "All projects",
+            "href": "pages/projects.html"
+          },
+          {
+            "label": "Pipeline",
+            "href": "pages/glotsuite.html"
+          },
+          {
+            "label": "GlotSuite homepage",
+            "href": "https://kargaranamir.github.io/glotsuite/"
+          }
+        ]
+      },
+      {
+        "title": "Community",
+        "links": [
+          {
+            "label": "GitHub · CommonGlot",
+            "href": "https://github.com/CommonGlot"
+          },
+          {
+            "label": "GitHub · cisnlp",
+            "href": "https://github.com/cisnlp"
+          },
+          {
+            "label": "Hugging Face · cis-lmu",
+            "href": "https://huggingface.co/cis-lmu"
+          }
+        ]
+      }
+    ],
+    "legal": "Code and site content are open source. Directory data © their respective sources — see Open data."
+  },
+  "languages_page": {
+    "kicker": "The directory · languages",
+    "title": "Every language, and the technology that serves it.",
+    "lead": "Search, filter and map thousands of languages. Each one opens a booklet with its location, family, writing systems, endangerment status and which GlotSuite technologies support it.",
+    "stats": [
+      {
+        "key": "total",
+        "label": "languages listed"
+      },
+      {
+        "key": "mapped",
+        "label": "with map coordinates"
+      },
+      {
+        "key": "lid",
+        "label": "identifiable by GlotLID"
+      },
+      {
+        "key": "endangered",
+        "label": "shifting or worse"
+      },
+      {
+        "key": "uncovered",
+        "label": "with no GlotSuite model yet"
+      }
+    ],
+    "tabs": {
+      "map": "Map",
+      "table": "Directory",
+      "families": "Families",
+      "coverage": "Coverage gaps"
+    },
+    "color_by": {
+      "macroarea": "Colour by macroarea",
+      "endangerment": "Colour by endangerment",
+      "coverage": "Colour by GlotLID coverage"
+    },
+    "coverage_text": "Share of languages in each group that GlotLID can identify. Gaps show where identification — and therefore corpus collection — is still missing.",
+    "families_text": "The largest language families in the current selection, with how many of their languages GlotLID covers."
+  },
+  "scripts_page": {
+    "kicker": "The directory · scripts",
+    "title": "Every writing system in Unicode, and how well machines read it.",
+    "lead": "Each ISO 15924 script gets a booklet: a specimen, its Unicode ranges, the languages written in it, identification support and per-model OCR accuracy from GlotOCR Bench.",
+    "stats": [
+      {
+        "key": "total",
+        "label": "scripts tracked"
+      },
+      {
+        "key": "ocr",
+        "label": "benchmarked for OCR"
+      },
+      {
+        "key": "readable",
+        "label": "best OCR Acc@5 ≥ 50%"
+      },
+      {
+        "key": "rtl",
+        "label": "right-to-left"
+      },
+      {
+        "key": "lid",
+        "label": "with GlotLID labels"
+      }
+    ],
+    "tabs": {
+      "gallery": "Gallery",
+      "table": "Table",
+      "ocr": "OCR leaderboard"
+    },
+    "ocr_text": "Average Acc@5 per model on GlotOCR Bench (plain rendering). High = Latin; mid and low tiers cover the remaining scripts.",
+    "ocr_source": "https://cisnlp.github.io/GlotOCR-bench/"
+  },
+  "booklet": {
+    "language_tech_title": "Technology",
+    "language_tech_text": "Which open technologies support this language today. Entries come from GlotSuite releases and the GlotOCR benchmark.",
+    "not_covered": "Not covered yet — help us change that.",
+    "contribute_label": "Report missing technology",
+    "sources_note": "Booklet built from Glottolog, GlotScript, LinguaMeta and GlotSuite data. See Open data for licences."
+  },
+  "not_found": {
+    "title": "This page wandered off.",
+    "text": "The page you were looking for doesn't exist. Try the language or script directory instead.",
+    "links": [
+      {
+        "label": "Home",
+        "href": "index.html",
+        "style": "yellow"
+      },
+      {
+        "label": "Languages",
+        "href": "pages/languages.html",
+        "style": "pink"
+      },
+      {
+        "label": "Scripts",
+        "href": "pages/scripts.html",
+        "style": "plain"
+      }
+    ]
+  }
+}

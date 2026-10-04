@@ -1,109 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CommonGlot - Open Tools for Every Language</title>
-  <meta name="description" content="Open tools, corpora and benchmarks for minority languages. Part of the GlotSuite initiative.">
+  <title>CommonGlot — open language technology for every language</title>
+  <meta name="description" content="Open tools, corpora, models and benchmarks for under-served languages, and a directory of what technology exists for every language and script.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6efe2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1b1813" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="assets/img/glotsuite-mark.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="assets/css/style.css">
+  <script>try{var t=localStorage.getItem('cg-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
-<body>
-  <!-- Hero -->
-  <section class="hero" id="hero">
-    <div class="container">
-      <img src="assets/img/glotsuite.svg" alt="GlotSuite" class="hero-logo">
-      <h1>Open Tools for Every Language</h1>
-      <p>Open tools, corpora and benchmarks for minority languages &mdash; covering 2,000+ languages and 158 writing systems.</p>
-      <div class="btn-group">
-        <a href="pages/projects.html" class="btn btn-primary">Explore Projects</a>
-        <a href="pages/glotsuite.html" class="btn btn-outline" style="border-color:#fff;color:#fff;">Learn About GlotSuite</a>
-      </div>
+<body data-page="home">
+<main id="main">
+  <section class="hero"><div class="container hero-grid">
+    <div id="hero-text"><div class="loading">Loading</div></div>
+    <div class="hero-art" id="hero-art" aria-hidden="true"></div>
+  </div></section>
+  <section class="section--tight"><div class="container">
+    <h2 class="visually-hidden" id="numbers-title"></h2>
+    <div class="stats" id="home-stats"></div>
+  </div></section>
+  <section class="section"><div class="container" id="home-mission"></div></section>
+  <section class="section section--band"><div class="container">
+    <div class="section-head" id="deliver-head"></div>
+    <div id="home-deliverables"></div>
+  </div></section>
+  <section class="section"><div class="container">
+    <div class="section-head" id="directory-head"></div>
+    <div class="grid grid-2" style="align-items:start">
+      <div><div class="map" id="home-map" role="region" aria-label="Map of languages"></div><div class="legend" id="home-legend"></div></div>
+      <div id="directory-examples"></div>
     </div>
-  </section>
-
-  <!-- Stats Bar -->
-  <section class="container">
-    <div class="stats-bar" id="stats-bar">
-      <div class="stats-grid">
-        <div class="loading" style="grid-column:1/-1;">Loading stats...</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Featured Projects -->
-  <section class="section">
-    <div class="container">
-      <div class="section-title">
-        <h2>Featured Projects</h2>
-        <p>A suite of open-source tools and datasets for multilingual NLP</p>
-      </div>
-      <div class="card-grid" id="projects-grid">
-        <div class="loading">Loading projects...</div>
-      </div>
-      <div class="text-center mt-4">
-        <a href="pages/projects.html" class="btn btn-outline">View All Projects</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- What is CommonGlot -->
-  <section class="section" style="background: var(--card-bg);">
-    <div class="container">
-      <div class="content-block" style="box-shadow:none;border:none;max-width:800px;margin:0 auto;">
-        <h2>What is CommonGlot?</h2>
-        <p>The CommonGlot Foundation supports <strong>GlotSuite</strong>, a comprehensive collection of open-source tools, models, corpora, and benchmarks designed to democratize natural language processing for the world's languages.</p>
-        <p>While most NLP research focuses on a handful of high-resource languages, thousands of languages remain underserved. Our projects address this gap by providing language identification for 2,000+ languages, curating web-scale corpora for 1,000+ languages, building multilingual models for 500+ languages, and benchmarking OCR across 158 writing systems.</p>
-        <p>All our work is developed at <strong>CIS-LMU Munich</strong> and <strong>Sorbonne Universit&eacute;</strong>, and published at top venues including ACL, EMNLP, NeurIPS, and WWW. Every tool, dataset, and model is freely available under open licenses.</p>
-        <div class="mt-3">
-          <a href="pages/about.html" class="btn btn-primary">Learn More About Us</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
+  </div></section>
+  <section class="section section--band"><div class="container">
+    <div class="section-head" id="projects-head"></div>
+    <div class="grid grid-auto" id="home-projects"></div>
+  </div></section>
+  <section class="section"><div class="container" id="home-glotsuite"></div></section>
+  <section class="section--tight"><div class="container" id="home-cta"></div></section>
+</main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="assets/js/main.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const base = getBasePath();
-      try {
-        // Stats
-        const stats = await loadJSON(base + 'data/stats.json');
-        document.querySelector('#stats-bar .stats-grid').innerHTML = `
-          <div class="stat-item"><div class="stat-number">${formatNumber(stats.languages_covered)}+</div><div class="stat-label">Languages</div></div>
-          <div class="stat-item"><div class="stat-number">${stats.scripts_covered}</div><div class="stat-label">Writing Systems</div></div>
-          <div class="stat-item"><div class="stat-number">${stats.corpus_size_tb}TB</div><div class="stat-label">Corpus Data</div></div>
-          <div class="stat-item"><div class="stat-number">${stats.papers_published}</div><div class="stat-label">Publications</div></div>
-          <div class="stat-item"><div class="stat-number">${formatNumber(stats.downloads)}+</div><div class="stat-label">Downloads</div></div>
-        `;
-
-        // Projects (show first 4)
-        const projects = await loadJSON(base + 'data/projects.json');
-        const featured = projects.slice(0, 4);
-        document.getElementById('projects-grid').innerHTML = featured.map(p => `
-          <div class="card">
-            <div class="card-header">
-              <img src="${base}assets/img/${p.logo}" alt="${p.name}" class="card-logo">
-              <div>
-                <div class="card-title">${p.name}</div>
-                ${p.venue ? `<span class="badge">${p.venue} ${p.year}</span>` : ''}
-              </div>
-            </div>
-            <div class="card-tagline">${p.tagline}</div>
-            <div class="card-links">
-              ${p.paperUrl ? `<a href="${p.paperUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('paper')} Paper</a>` : ''}
-              ${p.codeUrl ? `<a href="${p.codeUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('code')} Code</a>` : ''}
-              ${p.demoUrl ? `<a href="${p.demoUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('demo')} Demo</a>` : ''}
-              ${p.modelUrl ? `<a href="${p.modelUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('model')} Model</a>` : ''}
-              ${p.dataUrl ? `<a href="${p.dataUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('data')} Data</a>` : ''}
-            </div>
-          </div>
-        `).join('');
-      } catch (e) {
-        console.error('Failed to load data:', e);
-      }
-    });
-  </script>
+  <script src="assets/js/blocks.js"></script>
+  <script src="assets/js/pages/home.js"></script>
 </body>
 </html>

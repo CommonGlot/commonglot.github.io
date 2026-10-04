@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>Projects — CommonGlot</title>
-  <meta name="description" content="All GlotSuite projects: language identification, script detection, corpora, models and benchmarks.">
+  <title>Open data — CommonGlot</title>
+  <meta name="description" content="Download the JSON behind every page of CommonGlot and rebuild it from public sources.">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f6efe2" media="(prefers-color-scheme: light)">
@@ -14,12 +14,16 @@
   <link rel="stylesheet" href="../assets/css/style.css">
   <script>try{var t=localStorage.getItem('cg-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 </head>
-<body data-page="projects">
+<body data-page="data">
 <main id="main">
-  <section class="page-hero"><div class="container" id="projects-hero"></div></section>
-  <section class="section--tight"><div class="container" id="projects-tabs"><div class="loading">Loading projects</div></div></section>
+  <section class="page-hero"><div class="container" id="data-hero"></div></section>
+  <section class="section--tight"><div class="container grid grid-2" id="data-files"></div></section>
+  <section class="section"><div class="container grid grid-2" style="align-items:start">
+    <div id="data-rebuild"></div>
+    <div id="data-sources"></div>
+  </div></section>
 </main>
   <script src="../assets/js/main.js"></script>
-  <script src="../assets/js/pages/projects.js"></script>
+  <script src="../assets/js/pages/data.js"></script>
 </body>
 </html>
