@@ -697,5 +697,18 @@
         "style": "plain"
       }
     ]
+  },
+  "map": {
+    "_comment": "Tile URLs. {key} is filled from data/runtime.json, which the deploy workflow writes from the CARTO_API_KEY repository secret. Without a key the fallback tiles are used.",
+    "tiles": {
+      "light": "https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}.png?key={key}",
+      "dark": "https://basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}.png?key={key}"
+    },
+    "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> &copy; <a href=\"https://carto.com/attributions\">CARTO</a>",
+    "fallback": {
+      "tiles": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+    },
+    "data_attribution": "Data: <a href=\"https://glottolog.org\">Glottolog</a>"
   }
 }

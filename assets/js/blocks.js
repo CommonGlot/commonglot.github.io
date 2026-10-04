@@ -4,22 +4,35 @@ const Blocks = (() => {
   const { esc, href, extAttrs, langUrl, fmt } = CG;
 
   /* ---------- maps ---------- */
-  const TILE = {
-    light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    dark: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  };
-  const ATTR = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Data: <a href="https://glottolog.org">Glottolog</a>';
+  // Tile config lives in data/site.json (map). The CARTO key comes from data/runtime.json, written at
+  // deploy time from the CARTO_API_KEY repository secret; without it we fall back to keyless tiles.
+  const tileConfig = Promise.all([
+    CG.data.site(),
+    CG.getJSON('data/runtime.json').catch(() => ({})),
+  ]).then(([site, runtime]) => {
+    const m = site.map, key = String(runtime.carto_api_key || '').trim();
+    const extra = m.data_attribution ? ' · ' + m.data_attribution : '';
+    if (key) {
+      const withKey = u => u.replace('{key}', encodeURIComponent(key));
+      return { light: withKey(m.tiles.light), dark: withKey(m.tiles.dark), attribution: m.attribution + extra, dim: false };
+    }
+    return { light: m.fallback.tiles, dark: m.fallback.tiles, attribution: m.fallback.attribution + extra, dim: true };
+  });
 
   function makeMap(el, { center = [15, 10], zoom = 2, minZoom = 1, scrollWheelZoom = true } = {}) {
     const map = L.map(el, { preferCanvas: true, worldCopyJump: true, minZoom, scrollWheelZoom, zoomControl: true }).setView(center, zoom);
     let layer;
-    const setTiles = () => {
-      const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      if (layer) map.removeLayer(layer);
-      layer = L.tileLayer(TILE[theme], { attribution: ATTR, subdomains: 'abcd', maxZoom: 12 }).addTo(map);
-    };
-    setTiles();
-    document.addEventListener('cg:theme', setTiles);
+    tileConfig.then(cfg => {
+      const setTiles = () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+        if (layer) map.removeLayer(layer);
+        layer = L.tileLayer(cfg[theme], { attribution: cfg.attribution, maxZoom: 12 }).addTo(map);
+        // Keyless fallback tiles have no dark style; dim them in dark mode instead.
+        el.classList.toggle('dark-tiles', cfg.dim && theme === 'dark');
+      };
+      setTiles();
+      document.addEventListener('cg:theme', setTiles);
+    });
     return map;
   }
 

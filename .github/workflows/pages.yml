@@ -1,0 +1,43 @@
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # The key ends up in the published site (browsers need it to fetch tiles);
+      # keeping it in a secret only keeps it out of the repository.
+      # Restrict the key to commonglot.github.io in the CARTO dashboard.
+      - name: Write runtime config
+        env:
+          CARTO_API_KEY: ${{ secrets.CARTO_API_KEY }}
+        run: |
+          python3 -c 'import json, os; json.dump({"carto_api_key": os.environ.get("CARTO_API_KEY", "")}, open("data/runtime.json", "w"))'
+          if [ -z "$CARTO_API_KEY" ]; then echo "::warning::CARTO_API_KEY secret is not set; maps will use fallback tiles."; fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

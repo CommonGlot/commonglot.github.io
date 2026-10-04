@@ -322,7 +322,7 @@ td .sub { display: block; font-size: .8rem; color: var(--ink-soft); font-weight:
 .leaflet-popup-tip { background: var(--card); }
 .leaflet-popup-content { margin: 12px 14px; font-size: .9rem; line-height: 1.45; }
 .leaflet-popup-content a { color: var(--ink); }
-[data-theme="dark"] .leaflet-tile-pane, .dark-tiles .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9); }
+.dark-tiles .leaflet-tile-pane { filter: invert(1) hue-rotate(180deg) brightness(.85) contrast(.9); }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 14px 0 0; font-size: .85rem; }
 .legend .item { display: inline-flex; align-items: center; gap: 6px; }
 .legend .sw { width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--line-c); }
