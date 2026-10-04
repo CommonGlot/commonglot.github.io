@@ -46,7 +46,7 @@
           <th data-sort="ocr" data-type="number" class="num">Best OCR</th></tr></thead><tbody id="script-tbody"></tbody></table></div>
       </div>
       <div ${panelAttrs('sc', 'ocr')} class="tab-panel" hidden>
-        <p class="muted">${esc(P.ocr_text)} <a href="${P.ocr_source}" target="_blank" rel="noopener">Leaderboard ↗</a></p>
+        <p class="muted">${esc(P.ocr_text)} <a href="${CG.href(P.ocr_source)}" target="_blank" rel="noopener">Leaderboard ↗</a></p>
         <div class="grid grid-2" style="align-items:start">
           <div class="card"><h3>Overall</h3><div class="bars">${ocrModels.map(m => bar(m.display, m.overall, 100, 'blue')).join('')}</div></div>
           <div class="table-wrap"><table><thead><tr><th>Model</th><th class="num">High</th><th class="num">Mid</th><th class="num">Low</th></tr></thead><tbody>
@@ -62,7 +62,7 @@
     $('#script-table th[data-sort="langs"]').setAttribute('aria-sort', 'descending');
 
     let current = [];
-    const tierChip = s => s.ocr ? `<span class="chip chip--${taxonomy.ocr_tiers[s.ocr.tier]?.color || 'yellow'}">${esc(s.ocr.best.acc5.toFixed(0))}% OCR</span>` : `<span class="chip chip--off">no OCR</span>`;
+    const tierChip = s => s.ocr ? `<span class="chip chip--${CG.tok(taxonomy.ocr_tiers[s.ocr.tier]?.color || 'yellow')}">${esc(s.ocr.best.acc5.toFixed(0))}% OCR</span>` : `<span class="chip chip--off">no OCR</span>`;
     function renderGallery() {
       $('#gallery').innerHTML = sortRows(current, { key: 'langs', dir: -1 }, getters).map(s => `
         <a class="card script-card" href="${scriptUrl(s.code)}">

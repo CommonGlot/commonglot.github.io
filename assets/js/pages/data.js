@@ -13,7 +13,7 @@
     }).join('');
     $('#data-rebuild').innerHTML = `<h2>${esc(D.rebuild_title)}</h2>${codeBlock(D.rebuild_code, 'bash')}`;
     $('#data-sources').innerHTML = `<h2>${esc(D.sources_title)}</h2><div class="table-wrap"><table><thead><tr><th>Source</th><th>Used for</th><th>Licence</th></tr></thead><tbody>
-      ${site.sources.map(s => `<tr><td><a href="${s.url}" target="_blank" rel="noopener">${esc(s.name)}</a></td><td class="small">${esc(s.use)}</td><td class="small">${esc(s.license)}</td></tr>`).join('')}
+      ${site.sources.map(s => `<tr><td><a href="${href(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a></td><td class="small">${esc(s.use)}</td><td class="small">${esc(s.license)}</td></tr>`).join('')}
     </tbody></table></div>`;
   } catch (e) { CG.showError($('#data-hero'), e); }
 })();

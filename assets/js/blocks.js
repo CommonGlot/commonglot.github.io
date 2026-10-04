@@ -50,7 +50,7 @@ const Blocks = (() => {
   }
 
   function legend(el, entries) {
-    el.innerHTML = entries.map(([label, color]) => `<span class="item"><span class="sw" style="background:${color}"></span>${esc(label)}</span>`).join('');
+    el.innerHTML = entries.map(([label, color]) => `<span class="item"><span class="sw" style="background:${CG.tok(color)}"></span>${esc(label)}</span>`).join('');
   }
 
   /* ---------- deliverables (vertical tabs) ---------- */
@@ -60,13 +60,13 @@ const Blocks = (() => {
     container.innerHTML = `<div class="deliver">${CG.tabMarkup('dlv', items, { vertical: true })}
       <div>${mission.deliverables.map(d => `
         <div class="card deliver-panel" ${CG.panelAttrs('dlv', d.id)}>
-          <span class="sticker" style="--sticker:var(--${d.color})">${esc(d.label)}</span>
+          <span class="sticker" style="--sticker:var(--${CG.tok(d.color)})">${esc(d.label)}</span>
           <h3>${esc(d.title)}</h3>
           <p class="muted">${esc(d.text)}</p>
           <ul class="outputs">${d.outputs.map(o => `<li>${esc(o)}</li>`).join('')}</ul>
           <div class="btn-row">
             ${d.projects.map(id => byId[id]).filter(Boolean).map(p => `<a class="btn btn--sm" href="${CG.projectUrl(p.id)}"><img src="${href('assets/img/' + p.logo)}" alt="" width="20" height="20">${esc(p.name)}</a>`).join('')}
-            ${(d.links || []).map(l => `<a class="btn btn--sm btn--${d.color}" href="${href(l.href)}"${extAttrs(l.href)}>${esc(l.label)} →</a>`).join('')}
+            ${(d.links || []).map(l => `<a class="btn btn--sm btn--${CG.tok(d.color)}" href="${href(l.href)}"${extAttrs(l.href)}>${esc(l.label)} →</a>`).join('')}
           </div>
         </div>`).join('')}</div></div>`;
     CG.tabs(container);

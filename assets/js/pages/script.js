@@ -21,7 +21,7 @@
       <div class="booklet-head"><div>
         <span class="kicker">ISO 15924 · ${esc(s.code)}${s.type ? ' · ' + esc(s.type) : ''}</span>
         <h1>${esc(s.name)}</h1>
-      </div><div class="chips">${tier ? `<span class="chip chip--${tier.color}">${esc(tier.label)} OCR tier</span>` : '<span class="chip chip--off">Not in OCR bench</span>'}</div></div>
+      </div><div class="chips">${tier ? `<span class="chip chip--${CG.tok(tier.color)}">${esc(tier.label)} OCR tier</span>` : '<span class="chip chip--off">Not in OCR bench</span>'}</div></div>
       <div class="specimen" style="margin-top:20px"${dirAttr}>${esc(s.sample || s.specimen)}</div>
       ${s.sample && s.specimen ? `<p class="small muted" style="margin-top:10px"${dirAttr}>Letters: ${esc(s.specimen)}</p>` : ''}`;
 
@@ -38,7 +38,7 @@
         <div><dt>GlotLID</dt><dd>${fmt(s.glotlid_labels)} labels</dd></div>
         ${s.ocr ? `<div><dt>Best OCR</dt><dd>${s.ocr.best.acc5.toFixed(1)}% Acc@5<br><span class="small muted">${esc(modelName[s.ocr.best.model] || s.ocr.best.model)}</span></dd></div>` : ''}
       </dl></div>
-      <div class="card"><h3>Elsewhere</h3><div class="ext-links">${taxonomy.external_script_links.map(x => `<a class="chip" href="${fill(x.url, vals)}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('')}</div></div>`;
+      <div class="card"><h3>Elsewhere</h3><div class="ext-links">${taxonomy.external_script_links.map(x => `<a class="chip" href="${href(fill(x.url, vals))}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('')}</div></div>`;
 
     const langList = list => list.length ? `<ul class="lang-list">${list.map(l => `<li><a href="${langUrl(l.i)}">${esc(l.n)}</a><span class="iso">${esc(l.i)}</span></li>`).join('')}</ul>` : '<p class="empty">None recorded.</p>';
     const ocrSection = !s.ocr ? `<div class="card"><p>${esc(s.name)} is not part of GlotOCR Bench yet.</p><a class="btn btn--sm" href="${projectUrl('glotocr-bench')}">About the benchmark →</a></div>` :

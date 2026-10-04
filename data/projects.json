@@ -54,7 +54,7 @@
     "year": 2023,
     "venue": "ACL 2023",
     "logo": "glotsuite-mark.svg",
-    "logoFull": "glotsuite.svg",
+    "logoFull": null,
     "tagline": "Scaling multilingual corpora and language models to 500+ languages.",
     "description": "Glot500-m extends XLM-R-base from 104 to more than 500 languages through continued pretraining on Glot500-c, a corpus drawn from Glot2000-c (2,000+ languages). The model outperforms XLM-R-base on head and tail languages across sequence labelling, retrieval and classification tasks.",
     "numbers": [
