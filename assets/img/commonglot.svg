@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 392" role="img" aria-labelledby="t">
+  <title id="t">CommonGlot</title>
+  <style>.ink{fill:#16130f}@media (prefers-color-scheme:dark){.ink{fill:#f3ead8}}</style>
+  <!-- hard shadow -->
+  <path d="M66 312 L56 382 L132 312 Z" fill="#16130f"/>
+  <rect x="22" y="22" width="300" height="300" rx="38" fill="#16130f"/>
+  <!-- speech bubble -->
+  <rect x="10" y="10" width="300" height="300" rx="38" fill="#fffaf0" stroke="#16130f" stroke-width="8"/>
+  <path d="M54 296 L44 370 L126 296 Z" fill="#fffaf0"/>
+  <path d="M58 312 L44 370 L120 312" fill="none" stroke="#16130f" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- four tiles: Latin C, Latin G, Devanagari-style stroke, Arabic-style stroke -->
+  <g stroke="#16130f" stroke-width="5">
+    <rect x="30" y="30" width="122" height="122" rx="18" fill="#ff48b0"/>
+    <rect x="168" y="30" width="122" height="122" rx="18" fill="#ffe14d"/>
+    <rect x="30" y="168" width="122" height="122" rx="18" fill="#0078bf"/>
+    <rect x="168" y="168" width="122" height="122" rx="18" fill="#00a95c"/>
+  </g>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="13">
+    <path d="M115 67 A34 34 0 1 0 115 115" stroke="#16130f"/>
+    <path d="M253 67 A34 34 0 1 0 263 91 L235 91" stroke="#16130f"/>
+    <path d="M50 198 L132 198 M110 198 L110 270 M110 224 C80 214 60 234 74 252 C84 264 102 260 110 252" stroke="#fffaf0"/>
+    <path d="M190 202 Q196 244 229 244 Q262 244 268 202" stroke="#16130f"/>
+  </g>
+  <circle cx="229" cy="270" r="9" fill="#16130f"/>
+  <g font-family="'Bricolage Grotesque', 'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="800" letter-spacing="-4">
+    <text class="ink" x="372" y="176" font-size="128">Common</text>
+    <text x="372" y="300" font-size="128" fill="#ff48b0" stroke="#16130f" stroke-width="3" paint-order="stroke">Glot</text>
+  </g>
+</svg>

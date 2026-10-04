@@ -2,9 +2,10 @@
   "brand": {
     "name": "CommonGlot",
     "tagline": "Open language technology for every language",
-    "logo": "assets/img/glotsuite-mark.svg",
+    "logo": "assets/img/commonglot-mark.svg",
     "github": "https://github.com/CommonGlot",
-    "description": "CommonGlot is the open home of GlotSuite: language identification, script detection, web corpora, models and benchmarks for the world's under-served languages, plus a public directory of what technology exists for each language and script."
+    "description": "CommonGlot is the open home of GlotSuite: language identification, script detection, web corpora, models and benchmarks for the world's under-served languages, plus a public directory of what technology exists for each language and script.",
+    "logo_full": "assets/img/commonglot.svg"
   },
   "nav": [
     {

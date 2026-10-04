@@ -3,7 +3,8 @@
   try {
     const site = await data.site();
     const A = site.about;
-    $('#about-hero').innerHTML = `<span class="kicker">${esc(A.kicker)}</span><h1>${esc(A.title)}</h1><p class="lead">${esc(A.lead)}</p>`;
+    $('#about-hero').innerHTML = `<div class="hero-grid"><div><span class="kicker">${esc(A.kicker)}</span><h1>${esc(A.title)}</h1><p class="lead">${esc(A.lead)}</p></div>
+      <div class="lockup" role="img" aria-label="${esc(site.brand.name)} logo"><img src="${CG.href(site.brand.logo)}" alt="" width="166" height="196"><span><b>Common</b><b>Glot</b></span></div></div>`;
     $('#team-title').textContent = A.team_title;
     const initials = n => n.split(/\s+/).map(w => w[0]).slice(0, 2).join('');
     const colors = ['pink', 'yellow', 'blue', 'green'];

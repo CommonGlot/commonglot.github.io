@@ -103,7 +103,7 @@ td code { white-space: nowrap; }
 }
 .header-inner { display: flex; align-items: center; gap: 16px; height: var(--header-h); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.02em; flex-shrink: 0; }
-.brand img { width: 34px; height: 34px; background: var(--card); border: var(--line) solid var(--line-c); border-radius: 10px; padding: 3px; box-shadow: 3px 3px 0 var(--shadow); }
+.brand img { width: 34px; height: 40px; display: block; }
 .brand:hover { color: inherit; }
 .nav { margin-left: auto; }
 .nav ul { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
@@ -406,6 +406,12 @@ details.faq summary::after { content: "+"; font-family: var(--mono); font-size: 
 details.faq[open] summary::after { content: "–"; }
 details.faq p { padding: 0 20px 18px; margin: 0; color: var(--ink-soft); }
 
+/* logo lockup */
+.lockup { display: flex; align-items: center; gap: clamp(14px, 3vw, 26px); justify-self: center; }
+.lockup img { width: clamp(90px, 12vw, 140px); height: auto; flex-shrink: 0; }
+.lockup span { display: flex; flex-direction: column; font-weight: 800; font-size: clamp(2.2rem, 4.4vw, 3.4rem); line-height: .95; letter-spacing: -0.04em; }
+.lockup b:last-child { color: var(--pink); text-shadow: 3px 3px 0 var(--shadow); }
+
 /* misc */
 .callout { display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
 @media (max-width: 720px) { .callout { grid-template-columns: 1fr; } }
@@ -433,7 +439,7 @@ details.faq p { padding: 0 20px 18px; margin: 0; color: var(--ink-soft); }
 .footer-grid h4 { font-family: var(--mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .08em; color: var(--yellow); margin-bottom: 14px; }
 .footer-grid ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .footer-brand { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-.footer-brand img { width: 36px; height: 36px; background: #fffaf0; border-radius: 10px; padding: 3px; }
+.footer-brand img { width: 36px; height: 42px; display: block; }
 .footer-blurb { color: color-mix(in srgb, var(--paper) 75%, transparent); max-width: 40ch; }
 .footer-bottom { margin-top: 36px; padding-top: 20px; border-top: 1.5px solid color-mix(in srgb, var(--paper) 25%, transparent); font-family: var(--mono); font-size: .78rem; color: color-mix(in srgb, var(--paper) 65%, transparent); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; }
 @media (max-width: 860px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-grid > :first-child { grid-column: 1 / -1; } }
