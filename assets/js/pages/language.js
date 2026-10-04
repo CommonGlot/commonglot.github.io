@@ -27,14 +27,14 @@
         ${d.endonym && d.endonym !== l.n ? `<p class="endonym" lang="${esc(l.i)}">${esc(d.endonym)}</p>` : ''}
         <div class="codes">${codes.map(c => `<span class="chip">${esc(c)}</span>`).join('')}</div>
       </div>
-      <div class="chips">${Object.entries(taxonomy.coverage).map(([k, v]) => `<span class="chip ${(l.t || '').includes(k) ? 'chip--' + v.color : 'chip--off'}" title="${esc(v.long)}">${esc(v.label)}</span>`).join('')}</div></div>
+      <div class="chips">${Object.entries(taxonomy.coverage).map(([k, v]) => `<span class="chip ${(l.t || '').includes(k) ? 'chip--' + CG.tok(v.color) : 'chip--off'}" title="${esc(v.long)}">${esc(v.label)}</span>`).join('')}</div></div>
       ${d.description ? `<p class="lead" style="margin-top:16px">${esc(d.description.charAt(0).toUpperCase() + d.description.slice(1))}.</p>` : ''}`;
 
     /* ---------- aside ---------- */
     const famLink = l.f ? `<a href="${href('pages/languages.html')}?q=${encodeURIComponent(l.f)}#table">${esc(l.f)}</a>` : '–';
-    const scale = Object.keys(taxonomy.endangerment).map(k => `<span class="${+k <= (l.e || 0) ? 'on' : ''}" style="background:${taxonomy.endangerment[k].color}"></span>`).join('');
+    const scale = Object.keys(taxonomy.endangerment).map(k => `<span class="${+k <= (l.e || 0) ? 'on' : ''}" style="background:${CG.tok(taxonomy.endangerment[k].color)}"></span>`).join('');
     const vals = { iso: l.i, glottocode: d.glottocode, wikidata: d.wikidata };
-    const ext = taxonomy.external_language_links.filter(x => vals[x.needs]).map(x => `<a class="chip" href="${fill(x.url, vals)}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('');
+    const ext = taxonomy.external_language_links.filter(x => vals[x.needs]).map(x => `<a class="chip" href="${href(fill(x.url, vals))}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('');
     const aside = `
       <div class="card"><dl class="facts">
         <div><dt>Family</dt><dd>${famLink}</dd></div>
@@ -75,7 +75,7 @@
     ['glotcc', 'glotweb', 'glotstorybook'].forEach(id => {
       const p = proj[id]; if (!p) return;
       tech.push(row(p, ['part', 'Check'], `${esc(p.tagline)} Per-language coverage is listed in the dataset.`,
-        `<div class="chips" style="margin-top:8px">${['data', 'demo'].filter(k => p.links[k]).map(k => `<a class="chip" href="${p.links[k]}" target="_blank" rel="noopener">${k === 'data' ? 'Dataset' : 'Demo'} ↗</a>`).join('')}</div>`));
+        `<div class="chips" style="margin-top:8px">${['data', 'demo'].filter(k => p.links[k]).map(k => `<a class="chip" href="${href(p.links[k])}" target="_blank" rel="noopener">${k === 'data' ? 'Dataset' : 'Demo'} ↗</a>`).join('')}</div>`));
     });
 
     /* ---------- neighbours ---------- */
@@ -98,7 +98,7 @@
         <div ${panelAttrs('lb', 'tech')} class="tab-panel">
           <div class="card"><p class="muted">${esc(B.language_tech_text)}</p>${tech.join('')}</div>
           ${!/[LG]/.test(l.t || '') ? `<div class="card card--yellow" style="margin-top:20px"><h3>${esc(B.not_covered)}</h3>
-            <a class="btn btn--sm" href="${site.about.issues_url}/new?title=${encodeURIComponent(`Technology for ${l.n} (${l.i})`)}" target="_blank" rel="noopener">${esc(B.contribute_label)} ↗</a></div>` : ''}
+            <a class="btn btn--sm" href="${href(site.about.issues_url + '/new?title=' + encodeURIComponent(`Technology for ${l.n} (${l.i})`))}" target="_blank" rel="noopener">${esc(B.contribute_label)} ↗</a></div>` : ''}
         </div>
         <div ${panelAttrs('lb', 'writing')} class="tab-panel" hidden>
           <div class="grid grid-auto">${[...(l.s || []), ...(d.scripts_aux || [])].map(c => byCode[c]).filter(Boolean).map((s, i) => `

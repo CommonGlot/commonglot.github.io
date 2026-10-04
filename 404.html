@@ -3,6 +3,8 @@
 <head>
   <title>Not found — CommonGlot</title>
   <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'sha256-NBrBS0QH+oPLLHYW9Dbq4b4noKdB8RLG3k0J1wMUdQ8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://*.basemaps.cartocdn.com https://cdnjs.cloudflare.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <base href="/">
   <link rel="icon" href="assets/img/glotsuite-mark.svg" type="image/svg+xml">
@@ -13,12 +15,6 @@
 <body data-page="">
 <main id="main"><section class="page-hero"><div class="container" id="nf"></div></section></main>
   <script src="assets/js/main.js"></script>
-  <script>
-    CG.data.site().then(site => {
-      const n = site.not_found;
-      document.getElementById('nf').innerHTML = `<span class="kicker">404</span><h1>${CG.esc(n.title)}</h1><p class="lead">${CG.esc(n.text)}</p>
-        <div class="btn-row" style="margin-top:24px">${n.links.map(l => `<a class="btn${l.style !== 'plain' ? ' btn--' + l.style : ''}" href="${CG.href(l.href)}">${CG.esc(l.label)}</a>`).join('')}</div>`;
-    }).catch(e => CG.showError(document.getElementById('nf'), e));
-  </script>
+  <script src="assets/js/pages/notfound.js"></script>
 </body>
 </html>

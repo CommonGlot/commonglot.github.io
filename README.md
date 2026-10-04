@@ -52,6 +52,14 @@ assets/js/blocks.js       shared blocks: Leaflet maps, deliverables tabs, stats
 assets/js/pages/*.js      one script per page
 ```
 
+## Security
+
+- All text from JSON or the URL is HTML-escaped (`CG.esc`) before it reaches `innerHTML`.
+- Every URL written into the page goes through `CG.href`, which allows only `http(s)`, `mailto`, in-page anchors and site-relative paths (so `javascript:` / `data:` links are dropped).
+- Colours, ids and class suffixes from data go through `CG.tok` (`[A-Za-z0-9_#-]` only).
+- Each page sets a Content-Security-Policy: scripts only from the site and cdnjs (plus the hash-pinned theme snippet), `connect-src 'self'`, no plugins, no form submissions.
+- The site is fully static, with no forms, cookies, accounts or state-changing requests, so there is nothing for CSRF to target.
+
 ## Run locally
 
 The pages load JSON with `fetch`, so serve the folder over HTTP:

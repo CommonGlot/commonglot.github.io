@@ -20,7 +20,7 @@
         </div>
       </div>
       <p class="lead" style="margin-top:18px">${esc(p.tagline)}</p>
-      <div class="btn-row" style="margin-top:20px">${Object.entries(p.links).map(([k, u], i) => `<a class="btn btn--sm${i === 0 ? ' btn--' + p.color : ''}" href="${u}"${extAttrs(u)}>${esc(LINK_LABELS[k] || k)} ↗</a>`).join('')}</div>`;
+      <div class="btn-row" style="margin-top:20px">${Object.entries(p.links).map(([k, u], i) => `<a class="btn btn--sm${i === 0 ? ' btn--' + CG.tok(p.color) : ''}" href="${href(u)}"${extAttrs(u)}>${esc(LINK_LABELS[k] || k)} ↗</a>`).join('')}</div>`;
 
     // Directory coverage for projects that set flags in the language index.
     const flag = Object.entries(taxonomy.coverage).find(([, v]) => v.project === p.id);
@@ -28,7 +28,7 @@
     if (flag) {
       const langs = await data.languages();
       const n = langs.filter(l => (l.t || '').includes(flag[0])).length;
-      coverage = `<div class="card card--${p.color}"><h3>${fmt(n)} languages</h3><p class="small">${esc(flag[1].long)} in the CommonGlot directory.</p>
+      coverage = `<div class="card card--${CG.tok(p.color)}"><h3>${fmt(n)} languages</h3><p class="small">${esc(flag[1].long)} in the CommonGlot directory.</p>
         <a class="btn btn--sm" href="${href('pages/languages.html')}?tech=${flag[0]}">Browse them →</a></div>`;
     }
 
@@ -46,8 +46,9 @@
           <div><dt>Published</dt><dd>${esc(p.venue)}</dd></div>
           <div><dt>Year</dt><dd>${esc(p.year)}</dd></div>
           ${stage ? `<div><dt>Stage</dt><dd>${esc(stage.label)}</dd></div>` : ''}
-          <div><dt>Links</dt><dd class="chips">${Object.entries(p.links).map(([k, u]) => `<a class="chip" href="${u}"${extAttrs(u)}>${esc(LINK_LABELS[k] || k)}</a>`).join('')}</dd></div>
+          <div><dt>Links</dt><dd class="chips">${Object.entries(p.links).map(([k, u]) => `<a class="chip" href="${href(u)}"${extAttrs(u)}>${esc(LINK_LABELS[k] || k)}</a>`).join('')}</dd></div>
         </dl></div>
+        ${p.logoFull && p.logoFull !== p.logo ? `<div class="card" style="padding:14px;background:#fffaf0"><img src="${href('assets/img/' + p.logoFull)}" alt="${esc(p.name)} logo" loading="lazy" width="300" height="300" style="display:block;width:100%;height:auto"></div>` : ''}
         ${coverage}
       </aside>
       <div id="pj-tabs">

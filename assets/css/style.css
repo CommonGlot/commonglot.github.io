@@ -291,7 +291,7 @@ a.chip:hover { background: var(--yellow); color: var(--on-accent); }
 .search .input { padding-left: 42px; width: 100%; }
 .search::before { content: "⌕"; position: absolute; left: 14px; top: 50%; transform: translateY(-52%); font-size: 1.3rem; color: var(--ink-soft); pointer-events: none; }
 .result-count { font-family: var(--mono); font-size: .85rem; color: var(--ink-soft); margin: 0 0 12px; }
-.toggle-chip { cursor: pointer; user-select: none; }
+.toggle-chip { cursor: pointer; user-select: none; position: relative; min-height: 38px; padding: 6px 14px; font-size: .8rem; }
 .toggle-chip input { position: absolute; opacity: 0; pointer-events: none; }
 .toggle-chip:has(input:checked) { background: var(--yellow); color: var(--on-accent); }
 .toggle-chip:has(input:focus-visible) { outline: 3px solid var(--blue); outline-offset: 2px; }

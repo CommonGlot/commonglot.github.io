@@ -29,9 +29,24 @@ const CG = (() => {
 
   /* ---------- helpers ---------- */
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // Tokens (colours, ids, class suffixes) from data may only contain [A-Za-z0-9_#-].
+  const tok = s => String(s ?? '').replace(/[^\w#-]/g, '');
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
-  const href = h => (!h || /^(https?:|mailto:|#)/.test(h)) ? h : base + h;
+  // Single gate for every URL written into the page: only http(s), mailto, in-page anchors and
+  // site-relative paths are allowed (blocks javascript:, data:, etc.), and the result is HTML-escaped.
+  function href(h) {
+    if (!h) return '#';
+    h = String(h).replace(/[\u0000-\u001F\u007F]/g, '').trim();
+    if (h.startsWith('#')) return esc(h);
+    if (/^[a-z][a-z0-9+.-]*:/i.test(h)) {
+      let u;
+      try { u = new URL(h); } catch (e) { return '#'; }
+      return ['http:', 'https:', 'mailto:'].includes(u.protocol) ? esc(u.href) : '#';
+    }
+    if (h.startsWith('//')) return '#';
+    return esc(base + h.replace(/^\/+/, ''));
+  }
   const isExternal = h => /^https?:/.test(h || '');
   const extAttrs = h => isExternal(h) ? ' target="_blank" rel="noopener"' : '';
   const fmt = n => n == null ? '–' : Number(n).toLocaleString('en-US');
@@ -162,11 +177,11 @@ const CG = (() => {
   /* Build tab buttons + panels markup from a list of {id,label,count?,accent?}. */
   function tabMarkup(prefix, items, { vertical = false } = {}) {
     return `<div class="tabs" role="tablist"${vertical ? ' aria-orientation="vertical"' : ''}>${items.map((t, i) => `
-      <button class="tab" role="tab" type="button" id="${prefix}-tab-${t.id}" data-tab="${t.id}" aria-controls="${prefix}-panel-${t.id}" aria-selected="${i === 0}"${t.accent ? ` style="--tab-accent:var(--${t.accent})"` : ''}>
+      <button class="tab" role="tab" type="button" id="${prefix}-tab-${tok(t.id)}" data-tab="${tok(t.id)}" aria-controls="${prefix}-panel-${tok(t.id)}" aria-selected="${i === 0}"${t.accent ? ` style="--tab-accent:var(--${tok(t.accent)})"` : ''}>
         <span>${esc(t.label)}</span>${t.count != null ? `<span class="count">${esc(t.count)}</span>` : ''}
       </button>`).join('')}</div>`;
   }
-  const panelAttrs = (prefix, id) => `role="tabpanel" id="${prefix}-panel-${id}" aria-labelledby="${prefix}-tab-${id}" tabindex="0"`;
+  const panelAttrs = (prefix, id) => `role="tabpanel" id="${prefix}-panel-${tok(id)}" aria-labelledby="${prefix}-tab-${tok(id)}" tabindex="0"`;
 
   /* ---------- sortable table state ---------- */
   function sortable(table, state, rerender) {
@@ -249,11 +264,11 @@ const CG = (() => {
   function bar(name, value, max = 100, color = 'blue', suffix = '%', link = '') {
     const pct = Math.max(0, Math.min(100, (value / max) * 100));
     const label = link ? `<a href="${link}">${esc(name)}</a>` : esc(name);
-    return `<div class="bar"><span class="name" title="${esc(name)}">${label}</span><span class="track"><span class="fill" style="width:${pct.toFixed(1)}%;--bar:var(--${color})"></span></span><span class="v">${value == null ? '–' : value.toFixed(1) + suffix}</span></div>`;
+    return `<div class="bar"><span class="name" title="${esc(name)}">${label}</span><span class="track"><span class="fill" style="width:${pct.toFixed(1)}%;--bar:var(--${tok(color)})"></span></span><span class="v">${value == null ? '–' : value.toFixed(1) + suffix}</span></div>`;
   }
   function projectCard(p, taxonomy, { sticker = true } = {}) {
     return `<a class="card project-card" href="${projectUrl(p.id)}">
-      ${sticker ? `<span class="sticker" style="--sticker:var(--${p.color})">${esc(taxonomy.project_kinds[p.kind] || p.kind)}</span>` : ''}
+      ${sticker ? `<span class="sticker" style="--sticker:var(--${tok(p.color)})">${esc(taxonomy.project_kinds[p.kind] || p.kind)}</span>` : ''}
       <div class="top"><img class="logo" src="${href('assets/img/' + p.logo)}" alt="" loading="lazy" width="56" height="56">
         <div><h3>${esc(p.name)}</h3><div class="meta">${esc(p.venue)}${p.venue && !String(p.venue).includes(p.year) ? ' · ' + p.year : ''}</div></div></div>
       <p class="muted">${esc(p.tagline)}</p>
@@ -269,7 +284,7 @@ const CG = (() => {
   }).catch(err => { console.error(err); });
 
   return {
-    base, data, getJSON, esc, $, $$, href, extAttrs, isExternal, fmt, compact, param, debounce, fill,
+    base, data, getJSON, esc, tok, $, $$, href, extAttrs, isExternal, fmt, compact, param, debounce, fill,
     langUrl, scriptUrl, projectUrl, showError, tabs, tabMarkup, panelAttrs, sortable, sortRows, pager,
     copyButton, codeBlock, bar, projectCard, useFont, lazyFonts, ready,
   };

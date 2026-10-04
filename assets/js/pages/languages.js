@@ -107,7 +107,7 @@
     const getters = { n: l => l.n, i: l => l.i, f: l => l.f, m: l => l.m, e: l => l.e, p: l => l.p };
     sortable($('#lang-table'), sortState, () => { state.page = 1; renderTable(); });
     const covChips = l => Object.entries(taxonomy.coverage).map(([k, v]) =>
-      `<span class="chip ${(l.t || '').includes(k) ? 'chip--' + v.color : 'chip--off'}" title="${esc(v.long)}">${esc(v.label)}</span>`).join('');
+      `<span class="chip ${(l.t || '').includes(k) ? 'chip--' + CG.tok(v.color) : 'chip--off'}" title="${esc(v.long)}">${esc(v.label)}</span>`).join('');
     function renderTable() {
       const rows = sortRows(current, sortState, getters);
       const slice = rows.slice((state.page - 1) * PER_PAGE, state.page * PER_PAGE);
@@ -117,7 +117,7 @@
           <td><a href="${langUrl(l.i)}">${esc(l.n)}</a></td><td><code>${esc(l.i)}</code></td>
           <td class="hide-sm">${esc(l.f || '–')}</td><td class="hide-sm">${esc(l.m || '–')}</td>
           <td>${(l.s || []).slice(0, 3).map(s => `<a class="chip" href="${scriptUrl(s)}">${esc(s)}</a>`).join(' ')}</td>
-          <td class="hide-sm">${end ? `<span class="chip"><span class="dot" style="background:${end.color}"></span>${esc(end.short)}</span>` : '–'}</td>
+          <td class="hide-sm">${end ? `<span class="chip"><span class="dot" style="background:${CG.tok(end.color)}"></span>${esc(end.short)}</span>` : '–'}</td>
           <td class="num hide-sm">${l.p ? compact(l.p) : '–'}</td>
           <td><div class="chips" style="flex-wrap:nowrap">${covChips(l)}</div></td></tr>`;
       }).join('') || `<tr><td colspan="8" class="empty">No languages match these filters.</td></tr>`;

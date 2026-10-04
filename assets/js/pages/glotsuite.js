@@ -5,7 +5,7 @@
     const g = site.glotsuite;
     $('#gs-hero').innerHTML = `
       <div><span class="kicker">${esc(g.kicker)}</span><h1>${esc(g.title)}</h1><p class="lead">${esc(g.lead)}</p>
-        <div class="btn-row" style="margin-top:24px"><a class="btn btn--pink" href="${g.home_url}"${extAttrs(g.home_url)}>${esc(g.home_label)} ↗</a>
+        <div class="btn-row" style="margin-top:24px"><a class="btn btn--pink" href="${href(g.home_url)}"${extAttrs(g.home_url)}>${esc(g.home_label)} ↗</a>
         <a class="btn" href="${href('pages/projects.html')}">All projects</a></div></div>
       <div class="card tilt-r" style="justify-self:center;max-width:360px"><img src="${href(g.logo)}" alt="GlotSuite logo" width="320" height="320" style="width:100%;height:auto"></div>`;
 
@@ -16,7 +16,7 @@
 
     $('#timeline-title').textContent = g.timeline_title;
     $('#timeline').innerHTML = [...projects].sort((a, b) => a.year - b.year).map(p => `
-      <div class="item" style="--dotc:var(--${p.color})"><a class="card" href="${projectUrl(p.id)}">
+      <div class="item" style="--dotc:var(--${CG.tok(p.color)})"><a class="card" href="${projectUrl(p.id)}">
         <span class="year">${esc(p.year)} · ${esc(p.venue)}</span><h3 style="margin-top:4px">${esc(p.name)}</h3><p class="small muted">${esc(p.tagline)}</p></a></div>`).join('');
 
     $('#adoption-title').textContent = g.adoption_title;
