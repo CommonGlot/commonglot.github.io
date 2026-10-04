@@ -19,9 +19,9 @@
     /* filters */
     const url = new URLSearchParams(location.search);
     const state = { q: url.get('q') || '', type: url.get('type') || '', dir: url.get('dir') || '', tier: url.get('tier') || '' };
-    $('#f-type').innerHTML = `<option value="">Any type</option>` + Object.keys(taxonomy.script_types).map(t => `<option value="${t}">${esc(t)}</option>`).join('');
+    $('#f-type').innerHTML = `<option value="">Any type</option>` + Object.keys(taxonomy.script_types).map(t => `<option value="${esc(t)}">${esc(t)}</option>`).join('');
     $('#f-dir').innerHTML = `<option value="">Any direction</option><option value="ltr">Left-to-right</option><option value="rtl">Right-to-left</option>`;
-    $('#f-tier').innerHTML = `<option value="">Any OCR tier</option>` + Object.entries(taxonomy.ocr_tiers).map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join('') + `<option value="none">Not benchmarked</option>`;
+    $('#f-tier').innerHTML = `<option value="">Any OCR tier</option>` + Object.entries(taxonomy.ocr_tiers).map(([k, v]) => `<option value="${esc(k)}">${esc(v.label)}</option>`).join('') + `<option value="none">Not benchmarked</option>`;
     $('#script-q').value = state.q; $('#f-type').value = state.type; $('#f-dir').value = state.dir; $('#f-tier').value = state.tier;
 
     const filtered = () => {
