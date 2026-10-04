@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - CommonGlot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <section class="hero" style="padding:3rem 0;">
+    <div class="container">
+      <h1>Projects</h1>
+      <p>Open-source tools, models, corpora, and benchmarks for multilingual NLP</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <!-- Filter Tabs -->
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="tool">Tools</button>
+        <button class="filter-tab" data-filter="corpus">Corpora</button>
+        <button class="filter-tab" data-filter="benchmark">Benchmarks</button>
+        <button class="filter-tab" data-filter="model">Models</button>
+      </div>
+
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" class="search-input" id="project-search" placeholder="Search projects...">
+      </div>
+
+      <!-- Project Cards -->
+      <div class="card-grid" id="projects-grid">
+        <div class="loading">Loading projects...</div>
+      </div>
+    </div>
+  </section>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let allProjects = [];
+
+    function renderProjects(filter, search) {
+      let filtered = allProjects;
+      if (filter && filter !== 'all') {
+        filtered = filtered.filter(p => p.category === filter);
+      }
+      if (search) {
+        filtered = filtered.filter(p =>
+          p.name.toLowerCase().includes(search) ||
+          p.tagline.toLowerCase().includes(search) ||
+          p.description.toLowerCase().includes(search)
+        );
+      }
+
+      const grid = document.getElementById('projects-grid');
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="loading">No projects match your filter.</div>';
+        return;
+      }
+
+      const base = getBasePath();
+      grid.innerHTML = filtered.map(p => `
+        <div class="card" data-category="${p.category}">
+          <div class="card-header">
+            <img src="${base}assets/img/${p.logo}" alt="${p.name}" class="card-logo">
+            <div>
+              <div class="card-title">${p.name}</div>
+              <div style="margin-top:4px;">
+                ${p.venue ? `<span class="badge">${p.venue} ${p.year}</span>` : `<span class="badge badge--outline">${p.year}</span>`}
+                <span class="badge badge--brown">${p.category}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-description">${p.description}</div>
+          <div class="card-links">
+            ${p.paperUrl ? `<a href="${p.paperUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('paper')} Paper</a>` : ''}
+            ${p.codeUrl ? `<a href="${p.codeUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('code')} Code</a>` : ''}
+            ${p.demoUrl ? `<a href="${p.demoUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('demo')} Demo</a>` : ''}
+            ${p.modelUrl ? `<a href="${p.modelUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('model')} Model</a>` : ''}
+            ${p.dataUrl ? `<a href="${p.dataUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('data')} Data</a>` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const base = getBasePath();
+      try {
+        allProjects = await loadJSON(base + 'data/projects.json');
+        renderProjects('all', '');
+
+        let currentFilter = 'all';
+        setupFilterTabs('filter-tabs', filter => {
+          currentFilter = filter;
+          renderProjects(currentFilter, document.getElementById('project-search').value.toLowerCase().trim());
+        });
+
+        setupSearch('project-search', search => {
+          renderProjects(currentFilter, search);
+        });
+      } catch (e) {
+        console.error('Failed to load projects:', e);
+      }
+    });
+  </script>
+</body>
+</html>

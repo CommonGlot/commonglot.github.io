@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="882 98 136 227" width="136" height="227">
+
+<polygon points="950.0,310.0 956.8,302.5 963.1,295.2 968.9,287.9 974.2,280.8 979.1,273.7 983.6,266.7 987.5,259.8 991.0,253.0 994.0,246.3 996.6,239.7 998.6,233.2 1000.2,226.8 1001.4,220.4 1002.1,214.2 1002.3,208.0 1002.0,202.0 984.0,158.0 916.0,158.0 898.0,202.0 897.7,208.0 897.9,214.2 898.6,220.4 899.8,226.8 901.4,233.2 903.4,239.7 906.0,246.3 909.0,253.0 912.5,259.8 916.4,266.7 920.9,273.7 925.8,280.8 931.1,287.9 936.9,295.2 943.2,302.5 950.0,310.0" fill="#ffffff" stroke="#1f2533" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="950.0,310.0 950.0,232.0" fill="none" stroke="#1f2533" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse cx="950.0" cy="222.0" rx="11.0" ry="11.0" fill="#ffffff" stroke="#dc6e3b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="910" y="114" width="80" height="40" rx="10.0" fill="none" stroke="#dc6e3b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<polyline points="910.0,134.0 990.0,134.0" fill="none" stroke="#dc6e3b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
