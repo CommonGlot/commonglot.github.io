@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - CommonGlot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <section class="hero" style="padding:3rem 0;">
+    <div class="container">
+      <h1>About</h1>
+      <p>Our mission, team, and how to contribute</p>
+    </div>
+  </section>
+
+  <!-- Mission -->
+  <section class="section">
+    <div class="container">
+      <div class="content-block">
+        <h2>Our Mission</h2>
+        <p>The CommonGlot Foundation exists to ensure that advances in natural language processing benefit <strong>every language community</strong>, not just the few hundred languages that dominate the digital world.</p>
+        <p>We build and maintain <strong>GlotSuite</strong> &mdash; a growing collection of open-source tools, models, corpora, and benchmarks that together provide the infrastructure needed to bring NLP technology to thousands of underserved languages. From language identification and script detection to web-scale corpus curation and multilingual modeling, our tools form a complete pipeline for multilingual research.</p>
+        <p>All of our work is freely available under open licenses. We believe that language technology should be a public good, accessible to researchers, educators, and communities everywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="section" style="background:var(--card-bg);">
+    <div class="container">
+      <div class="section-title">
+        <h2>Team &amp; Contributors</h2>
+        <p>Researchers driving the GlotSuite initiative</p>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">AHK</div>
+          <h3>Amir Hossein Kargaran</h3>
+          <p>CIS-LMU Munich</p>
+          <p style="margin-top:0.5rem;"><a href="https://github.com/kargaranamir" target="_blank" rel="noopener">GitHub</a></p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">AI</div>
+          <h3>Ayyoob Imani</h3>
+          <p>CIS-LMU Munich</p>
+          <p style="margin-top:0.5rem;"><a href="https://github.com/ayyoobimani" target="_blank" rel="noopener">GitHub</a></p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">FY</div>
+          <h3>Fran&ccedil;ois Yvon</h3>
+          <p>Sorbonne Universit&eacute;</p>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">HS</div>
+          <h3>Hinrich Sch&uuml;tze</h3>
+          <p>CIS-LMU Munich</p>
+        </div>
+      </div>
+      <p class="text-center mt-3" style="color:var(--text-secondary);">And many more contributors across the open-source community.</p>
+    </div>
+  </section>
+
+  <!-- How to Contribute -->
+  <section class="section">
+    <div class="container">
+      <div class="content-block">
+        <h2>How to Contribute</h2>
+        <p>We welcome contributions from researchers, engineers, linguists, and language community members. Here are some ways to get involved:</p>
+        <ul class="impact-list mt-2">
+          <li><strong>Report issues</strong> &mdash; Found a bug or misclassification? Open an issue on the relevant GitHub repository.</li>
+          <li><strong>Contribute data</strong> &mdash; Help expand coverage by contributing text data for underrepresented languages.</li>
+          <li><strong>Improve models</strong> &mdash; Submit pull requests to improve language identification, script detection, or other tools.</li>
+          <li><strong>Evaluate and test</strong> &mdash; Help benchmark our tools on your language and report results.</li>
+          <li><strong>Spread the word</strong> &mdash; Share our tools with researchers and communities who could benefit.</li>
+          <li><strong>Cite our work</strong> &mdash; If you use GlotSuite tools in your research, please cite the relevant papers.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Repositories -->
+  <section class="section" style="background:var(--card-bg);">
+    <div class="container">
+      <div class="section-title">
+        <h2>Repositories</h2>
+        <p>All code and data is open source</p>
+      </div>
+      <div class="card-grid" id="repos-grid">
+        <div class="loading">Loading repositories...</div>
+      </div>
+      <div class="text-center mt-3">
+        <a href="https://github.com/cisnlp" class="btn btn-primary" target="_blank" rel="noopener">View All on GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const base = getBasePath();
+      try {
+        const projects = await loadJSON(base + 'data/projects.json');
+        document.getElementById('repos-grid').innerHTML = projects
+          .filter(p => p.codeUrl)
+          .map(p => `
+            <div class="card">
+              <div class="card-header">
+                <img src="${base}assets/img/${p.logo}" alt="${p.name}" class="card-logo">
+                <div>
+                  <div class="card-title">${p.name}</div>
+                  ${p.venue ? `<span class="badge">${p.venue} ${p.year}</span>` : ''}
+                </div>
+              </div>
+              <div class="card-tagline">${p.tagline}</div>
+              <div class="card-links">
+                <a href="${p.codeUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('code')} GitHub</a>
+                ${p.dataUrl ? `<a href="${p.dataUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('data')} Data</a>` : ''}
+                ${p.modelUrl ? `<a href="${p.modelUrl}" class="card-link" target="_blank" rel="noopener">${linkIcon('model')} Model</a>` : ''}
+              </div>
+            </div>
+          `).join('');
+      } catch (e) {
+        console.error('Failed to load repos:', e);
+      }
+    });
+  </script>
+</body>
+</html>
