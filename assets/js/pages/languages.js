@@ -24,13 +24,13 @@
     };
     const areas = Object.keys(taxonomy.macroareas);
     $('#f-area').innerHTML = `<option value="">All macroareas</option>` + areas.map(a => `<option>${esc(a)}</option>`).join('');
-    $('#f-end').innerHTML = `<option value="">Any status</option>` + Object.entries(taxonomy.endangerment).map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join('');
+    $('#f-end').innerHTML = `<option value="">Any status</option>` + Object.entries(taxonomy.endangerment).map(([k, v]) => `<option value="${esc(k)}">${esc(v.label)}</option>`).join('');
     const scriptCounts = {};
     languages.forEach(l => (l.s || []).forEach(s => { scriptCounts[s] = (scriptCounts[s] || 0) + 1; }));
     $('#f-script').innerHTML = `<option value="">Any script</option>` + Object.entries(scriptCounts).sort((a, b) => b[1] - a[1])
-      .map(([c, n]) => `<option value="${c}">${esc(scriptName[c] || c)} (${fmt(n)})</option>`).join('');
+      .map(([c, n]) => `<option value="${esc(c)}">${esc(scriptName[c] || c)} (${fmt(n)})</option>`).join('');
     $('#f-tech').innerHTML = Object.entries(taxonomy.coverage).map(([k, v]) => `
-      <label class="chip toggle-chip"><input type="checkbox" value="${k}"${state.tech.has(k) ? ' checked' : ''}>${esc(v.label)}</label>`).join('') +
+      <label class="chip toggle-chip"><input type="checkbox" value="${esc(k)}"${state.tech.has(k) ? ' checked' : ''}>${esc(v.label)}</label>`).join('') +
       `<label class="chip toggle-chip"><input type="checkbox" value="-"${state.tech.has('-') ? ' checked' : ''}>No GlotSuite model</label>`;
     $('#lang-q').value = state.q; $('#f-area').value = state.area; $('#f-end').value = state.end; $('#f-script').value = state.script;
 
@@ -63,7 +63,7 @@
       { id: 'families', label: T.families, accent: 'blue' }, { id: 'coverage', label: T.coverage, accent: 'green' },
     ]) + `
       <div ${panelAttrs('lg', 'map')} class="tab-panel">
-        <div class="map-controls"><label><span class="visually-hidden">Colour by</span><select class="select" id="color-by">${Object.entries(P.color_by).map(([k, v]) => `<option value="${k}">${esc(v)}</option>`).join('')}</select></label></div>
+        <div class="map-controls"><label><span class="visually-hidden">Colour by</span><select class="select" id="color-by">${Object.entries(P.color_by).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join('')}</select></label></div>
         <div class="map" id="lang-map" role="region" aria-label="Map of languages"></div>
         <div class="legend" id="lang-legend"></div>
       </div>
