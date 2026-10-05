@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 392" role="img" aria-labelledby="t">
   <title id="t">CommonGlot</title>
-  <style>.ink{fill:#16130f}@media (prefers-color-scheme:dark){.ink{fill:#f3ead8}}</style>
+  <style>.ink{fill:#0a0a0a}.soft{fill:#6b6b6b}@media (prefers-color-scheme:dark){.ink{fill:#ededed}.soft{fill:#8f8f8f}}</style>
   <!-- hard shadow -->
   <path d="M66 312 L56 382 L132 312 Z" fill="#16130f"/>
   <rect x="22" y="22" width="300" height="300" rx="38" fill="#16130f"/>
@@ -22,8 +22,8 @@
     <path d="M190 202 Q196 244 229 244 Q262 244 268 202" stroke="#16130f"/>
   </g>
   <circle cx="229" cy="270" r="9" fill="#16130f"/>
-  <g font-family="'Bricolage Grotesque', 'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="800" letter-spacing="-4">
+  <g font-family="Inter, 'Segoe UI', system-ui, -apple-system, sans-serif" font-weight="700" letter-spacing="-6">
     <text class="ink" x="372" y="176" font-size="128">Common</text>
-    <text x="372" y="300" font-size="128" fill="#ff48b0" stroke="#16130f" stroke-width="3" paint-order="stroke">Glot</text>
+    <text class="soft" x="372" y="300" font-size="128">Glot</text>
   </g>
 </svg>

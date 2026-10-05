@@ -16,7 +16,7 @@
       <div class="breadcrumbs"><a href="${href('projects/')}">Projects</a> / ${esc(p.name)}</div>
       <div class="booklet-head">
         <div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">
-          <img src="${href('assets/img/' + p.logo)}" alt="" width="96" height="96" style="width:96px;height:96px;background:#fffaf0;border:2.5px solid var(--line-c);border-radius:20px;padding:8px;box-shadow:5px 5px 0 var(--shadow)">
+          <img src="${href('assets/img/' + p.logo)}" alt="" width="96" height="96" class="logo-tile logo-tile--lg">
           <div><span class="kicker">${esc(taxonomy.project_kinds[p.kind])} · ${esc(p.venue)}</span><h1 style="margin:0">${esc(p.name)}</h1></div>
         </div>
       </div>
@@ -49,7 +49,7 @@
           ${stage ? `<div><dt>Stage</dt><dd>${esc(stage.label)}</dd></div>` : ''}
           <div><dt>Links</dt><dd class="chips">${Object.entries(p.links).map(([k, u]) => `<a class="chip" href="${href(u)}"${extAttrs(u)}>${esc(LINK_LABELS[k] || k)}</a>`).join('')}</dd></div>
         </dl></div>
-        ${p.logoFull && p.logoFull !== p.logo ? `<div class="card" style="padding:14px;background:#fffaf0"><img src="${href('assets/img/' + p.logoFull)}" alt="${esc(p.name)} logo" loading="lazy" width="300" height="300" style="display:block;width:100%;height:auto"></div>` : ''}
+        ${p.logoFull && p.logoFull !== p.logo ? `<div class="card" style="padding:14px;background:#fff"><img src="${href('assets/img/' + p.logoFull)}" alt="${esc(p.name)} logo" loading="lazy" width="300" height="300" style="display:block;width:100%;height:auto"></div>` : ''}
         ${coverage}
       </aside>
       <div id="pj-tabs">

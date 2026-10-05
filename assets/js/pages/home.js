@@ -15,13 +15,10 @@
 
     // Hero tiles: one glyph from each script's sample phrase.
     const byCode = Object.fromEntries(scripts.map(s => [s.code, s]));
-    const colors = ['pink', 'yellow', 'blue', 'green', 'orange', 'card'];
-    const spots = [[4, 6, -6, 34], [44, 0, 5, 30], [64, 40, -3, 32], [8, 50, 4, 30], [36, 70, -5, 28], [70, 74, 7, 24]];
-    $('#hero-art').innerHTML = h.hero_scripts.map((code, i) => {
+    $('#hero-art').innerHTML = h.hero_scripts.map(code => {
       const s = byCode[code]; if (!s) return '';
-      const [x, y, r, size] = spots[i % spots.length];
       const glyph = [...(s.sample || s.specimen || s.code)].find(c => /\p{L}/u.test(c));
-      return `<a class="tile" href="${scriptUrl(code)}" title="${esc(s.name)}" tabindex="-1" style="left:${x}%;top:${y}%;width:${size}%;height:${size}%;transform:rotate(${r}deg);background:var(--${colors[i % colors.length]});${colors[i % colors.length] === 'blue' ? 'color:var(--on-blue);' : ''}">${esc(glyph)}</a>`;
+      return `<a class="tile" href="${scriptUrl(code)}" title="${esc(s.name)}" tabindex="-1"${s.direction === 'rtl' ? ' dir="rtl"' : ''}>${esc(glyph)}</a>`;
     }).join('');
 
     /* stats */
@@ -78,7 +75,7 @@
     const g = site.glotsuite;
     $('#home-glotsuite').innerHTML = `<div class="card card--yellow callout">
       <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
-        <img src="${href(g.logo)}" alt="GlotSuite" width="120" height="120" style="width:120px;height:120px;background:#fffaf0;border:2.5px solid var(--line-c);border-radius:18px;padding:10px">
+        <img src="${href(g.logo)}" alt="GlotSuite" width="120" height="120" class="logo-tile logo-tile--xl">
         <div style="flex:1;min-width:220px"><h2>${esc(g.title)}</h2><p>${esc(g.lead)}</p></div>
       </div>
       <div class="btn-row"><a class="btn" href="${href('glotsuite/')}">How it fits →</a><a class="btn btn--pink" href="${href(g.home_url)}"${extAttrs(g.home_url)}>${esc(g.home_label)} ↗</a></div>
