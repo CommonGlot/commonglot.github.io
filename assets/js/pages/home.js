@@ -21,6 +21,12 @@
       return `<a class="tile" href="${scriptUrl(code)}" title="${esc(s.name)}" tabindex="-1"${s.direction === 'rtl' ? ' dir="rtl"' : ''}>${esc(glyph)}</a>`;
     }).join('');
 
+    /* trust strip: research partners and publication venues */
+    const t = h.trust;
+    $('#trust').innerHTML = `<div>${esc(t.label)}</div>` +
+      site.about.affiliations.map(a => `<a class="trust-cell" href="${CG.href(a.url)}" target="_blank" rel="noopener">${esc(a.name)}</a>`).join('') +
+      `<div class="trust-cell">${esc(t.venues_title)}<small>${esc(t.venues)}</small></div>`;
+
     /* stats */
     $('#numbers-title').textContent = h.numbers_title;
     Blocks.stats($('#home-stats'), h.numbers, stats);

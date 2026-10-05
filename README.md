@@ -47,7 +47,7 @@ The only hand-curated inputs are in `tools/curated/scripts_meta.json` (script ty
 ## Code layout
 
 ```
-assets/css/style.css      design system: monochrome tokens, light/dark, components, breakpoints
+assets/css/style.css      design system: colour tokens, light/dark, components, breakpoints
 assets/js/main.js         shared runtime: data loading, header/footer, tabs, tables, helpers
 assets/js/blocks.js       shared blocks: Leaflet maps, deliverables tabs, stats
 assets/js/pages/*.js      one script per page
@@ -93,4 +93,4 @@ Serving the repository root directly also works for quick edits, except the gene
 
 ## Credits
 
-Monochrome design set in [Inter](https://rsms.me/inter/) and [JetBrains Mono](https://www.jetbrains.com/lp/mono/); colour is reserved for the logo and for data (maps, endangerment). Maps use [Leaflet](https://leafletjs.com) with CARTO/OpenStreetMap tiles. Language metadata © [Glottolog](https://glottolog.org) (CC BY 4.0).
+Design: navy ink on a soft blue-grey page with one blue accent and pill buttons, set in [Source Sans 3](https://fonts.google.com/specimen/Source+Sans+3) and [Source Code Pro](https://fonts.google.com/specimen/Source+Code+Pro). The hero pattern uses letters from many scripts. Maps use [Leaflet](https://leafletjs.com) with CARTO/OpenStreetMap tiles. Language metadata © [Glottolog](https://glottolog.org) (CC BY 4.0).

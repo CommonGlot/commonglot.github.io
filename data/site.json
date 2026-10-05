@@ -137,7 +137,12 @@
       "Cher",
       "Hang",
       "Tibt"
-    ]
+    ],
+    "trust": {
+      "label": "Built by researchers at",
+      "venues_title": "Published at",
+      "venues": "EMNLP · ACL · NeurIPS · WWW · LREC-COLING"
+    }
   },
   "mission": {
     "kicker": "Our mission",
@@ -742,7 +747,7 @@
     "og_image": "assets/img/og-image.png",
     "og_image_alt": "CommonGlot logo: a speech bubble of four tiles with letters from Latin, Devanagari and Arabic scripts",
     "twitter_site": "",
-    "theme_color": "#fafafa",
+    "theme_color": "#f6f8fb",
     "verification": {
       "google": "",
       "bing": ""
