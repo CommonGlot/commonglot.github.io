@@ -13,17 +13,21 @@
       <p class="lead">${esc(h.lead)}</p>
       <div class="btn-row">${h.ctas.map(c => `<a class="btn${c.style !== 'plain' ? ' btn--' + CG.tok(c.style) : ''}" href="${href(c.href)}">${esc(c.label)}</a>`).join('')}</div>`;
 
-    // Hero tiles: one glyph from each script's sample phrase.
+    // Hero tiles: one letter from each of a few scripts.
     const byCode = Object.fromEntries(scripts.map(s => [s.code, s]));
-    // A different set of scripts on every visit, drawn from those with sample text (they render reliably).
-    const pool = scripts.filter(x => x.sample && !x.special).map(x => x.code);
+    // A different set of scripts and letters on every visit, drawn from every script with a web font,
+    // so the glyph renders even where the visitor has no local font for it.
+    const n = h.hero_count || 6;
+    const letters = s => [...(s.specimen || s.sample || '')].filter(c => /\p{L}/u.test(c));
+    const pool = scripts.filter(x => !x.special && x.font && letters(x).length).map(x => x.code);
     for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
-    const heroCodes = pool.length >= (h.hero_count || 6) ? pool.slice(0, h.hero_count || 6) : h.hero_scripts;
+    const heroCodes = pool.length >= n ? pool.slice(0, n) : h.hero_scripts;
     $('#hero-art').innerHTML = heroCodes.map(code => {
       const s = byCode[code]; if (!s) return '';
-      const glyph = [...(s.sample || s.specimen || s.code)].find(c => /\p{L}/u.test(c));
-      return `<a class="tile" href="${scriptUrl(code)}" title="${esc(s.name)}" tabindex="-1"${s.direction === 'rtl' ? ' dir="rtl"' : ''}>${esc(glyph)}</a>`;
+      const ls = letters(s), glyph = ls.length ? ls[Math.floor(Math.random() * ls.length)] : s.code;
+      return `<a class="tile" href="${scriptUrl(code)}" title="${esc(s.name)}" tabindex="-1"${s.font ? ` data-font="${esc(s.font)}"` : ''}${s.direction === 'rtl' ? ' dir="rtl"' : ''}>${esc(glyph)}</a>`;
     }).join('');
+    CG.lazyFonts($('#hero-art'));
 
     /* trust strip: research partners and publication venues */
     const t = h.trust;
