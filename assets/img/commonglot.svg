@@ -11,7 +11,7 @@
   <path d="M58 312 L44 370 L120 312" fill="none" stroke="#16130f" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
   <!-- four tiles: Latin C, Latin G, Devanagari-style stroke, Arabic-style stroke -->
   <g stroke="#16130f" stroke-width="5">
-    <rect x="30" y="30" width="122" height="122" rx="18" fill="#ff48b0"/>
+    <rect x="30" y="30" width="122" height="122" rx="18" fill="#dc6e3b"/>
     <rect x="168" y="30" width="122" height="122" rx="18" fill="#ffe14d"/>
     <rect x="30" y="168" width="122" height="122" rx="18" fill="#0078bf"/>
     <rect x="168" y="168" width="122" height="122" rx="18" fill="#00a95c"/>
