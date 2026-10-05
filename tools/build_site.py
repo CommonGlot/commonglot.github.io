@@ -184,13 +184,14 @@ class Site:
     def chrome(self, depth, page_key):
         """Static header + footer markup, identical to what main.js renders."""
         b, s = self.site["brand"], self.site
+        tag = f'<small class="brand-tag">{esc(b["status"])}</small>' if b.get("status") else ""
         r = lambda h: h if re.match(r"^(https?:|#)", h) else self.rel(depth, h)
         ext = lambda h: ' target="_blank" rel="noopener"' if h.startswith("http") else ""
         current = ' aria-current="page"'
         nav = "".join(f'<li><a href="{esc(r(n["href"]))}"{current if n["key"] == page_key else ""}>{esc(n["label"])}</a></li>' for n in s["nav"])
         header = (f'<a class="skip-link" href="#main">Skip to content</a>'
                   f'<header class="site-header"><div class="container header-inner">'
-                  f'<a class="brand" href="{esc(r(""))}"><img src="{esc(r(b["logo"]))}" alt="" width="34" height="40"><span>{esc(b["name"])}</span></a>'
+                  f'<a class="brand" href="{esc(r(""))}"><img src="{esc(r(b["logo"]))}" alt="" width="34" height="40"><span>{esc(b["name"])}</span>{tag}</a>'
                   f'<nav class="nav" id="site-nav" aria-label="Main"><ul>{nav}</ul></nav>'
                   f'<div class="header-tools"><button class="icon-btn" id="theme-btn" type="button" aria-label="Switch theme">☾</button>'
                   f'<button class="icon-btn menu-btn" id="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu"><span></span></button></div>'
@@ -199,7 +200,7 @@ class Site:
         cols = "".join(f'<div><h2 class="footer-h">{esc(c["title"])}</h2><ul>' + "".join(f'<li><a href="{esc(r(l["href"]))}"{ext(l["href"])}>{esc(l["label"])}</a></li>' for l in c["links"]) + "</ul></div>" for c in f["columns"])
         legal = "".join(f' · <a href="{esc(r(l["href"]))}">{esc(l["label"])}</a>' for l in f.get("legal_links", []))
         footer = (f'<footer class="site-footer"><div class="container"><div class="footer-grid">'
-                  f'<div><div class="footer-brand"><img src="{esc(r(b["logo"]))}" alt="" width="36" height="42">{esc(b["name"])}</div><p class="footer-blurb">{esc(f["blurb"])}</p></div>'
+                  f'<div><div class="footer-brand"><img src="{esc(r(b["logo"]))}" alt="" width="36" height="42">{esc(b["name"])}{tag}</div><p class="footer-blurb">{esc(f["blurb"])}</p></div>'
                   f'{cols}</div><div class="footer-bottom"><span>© {datetime.date.today().year} {esc(b.get("legal_name", b["name"]))}{legal}</span><span>{esc(f["legal"])}</span></div></div></footer>')
         return header, footer
 

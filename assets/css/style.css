@@ -121,6 +121,13 @@ td code { white-space: nowrap; }
 .header-inner { display: flex; align-items: center; gap: 16px; height: var(--header-h); }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 650; font-size: 1.05rem; letter-spacing: -0.02em; flex-shrink: 0; }
 .brand img { width: 28px; height: 33px; display: block; }
+/* Small "Non-profit" label next to the name in the header and footer. */
+.brand-tag {
+  font-size: .66rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; line-height: 1;
+  color: var(--ink-soft); border: 1px solid var(--border-strong); border-radius: 999px; padding: 3px 7px 2px; margin-left: -2px;
+}
+@media (max-width: 380px) { .brand .brand-tag { display: none; } }
+.site-footer .brand-tag { color: color-mix(in srgb, var(--f-fg) 78%, transparent); border-color: color-mix(in srgb, var(--f-fg) 30%, transparent); }
 .nav { margin-left: auto; }
 .nav ul { list-style: none; display: flex; gap: 2px; margin: 0; padding: 0; }
 .nav a {

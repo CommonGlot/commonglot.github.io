@@ -91,7 +91,7 @@ const CG = (() => {
     header.className = 'site-header';
     header.innerHTML = `
       <div class="container header-inner">
-        <a class="brand" href="${href('')}"><img src="${href(site.brand.logo)}" alt="" width="34" height="40"><span>${esc(site.brand.name)}</span></a>
+        <a class="brand" href="${href('')}"><img src="${href(site.brand.logo)}" alt="" width="34" height="40"><span>${esc(site.brand.name)}</span>${site.brand.status ? `<small class="brand-tag">${esc(site.brand.status)}</small>` : ''}</a>
         <nav class="nav" id="site-nav" aria-label="Main">
           <ul>${site.nav.map(n => `<li><a href="${href(n.href)}"${n.key === page ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('')}</ul>
         </nav>
@@ -133,7 +133,7 @@ const CG = (() => {
       <div class="container">
         <div class="footer-grid">
           <div>
-            <div class="footer-brand"><img src="${href(site.brand.logo)}" alt="" width="36" height="42">${esc(site.brand.name)}</div>
+            <div class="footer-brand"><img src="${href(site.brand.logo)}" alt="" width="36" height="42">${esc(site.brand.name)}${site.brand.status ? `<small class="brand-tag">${esc(site.brand.status)}</small>` : ''}</div>
             <p class="footer-blurb">${esc(f.blurb)}</p>
           </div>
           ${f.columns.map(c => `<div><h2 class="footer-h">${esc(c.title)}</h2><ul>${c.links.map(l => `<li><a href="${href(l.href)}"${extAttrs(l.href)}>${esc(l.label)}</a></li>`).join('')}</ul></div>`).join('')}
