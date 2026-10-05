@@ -1,14 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="466 643 206 236" width="206" height="236">
-
-<rect x="508" y="658" width="150" height="190" rx="32.0" fill="#ffffff" stroke="#c9c3c1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="482" y="674" width="150" height="190" rx="32.0" fill="#ffffff" stroke="#1f2533" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="500" y="692" width="114" height="20" rx="5.0" fill="#dc6e3b" stroke="#dc6e3b" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
-<rect x="500" y="726" width="50" height="44" rx="11.0" fill="none" stroke="#dc6e3b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="562.0,728.0 614.0,728.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="562.0,742.0 614.0,742.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="562.0,756.0 614.0,756.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="562.0,770.0 614.0,770.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="500.0,788.0 614.0,788.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="500.0,804.0 614.0,804.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="500.0,820.0 584.0,820.0" fill="none" stroke="#1f2533" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="206" height="236" viewBox="466 643 206 236"><rect width="150" height="190" x="508" y="658" fill="#fff" stroke="#c9c3c1" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" rx="32"/><rect width="150" height="190" x="482" y="674" fill="#fff" stroke="#1f2533" stroke-linecap="round" stroke-linejoin="round" stroke-width="7" rx="32"/><rect width="114" height="20" x="500" y="692" fill="#dc6e3b" stroke="#dc6e3b" stroke-linecap="round" stroke-linejoin="round" rx="5"/><rect width="50" height="44" x="500" y="726" fill="none" stroke="#dc6e3b" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" rx="11"/><path fill="none" stroke="#1f2533" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" d="M562 728h52m-52 14h52m-52 14h52m-52 14h52m-114 18h114m-114 16h114m-114 16h84"/></svg>

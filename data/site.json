@@ -5,48 +5,49 @@
     "logo": "assets/img/commonglot-mark.svg",
     "github": "https://github.com/CommonGlot",
     "description": "CommonGlot is the open home of GlotSuite: language identification, script detection, web corpora, models and benchmarks for the world's under-served languages, plus a public directory of what technology exists for each language and script.",
-    "logo_full": "assets/img/commonglot.svg"
+    "logo_full": "assets/img/commonglot.svg",
+    "legal_name": "CommonGlot Foundation"
   },
   "nav": [
     {
       "key": "home",
       "label": "Home",
-      "href": "index.html"
+      "href": ""
     },
     {
       "key": "mission",
       "label": "Mission",
-      "href": "pages/mission.html"
+      "href": "mission/"
     },
     {
       "key": "projects",
       "label": "Projects",
-      "href": "pages/projects.html"
+      "href": "projects/"
     },
     {
       "key": "languages",
       "label": "Languages",
-      "href": "pages/languages.html"
+      "href": "languages/"
     },
     {
       "key": "scripts",
       "label": "Scripts",
-      "href": "pages/scripts.html"
+      "href": "scripts/"
     },
     {
       "key": "glotsuite",
       "label": "GlotSuite",
-      "href": "pages/glotsuite.html"
+      "href": "glotsuite/"
     },
     {
       "key": "data",
       "label": "Open data",
-      "href": "pages/data.html"
+      "href": "open-data/"
     },
     {
       "key": "about",
       "label": "About",
-      "href": "pages/about.html"
+      "href": "about/"
     }
   ],
   "home": {
@@ -60,17 +61,17 @@
     "ctas": [
       {
         "label": "Browse languages",
-        "href": "pages/languages.html",
+        "href": "languages/",
         "style": "pink"
       },
       {
         "label": "Explore GlotSuite",
-        "href": "pages/glotsuite.html",
+        "href": "glotsuite/",
         "style": "yellow"
       },
       {
         "label": "Get the data",
-        "href": "pages/data.html",
+        "href": "open-data/",
         "style": "plain"
       }
     ],
@@ -126,7 +127,7 @@
       "text": "Corrections, data and evaluations from language communities are the fastest way to improve coverage. Open an issue or send a pull request — every booklet links to its sources.",
       "button": {
         "label": "How to contribute",
-        "href": "pages/about.html#contribute"
+        "href": "about/#contribute"
       }
     },
     "hero_scripts": [
@@ -280,19 +281,20 @@
         "links": [
           {
             "label": "Languages",
-            "href": "pages/languages.html"
+            "href": "languages/"
           },
           {
             "label": "Scripts",
-            "href": "pages/scripts.html"
+            "href": "scripts/"
           },
           {
             "label": "Open data",
-            "href": "pages/data.html"
+            "href": "open-data/"
           }
         ]
       }
-    ]
+    ],
+    "pillars_title": "Five pillars"
   },
   "glotsuite": {
     "kicker": "The research suite",
@@ -406,7 +408,8 @@
     ],
     "rebuild_title": "Rebuild from source",
     "rebuild_code": "git clone --depth 1 https://github.com/glottolog/glottolog-cldf src/glottolog-cldf\nfor r in GlotScript GlotLID GlotWeb GlotOCR-bench; do\n  git clone --depth 1 https://github.com/cisnlp/$r src/$r\ndone\npip install pycountry\npython3 tools/build_data.py --sources src",
-    "sources_title": "Sources & licences"
+    "sources_title": "Sources & licences",
+    "files_title": "Files"
   },
   "sources": [
     {
@@ -449,7 +452,7 @@
   "about": {
     "kicker": "About",
     "title": "Who we are",
-    "lead": "CommonGlot grew out of the GlotSuite research line at the Center for Information and Language Processing (CIS), LMU Munich, in collaboration with Sorbonne Université and CNRS. It brings those releases under one open roof.",
+    "lead": "The CommonGlot Foundation is an open, non-commercial initiative that grew out of the GlotSuite research line at the Center for Information and Language Processing (CIS), LMU Munich, in collaboration with Sorbonne Université and CNRS. Like Common Crawl does for web data, it aims to keep language technology for every language open and freely available.",
     "team_title": "People behind GlotSuite",
     "team": [
       {
@@ -528,8 +531,8 @@
     "faq_title": "Questions",
     "faq": [
       {
-        "q": "Is CommonGlot a company?",
-        "a": "No. It is an open umbrella for research releases and community work on language technology for minority languages."
+        "q": "What is the CommonGlot Foundation?",
+        "a": "An open, non-commercial initiative — inspired by Common Crawl — that develops and maintains free language technology and data for the world's under-served languages."
       },
       {
         "q": "Where does the directory data come from?",
@@ -553,15 +556,15 @@
         "links": [
           {
             "label": "Languages",
-            "href": "pages/languages.html"
+            "href": "languages/"
           },
           {
             "label": "Scripts",
-            "href": "pages/scripts.html"
+            "href": "scripts/"
           },
           {
             "label": "Open data",
-            "href": "pages/data.html"
+            "href": "open-data/"
           }
         ]
       },
@@ -570,11 +573,11 @@
         "links": [
           {
             "label": "All projects",
-            "href": "pages/projects.html"
+            "href": "projects/"
           },
           {
             "label": "Pipeline",
-            "href": "pages/glotsuite.html"
+            "href": "glotsuite/"
           },
           {
             "label": "GlotSuite homepage",
@@ -604,11 +607,11 @@
     "legal_links": [
       {
         "label": "Privacy Policy",
-        "href": "pages/privacy.html"
+        "href": "privacy/"
       },
       {
         "label": "Terms of Use",
-        "href": "pages/terms.html"
+        "href": "terms/"
       }
     ]
   },
@@ -650,7 +653,8 @@
       "coverage": "Colour by GlotLID coverage"
     },
     "coverage_text": "Share of languages in each group that GlotLID can identify. Gaps show where identification — and therefore corpus collection — is still missing.",
-    "families_text": "The largest language families in the current selection, with how many of their languages GlotLID covers."
+    "families_text": "The largest language families in the current selection, with how many of their languages GlotLID covers.",
+    "explore_title": "Explore the directory"
   },
   "scripts_page": {
     "kicker": "The directory · scripts",
@@ -684,7 +688,8 @@
       "ocr": "OCR leaderboard"
     },
     "ocr_text": "Average Acc@5 per model on GlotOCR Bench (plain rendering). High = Latin; mid and low tiers cover the remaining scripts.",
-    "ocr_source": "https://cisnlp.github.io/GlotOCR-bench/"
+    "ocr_source": "https://cisnlp.github.io/GlotOCR-bench/",
+    "explore_title": "Explore the scripts"
   },
   "booklet": {
     "language_tech_title": "Technology",
@@ -699,17 +704,17 @@
     "links": [
       {
         "label": "Home",
-        "href": "index.html",
+        "href": "",
         "style": "yellow"
       },
       {
         "label": "Languages",
-        "href": "pages/languages.html",
+        "href": "languages/",
         "style": "pink"
       },
       {
         "label": "Scripts",
-        "href": "pages/scripts.html",
+        "href": "scripts/",
         "style": "plain"
       }
     ]
@@ -726,5 +731,145 @@
       "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
     },
     "data_attribution": "Data: <a href=\"https://glottolog.org\">Glottolog</a>"
+  },
+  "seo": {
+    "_comment": "Used by tools/build_site.py to write <head> metadata, JSON-LD, sitemap.xml, robots.txt and site.webmanifest. Put Search Console / Bing verification tokens in 'verification' to emit their meta tags.",
+    "site_url": "https://commonglot.github.io",
+    "site_name": "CommonGlot",
+    "locale": "en_US",
+    "language": "en",
+    "author": "CommonGlot Foundation",
+    "og_image": "assets/img/og-image.png",
+    "og_image_alt": "CommonGlot logo: a speech bubble of four tiles with letters from Latin, Devanagari and Arabic scripts",
+    "twitter_site": "",
+    "theme_color": "#f6efe2",
+    "verification": {
+      "google": "",
+      "bing": ""
+    },
+    "organization": {
+      "name": "CommonGlot Foundation",
+      "url": "https://commonglot.github.io/",
+      "logo": "assets/img/icon-512.png",
+      "description": "The CommonGlot Foundation is an open, non-commercial initiative building language technology for the world's under-served languages: identification, corpora, models, benchmarks and a public directory of languages and scripts.",
+      "contact_url": "https://github.com/CommonGlot/commonglot.github.io/issues",
+      "same_as": [
+        "https://github.com/CommonGlot",
+        "https://github.com/cisnlp",
+        "https://huggingface.co/cis-lmu"
+      ],
+      "alternate_name": "CommonGlot"
+    }
+  },
+  "pages": [
+    {
+      "path": "",
+      "source": "index.html",
+      "type": "WebPage",
+      "title": "CommonGlot — Open language technology for every language",
+      "description": "Open tools, corpora, models and benchmarks for under-served languages, plus a free directory of 7,500+ languages and 170+ scripts and the technology that supports them."
+    },
+    {
+      "path": "mission/",
+      "source": "mission/index.html",
+      "type": "AboutPage",
+      "name": "Mission",
+      "title": "Our mission — open language technology for all · CommonGlot",
+      "description": "Why CommonGlot exists: to identify, collect, model, evaluate and document every language, and to publish an honest record of which technologies support each one."
+    },
+    {
+      "path": "projects/",
+      "source": "projects/index.html",
+      "type": "CollectionPage",
+      "name": "Projects",
+      "title": "GlotSuite projects: GlotLID, GlotCC, Glot500 & more · CommonGlot",
+      "description": "All GlotSuite releases — GlotLID, GlotScript, GlotCC, GlotWeb, Glot500 and GlotOCR Bench — with code, data, demos and citations."
+    },
+    {
+      "path": "languages/",
+      "source": "languages/index.html",
+      "type": "CollectionPage",
+      "name": "Languages",
+      "title": "Language directory: 7,500+ languages and their tech · CommonGlot",
+      "description": "Search and map 7,500+ languages by family, region, script and endangerment, and see which language identification, models and OCR systems support each one."
+    },
+    {
+      "path": "scripts/",
+      "source": "scripts/index.html",
+      "type": "CollectionPage",
+      "name": "Scripts",
+      "title": "Writing systems directory and OCR benchmark results · CommonGlot",
+      "description": "Every ISO 15924 writing system in Unicode: sample text, languages that use it, language-identification support and OCR accuracy for 14 models from GlotOCR Bench."
+    },
+    {
+      "path": "glotsuite/",
+      "source": "glotsuite/index.html",
+      "type": "WebPage",
+      "name": "GlotSuite",
+      "title": "GlotSuite: from raw web text to language technology · CommonGlot",
+      "description": "How the GlotSuite projects fit together — identify, collect, model, evaluate — with a timeline of releases from GlotLID (EMNLP 2023) to GlotOCR Bench (2026)."
+    },
+    {
+      "path": "open-data/",
+      "source": "open-data/index.html",
+      "type": "Dataset",
+      "name": "Open data",
+      "title": "Open data: download the language & script directory · CommonGlot",
+      "description": "Download the JSON behind CommonGlot — languages, scripts, OCR results, projects — with sources, licences and a script to rebuild it."
+    },
+    {
+      "path": "about/",
+      "source": "about/index.html",
+      "type": "AboutPage",
+      "name": "About",
+      "title": "About CommonGlot: team, affiliations and how to contribute",
+      "description": "The researchers behind CommonGlot and GlotSuite at LMU Munich, Sorbonne Université and CNRS, how to report errors or contribute data, and answers to common questions."
+    },
+    {
+      "path": "privacy/",
+      "source": "privacy/index.html",
+      "type": "WebPage",
+      "name": "Privacy Policy",
+      "title": "Privacy Policy · CommonGlot",
+      "description": "CommonGlot sets no cookies and runs no analytics. Read which hosting and content services your browser contacts and what is stored on your device."
+    },
+    {
+      "path": "terms/",
+      "source": "terms/index.html",
+      "type": "WebPage",
+      "name": "Terms of Use",
+      "title": "Terms of Use · CommonGlot",
+      "description": "Terms for using CommonGlot: Apache-2.0 licensed code, third-party data licences and attribution, accuracy, acceptable use and the warranty disclaimer."
+    }
+  ],
+  "legacy_redirects": {
+    "_comment": "Old URLs (before clean URLs) mapped to their new location; build_site.py writes noindex redirect pages for them.",
+    "pages/mission.html": "mission/",
+    "pages/projects.html": "projects/",
+    "pages/languages.html": "languages/",
+    "pages/scripts.html": "scripts/",
+    "pages/glotsuite.html": "glotsuite/",
+    "pages/data.html": "open-data/",
+    "pages/about.html": "about/",
+    "pages/privacy.html": "privacy/",
+    "pages/terms.html": "terms/",
+    "pages/language.html": {
+      "param": "iso",
+      "to": "languages/{}/",
+      "fallback": "languages/"
+    },
+    "pages/script.html": {
+      "param": "code",
+      "to": "scripts/{}/",
+      "fallback": "scripts/"
+    },
+    "pages/project.html": {
+      "param": "id",
+      "to": "projects/{}/",
+      "fallback": "projects/"
+    }
+  },
+  "projects_page": {
+    "list_title": "All projects"
   }
 }

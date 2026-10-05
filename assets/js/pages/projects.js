@@ -13,7 +13,7 @@
       ...g.pipeline.map(s => ({ id: 'stage-' + s.id, label: 'Stage: ' + s.label, items: projects.filter(p => p.stage === s.id), note: s.text })),
     ].filter(x => x.items.length);
 
-    $('#projects-tabs').innerHTML = tabMarkup('pj', groups.map(x => ({ ...x, count: x.items.length }))) +
+    $('#projects-tabs').innerHTML = `<h2 class="visually-hidden">${esc(site.projects_page.list_title)}</h2>` + tabMarkup('pj', groups.map(x => ({ ...x, count: x.items.length }))) +
       groups.map(x => `<div ${panelAttrs('pj', x.id)} class="tab-panel">
         ${x.note ? `<p class="lead" style="margin-bottom:20px">${esc(x.note)}</p>` : ''}
         <div class="grid grid-auto">${x.items.map(p => projectCard(p, taxonomy)).join('')}</div></div>`).join('');

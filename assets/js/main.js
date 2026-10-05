@@ -2,8 +2,8 @@
    Every page sets <body data-page="..."> and loads this file plus its own script. */
 
 const CG = (() => {
-  const inPages = /\/pages\//.test(location.pathname);
-  const base = inPages ? '../' : './';
+  // Every page declares its depth: <html data-base="../">.
+  const base = document.documentElement.dataset.base || './';
   const cache = new Map();
 
   /* ---------- data ---------- */
@@ -36,7 +36,8 @@ const CG = (() => {
   // Single gate for every URL written into the page: only http(s), mailto, in-page anchors and
   // site-relative paths are allowed (blocks javascript:, data:, etc.), and the result is HTML-escaped.
   function href(h) {
-    if (!h) return '#';
+    if (h == null) return '#';
+    if (h === '') return esc(base);
     h = String(h).replace(/[\u0000-\u001F\u007F]/g, '').trim();
     if (h.startsWith('#')) return esc(h);
     if (/^[a-z][a-z0-9+.-]*:/i.test(h)) {
@@ -59,9 +60,9 @@ const CG = (() => {
   }
   const param = k => new URLSearchParams(location.search).get(k);
   const debounce = (fn, ms = 180) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
-  const langUrl = iso => `${base}pages/language.html?iso=${encodeURIComponent(iso)}`;
-  const scriptUrl = code => `${base}pages/script.html?code=${encodeURIComponent(code)}`;
-  const projectUrl = id => `${base}pages/project.html?id=${encodeURIComponent(id)}`;
+  const langUrl = iso => `${base}languages/${encodeURIComponent(iso)}/`;
+  const scriptUrl = code => `${base}scripts/${encodeURIComponent(code)}/`;
+  const projectUrl = id => `${base}projects/${encodeURIComponent(id)}/`;
   const fill = (tpl, vals) => tpl.replace(/\{(\w+)\}/g, (_, k) => encodeURIComponent(vals[k] ?? ''));
   function showError(target, err) {
     console.error(err);
@@ -83,12 +84,14 @@ const CG = (() => {
 
   /* ---------- header & footer ---------- */
   function renderHeader(site) {
+    // Prerendered pages already contain header/footer markup; replace it rather than duplicate it.
+    document.querySelectorAll('.site-header, .site-footer, .skip-link').forEach(el => el.remove());
     const page = document.body.dataset.page;
     const header = document.createElement('header');
     header.className = 'site-header';
     header.innerHTML = `
       <div class="container header-inner">
-        <a class="brand" href="${href('index.html')}"><img src="${href(site.brand.logo)}" alt="" width="34" height="40"><span>${esc(site.brand.name)}</span></a>
+        <a class="brand" href="${href('')}"><img src="${href(site.brand.logo)}" alt="" width="34" height="40"><span>${esc(site.brand.name)}</span></a>
         <nav class="nav" id="site-nav" aria-label="Main">
           <ul>${site.nav.map(n => `<li><a href="${href(n.href)}"${n.key === page ? ' aria-current="page"' : ''}>${esc(n.label)}</a></li>`).join('')}</ul>
         </nav>
@@ -133,9 +136,9 @@ const CG = (() => {
             <div class="footer-brand"><img src="${href(site.brand.logo)}" alt="" width="36" height="42">${esc(site.brand.name)}</div>
             <p class="footer-blurb">${esc(f.blurb)}</p>
           </div>
-          ${f.columns.map(c => `<div><h4>${esc(c.title)}</h4><ul>${c.links.map(l => `<li><a href="${href(l.href)}"${extAttrs(l.href)}>${esc(l.label)}</a></li>`).join('')}</ul></div>`).join('')}
+          ${f.columns.map(c => `<div><h2 class="footer-h">${esc(c.title)}</h2><ul>${c.links.map(l => `<li><a href="${href(l.href)}"${extAttrs(l.href)}>${esc(l.label)}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
-        <div class="footer-bottom"><span>© ${new Date().getFullYear()} ${esc(site.brand.name)}${(f.legal_links || []).map(l => ` · <a href="${href(l.href)}">${esc(l.label)}</a>`).join('')}</span><span>${esc(f.legal)}</span></div>
+        <div class="footer-bottom"><span>© ${new Date().getFullYear()} ${esc(site.brand.legal_name || site.brand.name)}${(f.legal_links || []).map(l => ` · <a href="${href(l.href)}">${esc(l.label)}</a>`).join('')}</span><span>${esc(f.legal)}</span></div>
       </div>`;
     document.body.appendChild(footer);
   }
@@ -259,12 +262,23 @@ const CG = (() => {
   function codeBlock(code, lang = '') {
     const id = 'code-' + Math.random().toString(36).slice(2, 8);
     setTimeout(() => { const b = document.getElementById(id); if (b) copyButton(b, () => code); });
-    return `<div class="code-block"><button class="btn btn--sm btn--yellow copy" id="${id}" type="button">Copy</button><pre><code${lang ? ` data-lang="${esc(lang)}"` : ''}>${esc(code)}</code></pre></div>`;
+    return `<div class="code-block"><button class="btn btn--sm btn--yellow copy" id="${id}" type="button">Copy</button><pre tabindex="0"><code${lang ? ` data-lang="${esc(lang)}"` : ''}>${esc(code)}</code></pre></div>`;
   }
   function bar(name, value, max = 100, color = 'blue', suffix = '%', link = '') {
     const pct = Math.max(0, Math.min(100, (value / max) * 100));
     const label = link ? `<a href="${link}">${esc(name)}</a>` : esc(name);
     return `<div class="bar"><span class="name" title="${esc(name)}">${label}</span><span class="track"><span class="fill" style="width:${pct.toFixed(1)}%;--bar:var(--${tok(color)})"></span></span><span class="v">${value == null ? '–' : value.toFixed(1) + suffix}</span></div>`;
+  }
+  /* Script codes: link to the script page, or via an alias (Hans → Hani), or plain text if no page exists. */
+  function scriptRef(code, byCode, taxonomy) {
+    const alias = (taxonomy.script_aliases || {})[code];
+    const target = byCode[code] ? code : alias && alias.link && byCode[alias.link] ? alias.link : null;
+    return { name: byCode[code]?.name || alias?.name || code, url: target ? scriptUrl(target) : null };
+  }
+  function scriptChip(code, byCode, taxonomy, { label = 'name' } = {}) {
+    const r = scriptRef(code, byCode, taxonomy);
+    const text = esc(label === 'code' ? code : r.name);
+    return r.url ? `<a class="chip" href="${r.url}" title="${esc(r.name)}">${text}</a>` : `<span class="chip" title="${esc(r.name)}">${text}</span>`;
   }
   function projectCard(p, taxonomy, { sticker = true } = {}) {
     return `<a class="card project-card" href="${projectUrl(p.id)}">
@@ -277,7 +291,9 @@ const CG = (() => {
   }
 
   /* ---------- boot ---------- */
-  const ready = data.site().then(site => {
+  // Wait for the whole document so prerendered header/footer markup is in the DOM before it is replaced.
+  const parsed = document.readyState === 'loading' ? new Promise(r => document.addEventListener('DOMContentLoaded', r, { once: true })) : Promise.resolve();
+  const ready = Promise.all([data.site(), parsed]).then(([site]) => {
     renderHeader(site);
     renderFooter(site);
     return site;
@@ -286,6 +302,6 @@ const CG = (() => {
   return {
     base, data, getJSON, esc, tok, $, $$, href, extAttrs, isExternal, fmt, compact, param, debounce, fill,
     langUrl, scriptUrl, projectUrl, showError, tabs, tabMarkup, panelAttrs, sortable, sortRows, pager,
-    copyButton, codeBlock, bar, projectCard, useFont, lazyFonts, ready,
+    copyButton, codeBlock, bar, projectCard, scriptRef, scriptChip, useFont, lazyFonts, ready,
   };
 })();

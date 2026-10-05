@@ -22,6 +22,35 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # sitemap lastmod comes from git history
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install build tools
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1 leaflet@1.9.4 esbuild@0.25
+          npx playwright install --with-deps chromium
+
+      # Static booklet pages, head metadata, JSON-LD, sitemap, robots, manifest.
+      - name: Build site
+        run: python3 tools/build_site.py --out _site
+
+      # Render the JavaScript-driven top-level pages to static HTML for crawlers.
+      - name: Prerender pages
+        run: node tools/prerender.mjs _site
+
+      - name: Minify JavaScript and CSS
+        run: |
+          find _site/assets -name '*.js' -o -name '*.css' | while read -r f; do
+            npx esbuild "$f" --minify --outfile="$f" --allow-overwrite --log-level=warning
+          done
+
+      # Fails the deploy on broken links, orphan pages, duplicate titles, bad JSON-LD, etc.
+      - name: Check site
+        run: python3 tools/check_site.py _site
 
       # The key ends up in the published site (browsers need it to fetch tiles);
       # keeping it in a secret only keeps it out of the repository.
@@ -30,14 +59,14 @@ jobs:
         env:
           CARTO_API_KEY: ${{ secrets.CARTO_API_KEY }}
         run: |
-          python3 -c 'import json, os; json.dump({"carto_api_key": os.environ.get("CARTO_API_KEY", "")}, open("data/runtime.json", "w"))'
+          python3 -c 'import json, os; json.dump({"carto_api_key": os.environ.get("CARTO_API_KEY", "")}, open("_site/data/runtime.json", "w"))'
           if [ -z "$CARTO_API_KEY" ]; then echo "::warning::CARTO_API_KEY secret is not set; maps will use fallback tiles."; fi
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4

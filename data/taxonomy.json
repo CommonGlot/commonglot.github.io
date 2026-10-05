@@ -1,22 +1,63 @@
 {
   "macroareas": {
-    "Africa": { "color": "#e8590c" },
-    "Eurasia": { "color": "#0078bf" },
-    "Papunesia": { "color": "#2f9e44" },
-    "Australia": { "color": "#c2255c" },
-    "North America": { "color": "#e0a800" },
-    "South America": { "color": "#7048e8" }
+    "Africa": {
+      "color": "#e8590c"
+    },
+    "Eurasia": {
+      "color": "#0078bf"
+    },
+    "Papunesia": {
+      "color": "#2f9e44"
+    },
+    "Australia": {
+      "color": "#c2255c"
+    },
+    "North America": {
+      "color": "#e0a800"
+    },
+    "South America": {
+      "color": "#7048e8"
+    }
   },
   "endangerment": {
-    "1": { "label": "not endangered", "short": "safe", "color": "#2f9e44" },
-    "2": { "label": "threatened", "short": "threatened", "color": "#94b500" },
-    "3": { "label": "shifting", "short": "shifting", "color": "#e0a800" },
-    "4": { "label": "moribund", "short": "moribund", "color": "#e8590c" },
-    "5": { "label": "nearly extinct", "short": "nearly extinct", "color": "#c92a2a" },
-    "6": { "label": "extinct", "short": "extinct", "color": "#495057" }
+    "1": {
+      "label": "not endangered",
+      "short": "safe",
+      "color": "#2f9e44"
+    },
+    "2": {
+      "label": "threatened",
+      "short": "threatened",
+      "color": "#94b500"
+    },
+    "3": {
+      "label": "shifting",
+      "short": "shifting",
+      "color": "#e0a800"
+    },
+    "4": {
+      "label": "moribund",
+      "short": "moribund",
+      "color": "#e8590c"
+    },
+    "5": {
+      "label": "nearly extinct",
+      "short": "nearly extinct",
+      "color": "#c92a2a"
+    },
+    "6": {
+      "label": "extinct",
+      "short": "extinct",
+      "color": "#495057"
+    }
   },
   "endangerment_names": {
-    "not endangered": "1", "threatened": "2", "shifting": "3", "moribund": "4", "nearly extinct": "5", "extinct": "6"
+    "not endangered": "1",
+    "threatened": "2",
+    "shifting": "3",
+    "moribund": "4",
+    "nearly extinct": "5",
+    "extinct": "6"
   },
   "documentation": {
     "long grammar": "Grammar of more than 300 pages",
@@ -26,10 +67,30 @@
     "Wordlist or less": "Wordlist or less"
   },
   "coverage": {
-    "L": { "label": "GlotLID", "long": "Identified by GlotLID v3", "project": "glotlid", "color": "pink" },
-    "S": { "label": "GlotScript", "long": "Writing system recorded in GlotScript-R", "project": "glotscript", "color": "yellow" },
-    "G": { "label": "Glot500", "long": "Included in Glot500", "project": "glot500", "color": "blue" },
-    "O": { "label": "OCR bench", "long": "Its script is benchmarked in GlotOCR Bench", "project": "glotocr-bench", "color": "green" }
+    "L": {
+      "label": "GlotLID",
+      "long": "Identified by GlotLID v3",
+      "project": "glotlid",
+      "color": "pink"
+    },
+    "S": {
+      "label": "GlotScript",
+      "long": "Writing system recorded in GlotScript-R",
+      "project": "glotscript",
+      "color": "yellow"
+    },
+    "G": {
+      "label": "Glot500",
+      "long": "Included in Glot500",
+      "project": "glot500",
+      "color": "blue"
+    },
+    "O": {
+      "label": "OCR bench",
+      "long": "Its script is benchmarked in GlotOCR Bench",
+      "project": "glotocr-bench",
+      "color": "green"
+    }
   },
   "script_types": {
     "alphabet": "Separate letters for consonants and vowels",
@@ -41,9 +102,18 @@
     "other": "Notation systems and special Unicode codes"
   },
   "ocr_tiers": {
-    "high": { "label": "High resource", "color": "green" },
-    "mid": { "label": "Mid resource", "color": "yellow" },
-    "low": { "label": "Low resource", "color": "pink" }
+    "high": {
+      "label": "High resource",
+      "color": "green"
+    },
+    "mid": {
+      "label": "Mid resource",
+      "color": "yellow"
+    },
+    "low": {
+      "label": "Low resource",
+      "color": "pink"
+    }
   },
   "project_kinds": {
     "model": "Model",
@@ -52,17 +122,142 @@
     "benchmark": "Benchmark"
   },
   "external_language_links": [
-    { "label": "Glottolog", "url": "https://glottolog.org/resource/languoid/id/{glottocode}", "needs": "glottocode" },
-    { "label": "Ethnologue", "url": "https://www.ethnologue.com/language/{iso}/", "needs": "iso" },
-    { "label": "ISO 639-3 (SIL)", "url": "https://iso639-3.sil.org/code/{iso}", "needs": "iso" },
-    { "label": "Wikidata", "url": "https://www.wikidata.org/wiki/{wikidata}", "needs": "wikidata" },
-    { "label": "OLAC resources", "url": "http://www.language-archives.org/language/{iso}", "needs": "iso" },
-    { "label": "Hugging Face models", "url": "https://huggingface.co/models?other={iso}", "needs": "iso" },
-    { "label": "Hugging Face datasets", "url": "https://huggingface.co/datasets?search={iso}", "needs": "iso" }
+    {
+      "label": "Glottolog",
+      "url": "https://glottolog.org/resource/languoid/id/{glottocode}",
+      "needs": "glottocode"
+    },
+    {
+      "label": "Ethnologue",
+      "url": "https://www.ethnologue.com/language/{iso}/",
+      "needs": "iso"
+    },
+    {
+      "label": "ISO 639-3 (SIL)",
+      "url": "https://iso639-3.sil.org/code/{iso}",
+      "needs": "iso"
+    },
+    {
+      "label": "Wikidata",
+      "url": "https://www.wikidata.org/wiki/{wikidata}",
+      "needs": "wikidata"
+    },
+    {
+      "label": "OLAC resources",
+      "url": "http://www.language-archives.org/language/{iso}",
+      "needs": "iso"
+    },
+    {
+      "label": "Hugging Face models",
+      "url": "https://huggingface.co/models?other={iso}",
+      "needs": "iso"
+    },
+    {
+      "label": "Hugging Face datasets",
+      "url": "https://huggingface.co/datasets?search={iso}",
+      "needs": "iso"
+    }
   ],
   "external_script_links": [
-    { "label": "ScriptSource", "url": "https://scriptsource.org/scr/{code}", "needs": "code" },
-    { "label": "Unicode charts", "url": "https://www.unicode.org/charts/", "needs": "code" },
-    { "label": "Wikipedia (ISO 15924)", "url": "https://en.wikipedia.org/wiki/ISO_15924", "needs": "code" }
-  ]
+    {
+      "label": "ScriptSource",
+      "url": "https://scriptsource.org/scr/{code}",
+      "needs": "code"
+    },
+    {
+      "label": "Unicode charts",
+      "url": "https://www.unicode.org/charts/",
+      "needs": "code"
+    },
+    {
+      "label": "Wikipedia (ISO 15924)",
+      "url": "https://en.wikipedia.org/wiki/ISO_15924",
+      "needs": "code"
+    }
+  ],
+  "script_aliases": {
+    "_comment": "ISO 15924 codes used by languages but without their own Unicode script page: display name and, where one exists, the script page to link to.",
+    "Hans": {
+      "name": "Han (Simplified)",
+      "link": "Hani"
+    },
+    "Hant": {
+      "name": "Han (Traditional)",
+      "link": "Hani"
+    },
+    "Jpan": {
+      "name": "Japanese (Han + Kana)",
+      "link": "Hani"
+    },
+    "Kore": {
+      "name": "Korean (Hangul + Han)",
+      "link": "Hang"
+    },
+    "Cyrs": {
+      "name": "Old Church Slavonic Cyrillic",
+      "link": "Cyrl"
+    },
+    "Latf": {
+      "name": "Fraktur Latin",
+      "link": "Latn"
+    },
+    "Latg": {
+      "name": "Gaelic Latin",
+      "link": "Latn"
+    },
+    "Syrj": {
+      "name": "Western Syriac",
+      "link": "Syrc"
+    },
+    "Syrn": {
+      "name": "Eastern Syriac",
+      "link": "Syrc"
+    },
+    "Geok": {
+      "name": "Khutsuri (Georgian)",
+      "link": "Geor"
+    },
+    "Zxxx": {
+      "name": "Unwritten"
+    },
+    "Teng": {
+      "name": "Tengwar"
+    },
+    "Nkgb": {
+      "name": "Naxi Geba"
+    },
+    "Nkdb": {
+      "name": "Naxi Dongba"
+    },
+    "Cirt": {
+      "name": "Cirth"
+    },
+    "Sara": {
+      "name": "Sarati"
+    },
+    "Ranj": {
+      "name": "Ranjana"
+    },
+    "Pelm": {
+      "name": "Old Permic (variant)"
+    },
+    "Maya": {
+      "name": "Maya hieroglyphs"
+    },
+    "Loma": {
+      "name": "Loma"
+    },
+    "Leke": {
+      "name": "Leke"
+    },
+    "Kpel": {
+      "name": "Kpelle"
+    },
+    "Jurc": {
+      "name": "Jurchen"
+    },
+    "Afak": {
+      "name": "Afaka"
+    }
+  }
 }

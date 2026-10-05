@@ -5,6 +5,7 @@
     const [site, taxonomy, languages, scripts] = await Promise.all([data.site(), data.taxonomy(), data.languages(), data.scripts()]);
     const P = site.languages_page;
     const scriptName = Object.fromEntries(scripts.map(s => [s.code, s.name]));
+    const byCode = Object.fromEntries(scripts.map(s => [s.code, s]));
 
     $('#lang-hero').innerHTML = `<span class="kicker">${esc(P.kicker)}</span><h1>${esc(P.title)}</h1><p class="lead">${esc(P.lead)}</p>`;
     const statVals = {
@@ -28,7 +29,7 @@
     const scriptCounts = {};
     languages.forEach(l => (l.s || []).forEach(s => { scriptCounts[s] = (scriptCounts[s] || 0) + 1; }));
     $('#f-script').innerHTML = `<option value="">Any script</option>` + Object.entries(scriptCounts).sort((a, b) => b[1] - a[1])
-      .map(([c, n]) => `<option value="${esc(c)}">${esc(scriptName[c] || c)} (${fmt(n)})</option>`).join('');
+      .map(([c, n]) => `<option value="${esc(c)}">${esc(CG.scriptRef(c, byCode, taxonomy).name)} (${fmt(n)})</option>`).join('');
     $('#f-tech').innerHTML = Object.entries(taxonomy.coverage).map(([k, v]) => `
       <label class="chip toggle-chip"><input type="checkbox" value="${esc(k)}"${state.tech.has(k) ? ' checked' : ''}>${esc(v.label)}</label>`).join('') +
       `<label class="chip toggle-chip"><input type="checkbox" value="-"${state.tech.has('-') ? ' checked' : ''}>No GlotSuite model</label>`;
@@ -58,7 +59,7 @@
 
     /* ---------- tabs ---------- */
     const T = P.tabs;
-    $('#lang-tabs').innerHTML = tabMarkup('lg', [
+    $('#lang-tabs').innerHTML = `<h2 class="visually-hidden">${esc(P.explore_title)}</h2>` + tabMarkup('lg', [
       { id: 'map', label: T.map, accent: 'pink' }, { id: 'table', label: T.table, accent: 'yellow' },
       { id: 'families', label: T.families, accent: 'blue' }, { id: 'coverage', label: T.coverage, accent: 'green' },
     ]) + `
@@ -116,7 +117,7 @@
         return `<tr>
           <td><a href="${langUrl(l.i)}">${esc(l.n)}</a></td><td><code>${esc(l.i)}</code></td>
           <td class="hide-sm">${esc(l.f || '–')}</td><td class="hide-sm">${esc(l.m || '–')}</td>
-          <td>${(l.s || []).slice(0, 3).map(s => `<a class="chip" href="${scriptUrl(s)}">${esc(s)}</a>`).join(' ')}</td>
+          <td>${(l.s || []).slice(0, 3).map(s => CG.scriptChip(s, byCode, taxonomy, { label: 'code' })).join(' ')}</td>
           <td class="hide-sm">${end ? `<span class="chip"><span class="dot" style="background:${CG.tok(end.color)}"></span>${esc(end.short)}</span>` : '–'}</td>
           <td class="num hide-sm">${l.p ? compact(l.p) : '–'}</td>
           <td><div class="chips" style="flex-wrap:nowrap">${covChips(l)}</div></td></tr>`;

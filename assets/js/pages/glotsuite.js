@@ -6,7 +6,7 @@
     $('#gs-hero').innerHTML = `
       <div><span class="kicker">${esc(g.kicker)}</span><h1>${esc(g.title)}</h1><p class="lead">${esc(g.lead)}</p>
         <div class="btn-row" style="margin-top:24px"><a class="btn btn--pink" href="${href(g.home_url)}"${extAttrs(g.home_url)}>${esc(g.home_label)} ↗</a>
-        <a class="btn" href="${href('pages/projects.html')}">All projects</a></div></div>
+        <a class="btn" href="${href('projects/')}">All projects</a></div></div>
       <div class="card tilt-r" style="justify-self:center;max-width:360px"><img src="${href(g.logo)}" alt="GlotSuite logo" width="320" height="320" style="width:100%;height:auto"></div>`;
 
     $('#pipeline-head').innerHTML = `<div><h2>${esc(g.pipeline_title)}</h2></div>`;

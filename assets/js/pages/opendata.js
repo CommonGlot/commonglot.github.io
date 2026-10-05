@@ -5,6 +5,7 @@
     const D = site.data_page;
     $('#data-hero').innerHTML = `<span class="kicker">${esc(D.kicker)}</span><h1>${esc(D.title)}</h1><p class="lead">${esc(D.lead)}</p>
       <p class="small muted" style="margin-top:12px">Last built ${esc(stats.generated)} · ${fmt(stats.languages_in_directory)} languages · ${fmt(stats.scripts_in_glotscript)} scripts</p>`;
+    $('#data-files').insertAdjacentHTML('beforebegin', `<div class="container"><h2>${esc(D.files_title)}</h2></div>`);
     $('#data-files').innerHTML = D.files.map(f => {
       const link = f.path.includes('{') ? href(f.path.replace('{letter}', 'a')) : href(f.path);
       return `<div class="card"><span class="sticker">JSON</span><h3>${esc(f.title)}</h3><p><code>${esc(f.path)}</code></p><p class="muted small">${esc(f.text)}</p>

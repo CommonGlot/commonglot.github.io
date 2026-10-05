@@ -1,12 +1,12 @@
 (async () => {
   const { esc, $, $$, href, data, param, fmt, fill, langUrl, projectUrl, tabMarkup, panelAttrs, tabs, bar, codeBlock } = CG;
-  const code = param('code') || '';
+  const code = document.body.dataset.id || param('code') || '';
   try {
     const [site, taxonomy, scripts, ocrModels, languages, projects] = await Promise.all([
       data.site(), data.taxonomy(), data.scripts(), data.ocrModels(), data.languages(), data.projects()]);
     const s = scripts.find(x => x.code.toLowerCase() === code.toLowerCase());
     if (!s) {
-      $('#script-head').innerHTML = `<h1>Script not found</h1><p class="lead">No script with ISO 15924 code “${esc(code)}”.</p><a class="btn btn--yellow" href="${href('pages/scripts.html')}">Browse scripts</a>`;
+      $('#script-head').innerHTML = `<h1>Script not found</h1><p class="lead">No script with ISO 15924 code “${esc(code)}”.</p><a class="btn btn--yellow" href="${href('scripts/')}">Browse scripts</a>`;
       return;
     }
     document.title = `${s.name} (${s.code}) — ${site.brand.name}`;
@@ -17,7 +17,7 @@
     const tier = s.ocr && taxonomy.ocr_tiers[s.ocr.tier];
 
     $('#script-head').innerHTML = `
-      <div class="breadcrumbs"><a href="${href('pages/scripts.html')}">Scripts</a> / ${esc(s.name)}</div>
+      <div class="breadcrumbs"><a href="${href('scripts/')}">Scripts</a> / ${esc(s.name)}</div>
       <div class="booklet-head"><div>
         <span class="kicker">ISO 15924 · ${esc(s.code)}${s.type ? ' · ' + esc(s.type) : ''}</span>
         <h1>${esc(s.name)}</h1>
@@ -38,12 +38,12 @@
         <div><dt>GlotLID</dt><dd>${fmt(s.glotlid_labels)} labels</dd></div>
         ${s.ocr ? `<div><dt>Best OCR</dt><dd>${s.ocr.best.acc5.toFixed(1)}% Acc@5<br><span class="small muted">${esc(modelName[s.ocr.best.model] || s.ocr.best.model)}</span></dd></div>` : ''}
       </dl></div>
-      <div class="card"><h3>Elsewhere</h3><div class="ext-links">${taxonomy.external_script_links.map(x => `<a class="chip" href="${href(fill(x.url, vals))}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('')}</div></div>`;
+      <div class="card"><h2 class="h3">Elsewhere</h2><div class="ext-links">${taxonomy.external_script_links.map(x => `<a class="chip" href="${href(fill(x.url, vals))}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('')}</div></div>`;
 
     const langList = list => list.length ? `<ul class="lang-list">${list.map(l => `<li><a href="${langUrl(l.i)}">${esc(l.n)}</a><span class="iso">${esc(l.i)}</span></li>`).join('')}</ul>` : '<p class="empty">None recorded.</p>';
     const ocrSection = !s.ocr ? `<div class="card"><p>${esc(s.name)} is not part of GlotOCR Bench yet.</p><a class="btn btn--sm" href="${projectUrl('glotocr-bench')}">About the benchmark →</a></div>` :
       Object.entries(s.ocr.results).map(([variant, rows]) => `
-        <div class="card" style="margin-bottom:20px"><h3>${variant === 'plain' ? 'Plain rendering' : 'Old-document rendering'}</h3>
+        <div class="card" style="margin-bottom:20px"><h2 class="h3">${variant === 'plain' ? 'Plain rendering' : 'Old-document rendering'}</h2>
           <p class="small muted">Acc@5 per model${s.ocr.samples ? ` · ${fmt(s.ocr.samples)} samples` : ''}. Character error rate in brackets.</p>
           <div class="bars">${rows.map(r => bar(`${modelName[r.model] || r.model} (CER ${r.cer.toFixed(1)})`, r.acc5, 100, variant === 'plain' ? 'green' : 'yellow')).join('')}</div></div>`).join('');
 
@@ -56,13 +56,13 @@
           { id: 'unicode', label: 'Unicode', accent: 'yellow' },
           { id: 'data', label: 'Data', accent: 'blue' }])}
         <div ${panelAttrs('sb', 'languages')} class="tab-panel">
-          <div class="card"><h3>Main script for</h3>${langList(users)}
-            <a class="btn btn--sm" style="margin-top:14px" href="${href('pages/languages.html')}?script=${encodeURIComponent(s.code)}#map">See them on the map →</a></div>
-          ${aux.length ? `<div class="card" style="margin-top:20px"><h3>Also used by</h3>${langList(aux)}</div>` : ''}
+          <div class="card"><h2 class="h3">Main script for</h2>${langList(users)}
+            <a class="btn btn--sm" style="margin-top:14px" href="${href('languages/')}?script=${encodeURIComponent(s.code)}#map">See them on the map →</a></div>
+          ${aux.length ? `<div class="card" style="margin-top:20px"><h2 class="h3">Also used by</h2>${langList(aux)}</div>` : ''}
         </div>
         <div ${panelAttrs('sb', 'ocr')} class="tab-panel" hidden>${ocrSection}</div>
         <div ${panelAttrs('sb', 'unicode')} class="tab-panel" hidden>
-          <div class="card"><h3>Ranges</h3><p class="small muted">From <a href="${projectUrl('glotscript')}">${esc(proj.glotscript.name)}</a>'s script table.</p>
+          <div class="card"><h2 class="h3">Ranges</h2><p class="small muted">From <a href="${projectUrl('glotscript')}">${esc(proj.glotscript.name)}</a>'s script table.</p>
             <div class="chips">${s.ranges.map(r => `<span class="chip">${esc(r)}</span>`).join('')}</div></div>
         </div>
         <div ${panelAttrs('sb', 'data')} class="tab-panel" hidden>${codeBlock(JSON.stringify(record, null, 2), 'json')}</div>

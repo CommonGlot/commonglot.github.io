@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="1191 644 278 232" width="278" height="232">
-
-<polyline points="1230.0,696.0 1230.0,660.0 1266.0,660.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1430.0,696.0 1430.0,660.0 1394.0,660.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1230.0,824.0 1230.0,860.0 1266.0,860.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1430.0,824.0 1430.0,860.0 1394.0,860.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1270.0,712.0 1390.0,712.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1270.0,742.0 1362.0,742.0" fill="none" stroke="#c9c3c1" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1270.0,772.0 1390.0,772.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1270.0,802.0 1340.0,802.0" fill="none" stroke="#1f2533" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-<polyline points="1206.0,757.0 1454.0,757.0" fill="none" stroke="#dc6e3b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="278" height="232" viewBox="1191 644 278 232"><path fill="none" stroke="#1f2533" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" d="M1230 696v-36h36m164 36v-36h-36m-164 164v36h36m164-36v36h-36m-124-148h120"/><path fill="none" stroke="#c9c3c1" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" d="M1270 742h92"/><path fill="none" stroke="#1f2533" stroke-linecap="round" stroke-linejoin="round" stroke-width="8" d="M1270 772h120m-120 30h70"/><path fill="none" stroke="#dc6e3b" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" d="M1206 757h248"/></svg>

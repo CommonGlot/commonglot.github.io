@@ -1,12 +1,12 @@
 (async () => {
   const { esc, $, href, extAttrs, data, param, fmt, compact, fill, langUrl, scriptUrl, projectUrl, tabMarkup, panelAttrs, tabs, bar, codeBlock } = CG;
-  const iso = (param('iso') || '').toLowerCase();
+  const iso = (document.body.dataset.id || param('iso') || '').toLowerCase();
   try {
     const [site, taxonomy, languages, scripts, projects, ocrModels] = await Promise.all([
       data.site(), data.taxonomy(), data.languages(), data.scripts(), data.projects(), data.ocrModels()]);
     const l = languages.find(x => x.i === iso);
     if (!l) {
-      $('#lang-head').innerHTML = `<h1>Language not found</h1><p class="lead">No language with ISO 639-3 code “${esc(iso)}” in the directory.</p><a class="btn btn--yellow" href="${href('pages/languages.html')}">Browse languages</a>`;
+      $('#lang-head').innerHTML = `<h1>Language not found</h1><p class="lead">No language with ISO 639-3 code “${esc(iso)}” in the directory.</p><a class="btn btn--yellow" href="${href('languages/')}">Browse languages</a>`;
       return;
     }
     const d = await data.languageDetails(iso);
@@ -20,7 +20,7 @@
     /* ---------- head ---------- */
     const codes = [`ISO 639-3 · ${l.i}`, d.glottocode && `Glottocode · ${d.glottocode}`, d.wikidata && `Wikidata · ${d.wikidata}`].filter(Boolean);
     $('#lang-head').innerHTML = `
-      <div class="breadcrumbs"><a href="${href('pages/languages.html')}">Languages</a> / ${l.m ? `<a href="${href('pages/languages.html')}?area=${encodeURIComponent(l.m)}">${esc(l.m)}</a> / ` : ''}${esc(l.n)}</div>
+      <div class="breadcrumbs"><a href="${href('languages/')}">Languages</a> / ${l.m ? `<a href="${href('languages/')}?area=${encodeURIComponent(l.m)}">${esc(l.m)}</a> / ` : ''}${esc(l.n)}</div>
       <div class="booklet-head"><div>
         <span class="kicker">${esc(l.f || 'Unclassified')}${l.m ? ' · ' + esc(l.m) : ''}</span>
         <h1 style="margin-bottom:8px">${esc(l.n)}</h1>
@@ -31,7 +31,7 @@
       ${d.description ? `<p class="lead" style="margin-top:16px">${esc(d.description.charAt(0).toUpperCase() + d.description.slice(1))}.</p>` : ''}`;
 
     /* ---------- aside ---------- */
-    const famLink = l.f ? `<a href="${href('pages/languages.html')}?q=${encodeURIComponent(l.f)}#table">${esc(l.f)}</a>` : '–';
+    const famLink = l.f ? `<a href="${href('languages/')}?q=${encodeURIComponent(l.f)}#table">${esc(l.f)}</a>` : '–';
     const scale = Object.keys(taxonomy.endangerment).map(k => `<span class="${+k <= (l.e || 0) ? 'on' : ''}" style="background:${CG.tok(taxonomy.endangerment[k].color)}"></span>`).join('');
     const vals = { iso: l.i, glottocode: d.glottocode, wikidata: d.wikidata };
     const ext = taxonomy.external_language_links.filter(x => vals[x.needs]).map(x => `<a class="chip" href="${href(fill(x.url, vals))}" target="_blank" rel="noopener">${esc(x.label)} ↗</a>`).join('');
@@ -43,18 +43,18 @@
         <div><dt>Speakers</dt><dd>${l.p ? `${compact(l.p)} <span class="muted small">(${fmt(l.p)})</span>` : '–'}</dd></div>
         <div><dt>Status</dt><dd>${end ? esc(end.label) : 'unknown'}${end ? `<div class="endangerment-scale" aria-hidden="true">${scale}</div>` : ''}</dd></div>
         <div><dt>Documented</dt><dd>${d.documentation ? esc(taxonomy.documentation[d.documentation] || d.documentation) : '–'}</dd></div>
-        <div><dt>Scripts</dt><dd class="chips">${(l.s || []).map(s => `<a class="chip" href="${scriptUrl(s)}">${esc(byCode[s]?.name || s)}</a>`).join('') || '–'}</dd></div>
-        ${d.scripts_aux ? `<div><dt>Also</dt><dd class="chips">${d.scripts_aux.map(s => `<a class="chip" href="${scriptUrl(s)}">${esc(byCode[s]?.name || s)}</a>`).join('')}</dd></div>` : ''}
+        <div><dt>Scripts</dt><dd class="chips">${(l.s || []).map(s => CG.scriptChip(s, byCode, taxonomy)).join('') || '–'}</dd></div>
+        ${d.scripts_aux ? `<div><dt>Also</dt><dd class="chips">${d.scripts_aux.map(s => CG.scriptChip(s, byCode, taxonomy)).join('')}</dd></div>` : ''}
         ${d.cldr_status ? `<div><dt>Official</dt><dd>${esc(d.cldr_status)}</dd></div>` : ''}
       </dl></div>
       ${l.y != null ? `<div class="map map--small" id="mini-map" role="region" aria-label="Location of ${esc(l.n)}"></div>` : ''}
-      <div class="card"><h3>Elsewhere</h3><div class="ext-links">${ext}</div></div>`;
+      <div class="card"><h2 class="h3">Elsewhere</h2><div class="ext-links">${ext}</div></div>`;
 
     /* ---------- technology ---------- */
     const row = (p, status, text, extra = '') => `
       <div class="tech-row">
         <img src="${href('assets/img/' + p.logo)}" alt="" width="48" height="48" loading="lazy">
-        <div><h4><a href="${projectUrl(p.id)}">${esc(p.name)}</a></h4><p>${text}</p>${extra}</div>
+        <div><h3><a href="${projectUrl(p.id)}">${esc(p.name)}</a></h3><p>${text}</p>${extra}</div>
         <span class="status status--${status[0]}">${esc(status[1])}</span>
       </div>`;
     const tech = [];
@@ -67,7 +67,7 @@
     tech.push(row(proj.glot500, g500.length ? ['yes', 'Included'] : ['no', 'Not yet'],
       g500.length ? `Glot500 includes ${g500.map(s => `${esc(l.i)}_${esc(s)}`).join(', ')}.` : 'Not among the Glot500 languages.'));
     tech.push(row(proj.glotscript, (l.t || '').includes('S') ? ['yes', 'Recorded'] : ['no', 'Not yet'],
-      (l.t || '').includes('S') ? `GlotScript-R lists ${(l.s || []).map(s => esc(byCode[s]?.name || s)).join(', ')}${d.scripts_aux ? ` (plus ${d.scripts_aux.length} auxiliary)` : ''}.` : 'No writing system recorded.'));
+      (l.t || '').includes('S') ? `GlotScript-R lists ${(l.s || []).map(s => esc(CG.scriptRef(s, byCode, taxonomy).name)).join(', ')}${d.scripts_aux ? ` (plus ${d.scripts_aux.length} auxiliary)` : ''}.` : 'No writing system recorded.'));
     const ocrScripts = (l.s || []).map(s => byCode[s]).filter(s => s && s.ocr);
     tech.push(row(proj['glotocr-bench'], ocrScripts.length ? ['yes', 'Benchmarked'] : ['no', 'Not yet'],
       ocrScripts.length ? 'Best OCR accuracy (Acc@5) for this language’s scripts:' : 'None of its scripts are in the OCR benchmark.',
@@ -97,26 +97,26 @@
           { id: 'neighbours', label: 'Neighbours', accent: 'blue' }, { id: 'data', label: 'Data', accent: 'green' }])}
         <div ${panelAttrs('lb', 'tech')} class="tab-panel">
           <div class="card"><p class="muted">${esc(B.language_tech_text)}</p>${tech.join('')}</div>
-          ${!/[LG]/.test(l.t || '') ? `<div class="card card--yellow" style="margin-top:20px"><h3>${esc(B.not_covered)}</h3>
+          ${!/[LG]/.test(l.t || '') ? `<div class="card card--yellow" style="margin-top:20px"><h2 class="h3">${esc(B.not_covered)}</h2>
             <a class="btn btn--sm" href="${href(site.about.issues_url + '/new?title=' + encodeURIComponent(`Technology for ${l.n} (${l.i})`))}" target="_blank" rel="noopener">${esc(B.contribute_label)} ↗</a></div>` : ''}
         </div>
         <div ${panelAttrs('lb', 'writing')} class="tab-panel" hidden>
           <div class="grid grid-auto">${[...(l.s || []), ...(d.scripts_aux || [])].map(c => byCode[c]).filter(Boolean).map((s, i) => `
             <a class="card script-card" href="${scriptUrl(s.code)}">${i >= (l.s || []).length ? '<span class="sticker">auxiliary</span>' : ''}
               <span class="code">${esc(s.code)}</span><div class="glyphs"${s.direction === 'rtl' ? ' dir="rtl"' : ''}${s.font ? ` data-font="${esc(s.font)}"` : ''}>${esc(s.sample || s.specimen)}</div>
-              <h3>${esc(s.name)}</h3><p class="small muted">${esc(s.type || '')}${s.direction ? ' · ' + s.direction.toUpperCase() : ''}</p></a>`).join('') || '<p class="empty">No writing system recorded.</p>'}</div>
+              <h2 class="h3">${esc(s.name)}</h2><p class="small muted">${esc(s.type || '')}${s.direction ? ' · ' + s.direction.toUpperCase() : ''}</p></a>`).join('') || '<p class="empty">No writing system recorded.</p>'}</div>
         </div>
         <div ${panelAttrs('lb', 'neighbours')} class="tab-panel" hidden>
           <div class="grid grid-2" style="align-items:start">
-            <div class="card"><h3>Nearest languages</h3><ul class="lang-list" style="columns:1">${near.map(([x, km]) => langItem(x, ` <span class="muted small">${fmt(Math.round(km))} km</span>`)).join('') || '<li class="muted">No coordinates.</li>'}</ul></div>
-            <div class="card"><h3>Same family</h3><ul class="lang-list" style="columns:2 140px">${kin.map(x => langItem(x)).join('') || '<li class="muted">No relatives listed.</li>'}</ul>
-              ${l.f ? `<a class="btn btn--sm" style="margin-top:14px" href="${href('pages/languages.html')}?q=${encodeURIComponent(l.f)}#table">All ${esc(l.f)} languages →</a>` : ''}</div>
+            <div class="card"><h2 class="h3">Nearest languages</h2><ul class="lang-list" style="columns:1">${near.map(([x, km]) => langItem(x, ` <span class="muted small">${fmt(Math.round(km))} km</span>`)).join('') || '<li class="muted">No coordinates.</li>'}</ul></div>
+            <div class="card"><h2 class="h3">Same family</h2><ul class="lang-list" style="columns:2 140px">${kin.map(x => langItem(x)).join('') || '<li class="muted">No relatives listed.</li>'}</ul>
+              ${l.f ? `<a class="btn btn--sm" style="margin-top:14px" href="${href('languages/')}?q=${encodeURIComponent(l.f)}#table">All ${esc(l.f)} languages →</a>` : ''}</div>
           </div>
         </div>
         <div ${panelAttrs('lb', 'data')} class="tab-panel" hidden>
           <p class="muted">${esc(B.sources_note)}</p>
           ${codeBlock(JSON.stringify(record, null, 2), 'json')}
-          <a class="btn btn--sm" style="margin-top:14px" href="${href('pages/data.html')}">About the data →</a>
+          <a class="btn btn--sm" style="margin-top:14px" href="${href('open-data/')}">About the data →</a>
         </div>
       </div>`;
     tabs($('#lb-tabs'), { hash: true });

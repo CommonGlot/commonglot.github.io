@@ -10,7 +10,7 @@
     const colors = ['pink', 'yellow', 'blue', 'green'];
     $('#team').innerHTML = A.team.map((p, i) => `
       <${p.url ? `a href="${CG.href(p.url)}" target="_blank" rel="noopener"` : 'div'} class="card" style="display:flex;gap:16px;align-items:center">
-        <span style="flex-shrink:0;width:60px;height:60px;display:grid;place-items:center;border:2.5px solid var(--line-c);border-radius:50%;font-weight:800;font-size:1.2rem;background:var(--${colors[i % 4]});color:${colors[i % 4] === 'blue' ? '#fff' : 'var(--on-accent)'}">${esc(initials(p.name))}</span>
+        <span style="flex-shrink:0;width:60px;height:60px;display:grid;place-items:center;border:2.5px solid var(--line-c);border-radius:50%;font-weight:800;font-size:1.2rem;background:var(--${colors[i % 4]});color:${colors[i % 4] === 'blue' ? 'var(--on-blue)' : 'var(--on-accent)'}">${esc(initials(p.name))}</span>
         <div><h3 style="margin:0">${esc(p.name)}</h3><p class="small muted" style="margin:2px 0 0">${esc(p.role)}${p.affiliation ? ' · ' + esc(p.affiliation) : ''}</p></div>
       </${p.url ? 'a' : 'div'}>`).join('');
     $('#team-note').textContent = A.team_note;

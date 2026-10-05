@@ -6,21 +6,22 @@ Live at <https://commonglot.github.io>.
 
 ## Pages
 
-| Page | File | What it shows |
+| Page | URL | Source |
 |---|---|---|
-| Home | `index.html` | Mission, numbers, deliverables tabs, directory teaser with map, projects, GlotSuite |
-| Mission | `pages/mission.html` | Mission statement, pillars, deliverables, principles |
-| Projects | `pages/projects.html` | All GlotSuite projects, tabbed by type and pipeline stage |
-| Project booklet | `pages/project.html?id=glotlid` | Overview, numbers, usage snippet, BibTeX, related projects |
-| Languages | `pages/languages.html` | Search + filters, map, sortable directory, families, coverage gaps |
-| Language booklet | `pages/language.html?iso=haw` | Facts, mini-map, technology coverage, writing systems, neighbours, raw data |
-| Scripts | `pages/scripts.html` | Gallery, table and OCR leaderboard for every ISO 15924 script |
-| Script booklet | `pages/script.html?code=Adlm` | Specimen, languages, per-model OCR results, Unicode ranges |
-| GlotSuite | `pages/glotsuite.html` | Pipeline, timeline, adoption, link to the GlotSuite homepage |
-| Open data | `pages/data.html` | Every JSON file, its schema, sources and licences |
-| About | `pages/about.html` | Team, affiliations, how to contribute, FAQ |
+| Home | `/` | `index.html` |
+| Mission | `/mission/` | `mission/index.html` |
+| Projects | `/projects/` | `projects/index.html` |
+| Project booklet | `/projects/glotlid/` | generated from `templates/project.html` |
+| Languages | `/languages/` (filters in the query, e.g. `?area=Africa&tech=L#map`) | `languages/index.html` |
+| Language booklet | `/languages/haw/` | generated from `templates/language.html` |
+| Languages A–Z | `/languages/browse/a/` | generated from `templates/browse.html` |
+| Scripts | `/scripts/` | `scripts/index.html` |
+| Script booklet | `/scripts/Adlm/` | generated from `templates/script.html` |
+| GlotSuite | `/glotsuite/` | `glotsuite/index.html` |
+| Open data | `/open-data/` | `open-data/index.html` |
+| About · Privacy · Terms | `/about/` · `/privacy/` · `/terms/` | `*/index.html` |
 
-Filters on the directory pages are kept in the URL (e.g. `pages/languages.html?area=Africa&tech=L#map`), so any view can be shared.
+Old `pages/*.html` URLs redirect to the new ones.
 
 ## No hard-coded content
 
@@ -60,14 +61,35 @@ assets/js/pages/*.js      one script per page
 - Each page sets a Content-Security-Policy: scripts only from the site and cdnjs (plus the hash-pinned theme snippet), `connect-src 'self'`, no plugins, no form submissions.
 - The site is fully static, with no forms, cookies, accounts or state-changing requests, so there is nothing for CSRF to target.
 
+## Build and deploy
+
+The repository is a working static site, but what gets deployed is `_site/`, built by
+`.github/workflows/pages.yml` on every push to `main`:
+
+1. `tools/build_site.py`: copies the site and generates the booklet and A–Z pages, per-page
+   `<title>`, description, canonical URL, Open Graph/Twitter tags, JSON-LD (Organization, WebSite,
+   BreadcrumbList, Language, DefinedTerm, SoftwareSourceCode/Dataset), static header and footer,
+   `sitemap.xml` (with `lastmod` from git history), `robots.txt`, `site.webmanifest` and legacy redirects.
+2. `tools/prerender.mjs`: renders the JavaScript-driven top-level pages to static HTML in headless Chromium.
+3. esbuild minifies JS and CSS.
+4. `tools/check_site.py`: fails the deploy on broken internal links, orphan pages, sitemap gaps,
+   duplicate titles or descriptions, missing canonical/OG tags, invalid JSON-LD, missing `alt`,
+   or heading-level jumps.
+
+Page titles, descriptions and SEO settings (site URL, organization, Search Console / Bing
+verification tokens) live in `data/site.json` under `pages` and `seo`.
+
 ## Run locally
 
-The pages load JSON with `fetch`, so serve the folder over HTTP:
-
 ```bash
-python3 -m http.server 8000
-# open http://localhost:8000
+python3 tools/build_site.py --out _site
+npm install --no-save playwright leaflet && npx playwright install chromium
+node tools/prerender.mjs _site          # optional: static top-level pages
+python3 tools/check_site.py _site
+python3 -m http.server 8000 --directory _site
 ```
+
+Serving the repository root directly also works for quick edits, except the generated booklet pages.
 
 ## Credits
 

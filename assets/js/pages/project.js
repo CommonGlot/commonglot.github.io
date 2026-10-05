@@ -3,16 +3,17 @@
   const LINK_LABELS = { paper: 'Paper', code: 'Code', demo: 'Demo', model: 'Model', data: 'Data', package: 'PyPI', leaderboard: 'Leaderboard', results: 'Results', pipeline: 'Pipeline' };
   try {
     const [site, taxonomy, projects] = await Promise.all([data.site(), data.taxonomy(), data.projects()]);
-    const p = projects.find(x => x.id === param('id'));
+    const pid = document.body.dataset.id || param('id');
+    const p = projects.find(x => x.id === pid);
     if (!p) {
-      $('#project-head').innerHTML = `<h1>Project not found</h1><p class="lead">No project with id “${esc(param('id'))}”.</p><a class="btn btn--yellow" href="${href('pages/projects.html')}">All projects</a>`;
+      $('#project-head').innerHTML = `<h1>Project not found</h1><p class="lead">No project with id “${esc(pid)}”.</p><a class="btn btn--yellow" href="${href('projects/')}">All projects</a>`;
       return;
     }
     document.title = `${p.name} — ${site.brand.name}`;
     const stage = site.glotsuite.pipeline.find(s => s.id === p.stage);
 
     $('#project-head').innerHTML = `
-      <div class="breadcrumbs"><a href="${href('pages/projects.html')}">Projects</a> / ${esc(p.name)}</div>
+      <div class="breadcrumbs"><a href="${href('projects/')}">Projects</a> / ${esc(p.name)}</div>
       <div class="booklet-head">
         <div style="display:flex;gap:22px;align-items:center;flex-wrap:wrap">
           <img src="${href('assets/img/' + p.logo)}" alt="" width="96" height="96" style="width:96px;height:96px;background:#fffaf0;border:2.5px solid var(--line-c);border-radius:20px;padding:8px;box-shadow:5px 5px 0 var(--shadow)">
@@ -28,8 +29,8 @@
     if (flag) {
       const langs = await data.languages();
       const n = langs.filter(l => (l.t || '').includes(flag[0])).length;
-      coverage = `<div class="card card--${CG.tok(p.color)}"><h3>${fmt(n)} languages</h3><p class="small">${esc(flag[1].long)} in the CommonGlot directory.</p>
-        <a class="btn btn--sm" href="${href('pages/languages.html')}?tech=${flag[0]}">Browse them →</a></div>`;
+      coverage = `<div class="card card--${CG.tok(p.color)}"><h2 class="h3">${fmt(n)} languages</h2><p class="small">${esc(flag[1].long)} in the CommonGlot directory.</p>
+        <a class="btn btn--sm" href="${href('languages/')}?tech=${flag[0]}">Browse them →</a></div>`;
     }
 
     const sections = [
@@ -56,7 +57,7 @@
         <div ${panelAttrs('pd', 'overview')} class="tab-panel">
           <div class="stats" style="margin-bottom:24px">${p.numbers.map(n => `<div class="stat"><b>${esc(n.value)}</b><span>${esc(n.label)}</span></div>`).join('')}</div>
           <div class="card"><p style="font-size:1.08rem">${esc(p.description)}</p>
-            <h3 style="margin-top:20px">Features</h3>
+            <h2 class="h3" style="margin-top:20px">Features</h2>
             <div class="deliver-panel"><ul class="outputs">${p.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul></div>
           </div>
         </div>

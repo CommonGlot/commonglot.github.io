@@ -35,7 +35,7 @@
 
     /* tabs */
     const T = P.tabs;
-    $('#script-tabs').innerHTML = tabMarkup('sc', [
+    $('#script-tabs').innerHTML = `<h2 class="visually-hidden">${esc(P.explore_title)}</h2>` + tabMarkup('sc', [
       { id: 'gallery', label: T.gallery, accent: 'yellow' }, { id: 'table', label: T.table, accent: 'pink' }, { id: 'ocr', label: T.ocr, accent: 'green' },
     ]) + `
       <div ${panelAttrs('sc', 'gallery')} class="tab-panel"><div class="grid grid-auto-sm" id="gallery"></div></div>

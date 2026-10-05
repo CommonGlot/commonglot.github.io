@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-base="../">
 <head>
-  <title>Language booklet — CommonGlot</title>
-  <meta name="description" content="Everything CommonGlot knows about a language: where it is spoken, how it is written and which technology supports it.">
+  <title>About — CommonGlot</title>
+  <meta name="description" content="The people and institutions behind CommonGlot and GlotSuite, and how to contribute.">
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'sha256-NBrBS0QH+oPLLHYW9Dbq4b4noKdB8RLG3k0J1wMUdQ8='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://basemaps.cartocdn.com https://*.basemaps.cartocdn.com https://tile.openstreetmap.org https://cdnjs.cloudflare.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -15,16 +15,26 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Space+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="../assets/css/style.css">
   <script>try{var t=localStorage.getItem('cg-theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 </head>
-<body data-page="languages">
+<body data-page="about">
 <main id="main">
-  <section class="page-hero"><div class="container" id="lang-head"><div class="loading">Loading</div></div></section>
-  <section class="section--tight"><div class="container booklet" id="lang-body"></div></section>
+  <section class="page-hero"><div class="container" id="about-hero"></div></section>
+  <section class="section--tight"><div class="container">
+    <h2 id="team-title"></h2>
+    <div class="grid grid-auto" id="team"></div>
+    <p class="muted mt" id="team-note" style="margin-top:20px"></p>
+  </div></section>
+  <section class="section section--band" id="contribute"><div class="container">
+    <h2 id="contribute-title"></h2>
+    <div class="grid grid-auto-sm" id="contribute-list"></div>
+    <div class="btn-row" style="margin-top:28px" id="contribute-cta"></div>
+  </div></section>
+  <section class="section"><div class="container grid grid-2" style="align-items:start">
+    <div><h2 id="faq-title"></h2><div id="faq"></div></div>
+    <div><h2 id="aff-title"></h2><div class="grid" id="affiliations"></div></div>
+  </div></section>
 </main>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="../assets/js/main.js"></script>
-  <script src="../assets/js/blocks.js"></script>
-  <script src="../assets/js/pages/language.js"></script>
+  <script src="../assets/js/pages/about.js"></script>
 </body>
 </html>
