@@ -397,6 +397,11 @@
         "path": "data/taxonomy.json",
         "title": "Vocabularies",
         "text": "Labels and colours for macroareas, endangerment levels, coverage flags and script types."
+      },
+      {
+        "path": "data/legal.json",
+        "title": "Legal pages",
+        "text": "Text of the Privacy Policy and Terms of Use."
       }
     ],
     "rebuild_title": "Rebuild from source",
@@ -595,7 +600,17 @@
         ]
       }
     ],
-    "legal": "Code and site content are open source. Directory data © their respective sources — see Open data."
+    "legal": "Code and site content are open source. Directory data © their respective sources — see Open data.",
+    "legal_links": [
+      {
+        "label": "Privacy Policy",
+        "href": "pages/privacy.html"
+      },
+      {
+        "label": "Terms of Use",
+        "href": "pages/terms.html"
+      }
+    ]
   },
   "languages_page": {
     "kicker": "The directory · languages",

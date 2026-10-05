@@ -406,6 +406,15 @@ details.faq summary::after { content: "+"; font-family: var(--mono); font-size: 
 details.faq[open] summary::after { content: "–"; }
 details.faq p { padding: 0 20px 18px; margin: 0; color: var(--ink-soft); }
 
+/* legal pages */
+.h3 { font-size: clamp(1.15rem, 2.4vw, 1.4rem); }
+.legal-section { padding: 6px 0 22px; border-bottom: 1.5px dashed color-mix(in srgb, var(--ink) 22%, transparent); margin-bottom: 22px; }
+.legal-section:last-child { border-bottom: 0; }
+.legal-section h2 { font-size: clamp(1.3rem, 3vw, 1.7rem); }
+.legal-list { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+.legal-section .chip { white-space: normal; }
+.legal-toc { margin: 0; padding-left: 1.3em; display: grid; gap: 6px; font-size: .95rem; }
+
 /* logo lockup */
 .lockup { display: flex; align-items: center; gap: clamp(14px, 3vw, 26px); justify-self: center; }
 .lockup img { width: clamp(90px, 12vw, 140px); height: auto; flex-shrink: 0; }

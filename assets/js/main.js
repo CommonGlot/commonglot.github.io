@@ -135,7 +135,7 @@ const CG = (() => {
           </div>
           ${f.columns.map(c => `<div><h4>${esc(c.title)}</h4><ul>${c.links.map(l => `<li><a href="${href(l.href)}"${extAttrs(l.href)}>${esc(l.label)}</a></li>`).join('')}</ul></div>`).join('')}
         </div>
-        <div class="footer-bottom"><span>© ${new Date().getFullYear()} ${esc(site.brand.name)}</span><span>${esc(f.legal)}</span></div>
+        <div class="footer-bottom"><span>© ${new Date().getFullYear()} ${esc(site.brand.name)}${(f.legal_links || []).map(l => ` · <a href="${href(l.href)}">${esc(l.label)}</a>`).join('')}</span><span>${esc(f.legal)}</span></div>
       </div>`;
     document.body.appendChild(footer);
   }
