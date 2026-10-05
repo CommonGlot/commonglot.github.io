@@ -63,12 +63,22 @@ for (const p of site.pages) {
     document.querySelectorAll('[data-font]').forEach(el => el.style.removeProperty('font-family'));
     return '<!doctype html>\n' + document.documentElement.outerHTML + '\n';
   });
-  if (errors.length) { failed++; console.error(`✗ /${p.path}: ${errors.join('; ')}`); }
-  else {
-    await writeFile(join(root, p.path, 'index.html'), html);
-    console.log(`✓ /${p.path} (${(html.length / 1024).toFixed(0)} KB)`);
-  }
+  const headings = () => [...document.querySelectorAll('main h1, main h2')].map(h => h.textContent.trim());
+  const rendered = await page.evaluate(headings);
   await page.close();
+  if (errors.length) { failed++; console.error(`✗ /${p.path}: ${errors.join('; ')}`); continue; }
+  await writeFile(join(root, p.path, 'index.html'), html);
+
+  // Load the saved HTML again: main.js must re-render it in place, not duplicate or drop content.
+  const check = await context.newPage();
+  await check.goto(`${origin}/${p.path}`, { waitUntil: 'networkidle' });
+  await check.waitForFunction(() => !document.querySelector('main .loading'), null, { timeout: 15000 }).catch(() => {});
+  const hydrated = await check.evaluate(headings);
+  await check.close();
+  if (JSON.stringify(rendered) !== JSON.stringify(hydrated)) {
+    failed++;
+    console.error(`✗ /${p.path}: headings change when the prerendered page loads\n    saved:    ${rendered.join(' | ')}\n    reloaded: ${hydrated.join(' | ')}`);
+  } else console.log(`✓ /${p.path} (${(html.length / 1024).toFixed(0)} KB)`);
 }
 await browser.close();
 server.close();
