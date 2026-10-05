@@ -206,7 +206,9 @@ td code { white-space: nowrap; }
 .hero-art .tile:nth-child(6) { background: var(--accent-soft); color: var(--accent-ink); border-color: transparent; }
 .hero-art .tile:hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); transform: translateY(-2px); }
 .page-hero { padding: clamp(40px, 6vw, 80px) 0 clamp(20px, 4vw, 40px); }
-.page-hero h1 { max-width: 20ch; }
+.page-hero h1 { max-width: 26ch; }
+/* Full-width page headers: let the statement use the line instead of a narrow column. */
+.page-hero .statement { max-width: 60ch; }
 .page-hero .lead { margin-bottom: 0; }
 
 /* trust strip (home): research partners and venues, hatched cells like a logo wall */
