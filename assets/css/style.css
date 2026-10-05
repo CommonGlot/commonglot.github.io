@@ -227,6 +227,9 @@ td code { white-space: nowrap; }
 .trust-cell { flex-direction: column; gap: 2px; background: repeating-linear-gradient(135deg, transparent 0 6px, color-mix(in srgb, var(--border) 45%, transparent) 6px 7px); font-weight: 700; font-size: 1.02rem; letter-spacing: -0.01em; color: var(--ink); text-decoration: none; }
 .trust-cell small { display: block; font-weight: 500; font-size: .8rem; color: var(--ink-faint); letter-spacing: 0; }
 a.trust-cell:hover { color: var(--accent-ink); }
+.trust-cell--logo { flex-direction: row; gap: 12px; text-align: left; }
+.partner-logo { height: 52px; width: auto; flex-shrink: 0; }
+.partner-card { display: flex; align-items: center; gap: 14px; }
 @media (max-width: 860px) { .trust-grid { grid-template-columns: 1fr 1fr; } .trust-grid > :first-child { grid-column: 1 / -1; padding: 16px 0 4px; min-height: 0; } .trust-grid > * { border-top: 1px solid var(--border); } .trust-grid > :nth-child(2n) { border-left: 0; } .trust-grid > :first-child { border-top: 0; } }
 
 /* ---------- cards ---------- */

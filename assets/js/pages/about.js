@@ -20,6 +20,6 @@
     $('#faq-title').textContent = A.faq_title;
     $('#faq').innerHTML = A.faq.map(f => `<details class="faq"><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join('');
     $('#aff-title').textContent = A.affiliations_title;
-    $('#affiliations').innerHTML = A.affiliations.map(a => `<a class="card" href="${CG.href(a.url)}" target="_blank" rel="noopener"><h3 style="margin:0">${esc(a.name)} ↗</h3></a>`).join('');
+    $('#affiliations').innerHTML = A.affiliations.map(a => `<a class="card partner-card" href="${CG.href(a.url)}" target="_blank" rel="noopener">${CG.partnerLogo(a)}<h3 style="margin:0">${esc(a.name)} ↗</h3></a>`).join('');
   } catch (e) { CG.showError($('#about-hero'), e); }
 })();

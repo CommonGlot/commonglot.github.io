@@ -504,7 +504,8 @@
     "affiliations": [
       {
         "name": "CIS, LMU Munich",
-        "url": "https://www.cis.lmu.de/"
+        "url": "https://www.cis.lmu.de/",
+        "logo": { "src": "assets/img/partners/cis-lmu.png", "width": 128, "height": 192 }
       },
       {
         "name": "Sorbonne Université",

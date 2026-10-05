@@ -251,6 +251,12 @@ const CG = (() => {
     $$('[data-font]', root).forEach(el => fontObserver ? fontObserver.observe(el) : useFont(el, el.dataset.font, el.textContent));
   }
 
+  // Partner logo from data (affiliations[].logo), or nothing when the entry has none.
+  function partnerLogo(a, cls = 'partner-logo') {
+    const l = a.logo; if (!l || !l.src) return '';
+    return `<img class="${tok(cls)}" src="${href(l.src)}" alt="" width="${+l.width || ''}" height="${+l.height || ''}" loading="lazy">`;
+  }
+
   /* ---------- small components ---------- */
   function copyButton(btn, getText) {
     btn.addEventListener('click', async () => {
@@ -302,6 +308,6 @@ const CG = (() => {
   return {
     base, data, getJSON, esc, tok, $, $$, href, extAttrs, isExternal, fmt, compact, param, debounce, fill,
     langUrl, scriptUrl, projectUrl, showError, tabs, tabMarkup, panelAttrs, sortable, sortRows, pager,
-    copyButton, codeBlock, bar, projectCard, scriptRef, scriptChip, useFont, lazyFonts, ready,
+    copyButton, codeBlock, bar, projectCard, partnerLogo, scriptRef, scriptChip, useFont, lazyFonts, ready,
   };
 })();
