@@ -305,8 +305,8 @@
     "kicker": "The research suite",
     "title": "GlotSuite",
     "lead": "GlotSuite is the family of research releases at the heart of CommonGlot. Each project solves one link in the chain from raw web text to working language technology, and each one feeds the next.",
-    "home_url": "https://kargaranamir.github.io/glotsuite/",
-    "home_label": "Visit the GlotSuite homepage",
+    "home_url": "https://huggingface.co/collections/cis-lmu/glotsuite",
+    "home_label": "See the collection on Hugging Face",
     "logo": "assets/img/glotsuite.svg",
     "pipeline_title": "How the pieces fit",
     "pipeline": [
@@ -457,7 +457,7 @@
   "about": {
     "kicker": "About",
     "title": "Who we are",
-    "lead": "The CommonGlot Foundation is an open, non-commercial initiative that grew out of the GlotSuite research line at the Center for Information and Language Processing (CIS), LMU Munich, in collaboration with Sorbonne Université and CNRS. Like Common Crawl does for web data, it aims to keep language technology for every language open and freely available.",
+    "lead": "The CommonGlot Foundation is an open, non-commercial initiative that grew out of the GlotSuite research line at the Center for Information and Language Processing (CIS), LMU Munich, in collaboration with Sorbonne Université and CNRS. It aims to keep language technology for every language open and freely available.",
     "team_title": "People behind GlotSuite",
     "team": [
       {
@@ -537,7 +537,7 @@
     "faq": [
       {
         "q": "What is the CommonGlot Foundation?",
-        "a": "An open, non-commercial initiative — inspired by Common Crawl — that develops and maintains free language technology and data for the world's under-served languages."
+        "a": "An open, non-commercial initiative that develops and maintains free language technology and data for the world's under-served languages."
       },
       {
         "q": "Where does the directory data come from?",
@@ -585,8 +585,8 @@
             "href": "glotsuite/"
           },
           {
-            "label": "GlotSuite homepage",
-            "href": "https://kargaranamir.github.io/glotsuite/"
+            "label": "GlotSuite on Hugging Face",
+            "href": "https://huggingface.co/collections/cis-lmu/glotsuite"
           }
         ]
       },
