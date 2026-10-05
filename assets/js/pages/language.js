@@ -125,7 +125,7 @@
     if (l.y != null) {
       const map = Blocks.makeMap($('#mini-map'), { center: [l.y, l.x], zoom: 4, scrollWheelZoom: false });
       Blocks.languageDots(map, near.map(([x]) => x), taxonomy, { radius: 5 });
-      L.circleMarker([l.y, l.x], { radius: 10, weight: 3, color: '#16130f', fillColor: '#ff48b0', fillOpacity: 1 }).addTo(map).bindPopup(Blocks.popup(l, taxonomy));
+      Blocks.highlight(map, l, taxonomy);
     }
   } catch (e) { CG.showError($('#lang-head'), e); }
 })();

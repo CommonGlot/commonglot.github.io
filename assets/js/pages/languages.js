@@ -65,8 +65,8 @@
     ]) + `
       <div ${panelAttrs('lg', 'map')} class="tab-panel">
         <div class="map-controls"><label><span class="visually-hidden">Colour by</span><select class="select" id="color-by">${Object.entries(P.color_by).map(([k, v]) => `<option value="${esc(k)}">${esc(v)}</option>`).join('')}</select></label></div>
-        <div class="map" id="lang-map" role="region" aria-label="Map of languages"></div>
-        <div class="legend" id="lang-legend"></div>
+        <div class="map-wrap"><div class="map" id="lang-map" role="region" aria-label="Map of languages"></div>
+        <div class="legend" id="lang-legend"></div></div>
       </div>
       <div ${panelAttrs('lg', 'table')} class="tab-panel" hidden>
         <div class="table-wrap"><table id="lang-table">
@@ -84,7 +84,7 @@
     let map, dots, mapReady = false;
     const legendFor = () => state.colorBy === 'endangerment'
       ? Object.values(taxonomy.endangerment).map(v => [v.label, v.color])
-      : state.colorBy === 'coverage' ? [['GlotLID', '#ff48b0'], ['not covered', '#8a8173']]
+      : state.colorBy === 'coverage' ? Blocks.coverageLegend(taxonomy)
       : Object.entries(taxonomy.macroareas).map(([k, v]) => [k, v.color]);
     function drawMap(rows) {
       if (!mapReady) return;

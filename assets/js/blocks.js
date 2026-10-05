@@ -36,21 +36,38 @@ const Blocks = (() => {
     return map;
   }
 
+  // Dot outline: a thin ring in the page colour so overlapping dots stay readable on light and dark tiles.
+  const ring = () => document.documentElement.getAttribute('data-theme') === 'dark' ? '#0b1220' : '#ffffff';
+  function coverageColor(l, taxonomy) {
+    const c = taxonomy.map_coverage || {};
+    return ((l.t && l.t.includes('L') ? c.covered : c.missing) || {}).color || '#a3adbb';
+  }
+
   function languageDots(map, languages, taxonomy, { colorBy = 'macroarea', radius = 4 } = {}) {
     const renderer = L.canvas({ padding: 0.5 });
     const group = L.layerGroup().addTo(map);
     const colorFor = l => {
-      if (colorBy === 'endangerment') return (taxonomy.endangerment[l.e] || {}).color || '#999';
-      if (colorBy === 'coverage') return l.t && l.t.includes('L') ? '#ff48b0' : '#8a8173';
-      return (taxonomy.macroareas[l.m] || {}).color || '#999';
+      if (colorBy === 'endangerment') return (taxonomy.endangerment[l.e] || {}).color || '#a3adbb';
+      if (colorBy === 'coverage') return coverageColor(l, taxonomy);
+      return (taxonomy.macroareas[l.m] || {}).color || '#a3adbb';
     };
+    const markers = [];
     languages.forEach(l => {
       if (l.y == null) return;
-      L.circleMarker([l.y, l.x], {
-        renderer, radius, weight: 1, color: '#16130f', fillColor: colorFor(l), fillOpacity: .85,
-      }).bindPopup(() => popup(l, taxonomy), { maxWidth: 260 }).addTo(group);
+      markers.push(L.circleMarker([l.y, l.x], {
+        renderer, radius, weight: radius > 3 ? 1.2 : .8, color: ring(), opacity: .9, fillColor: colorFor(l), fillOpacity: .78,
+      }).bindPopup(() => popup(l, taxonomy), { maxWidth: 260 }).addTo(group));
     });
+    const restyle = () => { const c = ring(); markers.forEach(m => m.setStyle({ color: c })); };
+    document.addEventListener('cg:theme', restyle);
+    group.on('remove', () => document.removeEventListener('cg:theme', restyle));
     return group;
+  }
+
+  // The highlighted language on a booklet's mini map.
+  function highlight(map, l, taxonomy) {
+    return L.circleMarker([l.y, l.x], { radius: 9, weight: 3, color: ring(), fillColor: '#2457e6', fillOpacity: 1 })
+      .addTo(map).bindPopup(popup(l, taxonomy));
   }
 
   function popup(l, taxonomy) {
@@ -90,5 +107,5 @@ const Blocks = (() => {
     el.innerHTML = defs.map(d => `<div class="stat"><b>${values[d.stat] != null ? fmt(values[d.stat]) : esc(d.value || '–')}</b><span>${esc(d.label)}</span></div>`).join('');
   }
 
-  return { makeMap, languageDots, legend, deliverables, stats, popup };
+  return { makeMap, languageDots, highlight, coverageLegend: t => Object.values(t.map_coverage || {}).map(v => [v.label, v.color]), legend, deliverables, stats, popup };
 })();

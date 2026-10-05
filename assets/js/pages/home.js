@@ -15,7 +15,11 @@
 
     // Hero tiles: one glyph from each script's sample phrase.
     const byCode = Object.fromEntries(scripts.map(s => [s.code, s]));
-    $('#hero-art').innerHTML = h.hero_scripts.map(code => {
+    // A different set of scripts on every visit, drawn from those with sample text (they render reliably).
+    const pool = scripts.filter(x => x.sample && !x.special).map(x => x.code);
+    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+    const heroCodes = pool.length >= (h.hero_count || 6) ? pool.slice(0, h.hero_count || 6) : h.hero_scripts;
+    $('#hero-art').innerHTML = heroCodes.map(code => {
       const s = byCode[code]; if (!s) return '';
       const glyph = [...(s.sample || s.specimen || s.code)].find(c => /\p{L}/u.test(c));
       return `<a class="tile" href="${scriptUrl(code)}" title="${esc(s.name)}" tabindex="-1"${s.direction === 'rtl' ? ' dir="rtl"' : ''}>${esc(glyph)}</a>`;

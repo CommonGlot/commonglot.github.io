@@ -142,7 +142,8 @@
       "label": "Built by researchers at",
       "venues_title": "Published at",
       "venues": "EMNLP · ACL · NeurIPS · WWW · LREC-COLING"
-    }
+    },
+    "hero_count": 6
   },
   "mission": {
     "kicker": "Our mission",
@@ -598,6 +599,10 @@
             "href": "https://github.com/CommonGlot"
           },
           {
+            "label": "Hugging Face · CommonGlot",
+            "href": "https://huggingface.co/CommonGlot"
+          },
+          {
             "label": "GitHub · cisnlp",
             "href": "https://github.com/cisnlp"
           },
@@ -760,6 +765,7 @@
       "contact_url": "https://github.com/CommonGlot/commonglot.github.io/issues",
       "same_as": [
         "https://github.com/CommonGlot",
+        "https://huggingface.co/CommonGlot",
         "https://github.com/cisnlp",
         "https://huggingface.co/cis-lmu"
       ],

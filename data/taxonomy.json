@@ -1,54 +1,54 @@
 {
   "macroareas": {
     "Africa": {
-      "color": "#e8590c"
+      "color": "#c8553d"
     },
     "Eurasia": {
-      "color": "#0078bf"
+      "color": "#4a6fa5"
     },
     "Papunesia": {
-      "color": "#2f9e44"
+      "color": "#4a9070"
     },
     "Australia": {
-      "color": "#c2255c"
+      "color": "#8c5aa8"
     },
     "North America": {
-      "color": "#e0a800"
+      "color": "#d39b2a"
     },
     "South America": {
-      "color": "#7048e8"
+      "color": "#9c7a56"
     }
   },
   "endangerment": {
     "1": {
       "label": "not endangered",
       "short": "safe",
-      "color": "#2f9e44"
+      "color": "#4a9070"
     },
     "2": {
       "label": "threatened",
       "short": "threatened",
-      "color": "#94b500"
+      "color": "#8aa63a"
     },
     "3": {
       "label": "shifting",
       "short": "shifting",
-      "color": "#e0a800"
+      "color": "#d39b2a"
     },
     "4": {
       "label": "moribund",
       "short": "moribund",
-      "color": "#e8590c"
+      "color": "#d9733a"
     },
     "5": {
       "label": "nearly extinct",
       "short": "nearly extinct",
-      "color": "#c92a2a"
+      "color": "#b8433a"
     },
     "6": {
       "label": "extinct",
       "short": "extinct",
-      "color": "#495057"
+      "color": "#7c8594"
     }
   },
   "endangerment_names": {
@@ -258,6 +258,16 @@
     },
     "Afak": {
       "name": "Afaka"
+    }
+  },
+  "map_coverage": {
+    "covered": {
+      "label": "GlotLID",
+      "color": "#2457e6"
+    },
+    "missing": {
+      "label": "not covered",
+      "color": "#a3adbb"
     }
   }
 }
