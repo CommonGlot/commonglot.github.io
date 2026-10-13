@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CommonGlot — Open Tools for Every Language</title>
+  <meta name="description" content="Open tools, corpora and benchmarks so that NLP technology reaches every language. A non-profit initiative from CIS-LMU Munich and Sorbonne Université.">
+  <link rel="canonical" href="https://commonglot.github.io/">
+  <meta property="og:title" content="CommonGlot — Open Tools for Every Language">
+  <meta property="og:description" content="Open NLP tools, corpora and benchmarks for 2,000+ languages. A non-profit initiative from CIS-LMU Munich and Sorbonne Université.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://commonglot.github.io/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="CommonGlot — Open Tools for Every Language">
+  <meta name="twitter:description" content="Open NLP tools, corpora and benchmarks for 2,000+ languages.">
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="assets/img/glotsuite-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Header rendered by main.js -->
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap">
+      <h1>CommonGlot</h1>
+      <p class="tagline">Open tools, corpora and benchmarks for every language.</p>
+      <p class="sub">A non-profit initiative from CIS-LMU Munich and Sorbonne Universit&eacute;, building NLP infrastructure for the world's 2,000+ languages.</p>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- Projects loaded from JSON -->
+  <main class="wrap" id="projects">
+    <div class="loading">Loading projects…</div>
+  </main>
+
+  <!-- Related -->
+  <div class="wrap">
+    <div class="related">
+      <strong>Used by:</strong>
+      <a href="https://arxiv.org/abs/2603.16309" target="_blank" rel="noopener">Omnilingual MT</a> (Meta, GlotLID),
+      <a href="https://arxiv.org/abs/2506.20920" target="_blank" rel="noopener">FineWeb2</a> (GlotLID),
+      <a href="https://huggingface.co/datasets/HuggingFaceFW/finepdfs" target="_blank" rel="noopener">FinePDFs</a> (GlotLID),
+      <a href="https://arxiv.org/abs/2409.17892" target="_blank" rel="noopener">EMMA-500</a> (GlotScript),
+      <a href="https://arxiv.org/abs/2510.10159" target="_blank" rel="noopener">BabyBabelLM</a> (GlotStoryBook), and
+      <a href="https://arxiv.org/abs/2406.06263" target="_blank" rel="noopener">MaskLID</a> (GlotLID).
+      See our <a href="https://scholar.google.com/citations?user=kargaran" target="_blank" rel="noopener">publications</a>.
+    </div>
+  </div>
+
+  <!-- Explore section -->
+  <div class="wrap">
+    <section class="explore">
+      <h2>Explore</h2>
+      <div class="explore-grid">
+        <a href="pages/languages.html" class="explore-card">
+          <h3>Languages</h3>
+          <p>Browse the language directory with map and coverage data</p>
+          <span class="count" id="lang-count-stat"></span>
+        </a>
+        <a href="pages/scripts.html" class="explore-card">
+          <h3>Writing Systems</h3>
+          <p>Explore scripts, their types, and tool support</p>
+          <span class="count" id="script-count-stat"></span>
+        </a>
+        <a href="https://github.com/cisnlp" target="_blank" rel="noopener" class="explore-card">
+          <h3>GitHub</h3>
+          <p>All code and models are open-source</p>
+        </a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer rendered by main.js -->
+
+  <script src="assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const projects = await loadJSON('data/projects.json');
+        const container = document.getElementById('projects');
+        container.innerHTML = projects.map(p => {
+          const pills = [];
+
+          // Venue badge
+          if (p.venue) {
+            pills.push(`<span class="pill pill--venue">${p.venue} ${p.year}</span>`);
+          }
+          if (p.paperUrl) {
+            pills.push(`<a class="pill" href="${p.paperUrl}" target="_blank" rel="noopener">${svgIcon('paper')} Paper</a>`);
+          }
+          if (p.codeUrl) {
+            pills.push(`<a class="pill" href="${p.codeUrl}" target="_blank" rel="noopener">${svgIcon('code')} Code</a>`);
+          }
+          if (p.demoUrl) {
+            pills.push(`<a class="pill" href="${p.demoUrl}" target="_blank" rel="noopener">${svgIcon('demo')} Demo</a>`);
+          }
+          if (p.modelUrl) {
+            pills.push(`<a class="pill" href="${p.modelUrl}" target="_blank" rel="noopener">${svgIcon('model')} Model</a>`);
+          }
+          if (p.dataUrl) {
+            pills.push(`<a class="pill" href="${p.dataUrl}" target="_blank" rel="noopener">${svgIcon('data')} Data</a>`);
+          }
+          if (p.codeUrl && p.stars) {
+            pills.push(`<a class="pill pill--stars" href="${p.codeUrl}/stargazers" target="_blank" rel="noopener">&#9733; ${p.stars}</a>`);
+          }
+
+          return `
+            <article class="project">
+              <div class="project-head">
+                <img src="assets/img/${p.logo}" alt="" class="project-logo">
+                <div>
+                  <div class="project-title">${p.name}</div>
+                  <div class="project-tagline">${p.tagline}</div>
+                </div>
+              </div>
+              <p class="project-desc">${p.description}</p>
+              <div class="project-links">${pills.join('')}</div>
+            </article>
+          `;
+        }).join('');
+
+        // Stats for explore cards — load real counts from data
+        const [langIndex, scripts] = await Promise.all([
+          loadJSON('data/languages/index.json'),
+          loadJSON('data/scripts.json')
+        ]);
+        const langStat = document.getElementById('lang-count-stat');
+        const scriptStat = document.getElementById('script-count-stat');
+        if (langStat) langStat.textContent = langIndex.length.toLocaleString() + ' languages covered';
+        if (scriptStat) scriptStat.textContent = scripts.length + ' scripts supported';
+      } catch (e) {
+        console.error('Failed to load projects:', e);
+        document.getElementById('projects').innerHTML = '<p>Failed to load projects.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Languages — CommonGlot</title>
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/glotsuite-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    .leaflet-popup-content-wrapper {
+      border-radius: var(--radius); box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+    .leaflet-popup-content {
+      margin: 10px 14px; font-family: var(--font); font-size: 0.88rem;
+    }
+    .leaflet-popup-content h3 { font-size: 0.95rem; font-weight: 700; margin: 0 0 2px; }
+    .leaflet-popup-content p { margin: 2px 0; color: var(--fg-soft); font-size: 0.8rem; }
+    .pager { display:flex; gap:6px; justify-content:center; padding:1rem 0; flex-wrap:wrap; }
+    .pager button { padding:4px 12px; border:1px solid var(--border); border-radius:var(--radius-sm);
+      background:var(--card); color:var(--fg); cursor:pointer; font-size:0.85rem; }
+    .pager button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+    .pager button:disabled { opacity:0.4; cursor:default; }
+    .stats-row { display:flex; gap:1.5rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+    .stat-item { text-align:center; }
+    .stat-item b { display:block; font-size:1.4rem; color:var(--accent); }
+    .stat-item span { font-size:0.8rem; color:var(--fg-muted); }
+  </style>
+</head>
+<body>
+  <!-- Header rendered by main.js -->
+
+  <div class="wrap">
+    <div class="page-header">
+      <a href="../index.html" class="back-link">← Back to home</a>
+      <h1>Languages</h1>
+      <p>Browse languages covered by CommonGlot tools and corpora</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row" id="lang-stats"></div>
+
+    <!-- Map legend -->
+    <div class="map-legend" id="map-legend"></div>
+
+    <!-- Map -->
+    <div class="map-container" id="lang-map"></div>
+
+    <!-- Detail overlay -->
+    <div class="detail-overlay" id="lang-detail">
+      <div class="detail-card" id="detail-card">
+        <button class="close-btn" id="detail-close" aria-label="Close">&times;</button>
+        <div id="detail-content"></div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="lang-search" placeholder="Search by name, ISO code, or family…">
+      </div>
+    </div>
+    <div class="result-count" id="lang-count"></div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table id="lang-table">
+        <thead>
+          <tr>
+            <th data-sort="n">Name <span class="sort-arrow">▲</span></th>
+            <th data-sort="i">ISO 639-3 <span class="sort-arrow">▲</span></th>
+            <th data-sort="f">Family <span class="sort-arrow">▲</span></th>
+            <th data-sort="m">Macroarea <span class="sort-arrow">▲</span></th>
+            <th data-sort="p" data-type="number">Speakers <span class="sort-arrow">▲</span></th>
+            <th>Coverage</th>
+          </tr>
+        </thead>
+        <tbody id="lang-tbody">
+          <tr><td colspan="6" class="loading">Loading languages…</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pager" id="lang-pager"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="../assets/js/main.js"></script>
+  <script>
+    const PER_PAGE = 100;
+    const endangerLabels = {
+      1: 'Not endangered', 2: 'Threatened', 3: 'Shifting',
+      4: 'Moribund', 5: 'Nearly extinct', 6: 'Extinct'
+    };
+    const macroareaColors = {
+      'Africa': '#b5452a', 'Eurasia': '#2b4c8c', 'Papunesia': '#2f7a5a',
+      'Australia': '#a0864f', 'North America': '#c8962c', 'South America': '#5b6b8c'
+    };
+
+    let allLanguages = [];
+    let detailCache = {};
+    let currentPage = 1;
+    let scriptCerMap = {}; // script code → best CER (lower = better)
+
+    function esc(str) {
+      const d = document.createElement('div');
+      d.textContent = str || '';
+      return d.innerHTML;
+    }
+
+    async function loadDetail(iso) {
+      const letter = iso[0].toLowerCase();
+      if (!detailCache[letter]) {
+        const base = getBasePath();
+        detailCache[letter] = await loadJSON(base + 'data/languages/details/' + letter + '.json');
+      }
+      return detailCache[letter][iso] || null;
+    }
+
+    async function showDetail(lang) {
+      const panel = document.getElementById('lang-detail');
+      const content = document.getElementById('detail-content');
+      const detail = await loadDetail(lang.i);
+
+      const wiki = encodeURIComponent(lang.n.replace(/ /g, '_') + '_language');
+      const tools = lang.t || '';
+      const endanger = detail ? detail.endangerment : (endangerLabels[lang.e] || 'Unknown');
+
+      content.innerHTML = `
+        <h2>${esc(lang.n)}</h2>
+        <div class="subtitle">${esc(lang.i)}</div>
+        <div class="detail-grid">
+          <div class="detail-field"><label>Family</label><span>${esc(lang.f)}</span></div>
+          <div class="detail-field"><label>Macroarea</label><span>${esc(lang.m)}</span></div>
+          <div class="detail-field"><label>Speakers</label><span>${lang.p != null ? lang.p.toLocaleString() : 'Unknown'}</span></div>
+          <div class="detail-field"><label>Endangerment</label><span>${esc(endanger)}</span></div>
+        </div>
+        ${detail && detail.countries ? `
+        <div class="detail-section">
+          <h3>Countries</h3>
+          <div>${detail.countries.map(c => `<span class="tag">${esc(c.name)}</span>`).join(' ')}</div>
+        </div>` : ''}
+        <div class="detail-section">
+          <h3>Writing Systems</h3>
+          <div>${(lang.s || []).map(s => `<span class="tag">${esc(s)}</span>`).join(' ') || '—'}</div>
+        </div>
+        <div class="detail-section">
+          <h3>Tool Coverage</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            <span class="tag ${tools.includes('L') ? 'tag--green' : ''}">${tools.includes('L') ? '✓' : '✗'} GlotLID</span>
+            <span class="tag ${tools.includes('S') ? 'tag--green' : ''}">${tools.includes('S') ? '✓' : '✗'} GlotScript</span>
+            <span class="tag ${tools.includes('G') ? 'tag--green' : ''}">${tools.includes('G') ? '✓' : '✗'} GlotCC</span>
+            ${(() => {
+              const scripts = lang.s || [];
+              const cers = scripts.map(sc => scriptCerMap[sc]).filter(c => c !== undefined);
+              const bestCer = cers.length ? Math.min(...cers) : null;
+              if (bestCer !== null && bestCer <= 30) return '<span class="tag tag--green">✓ OCR</span>';
+              if (bestCer !== null && bestCer <= 70) return '<span class="tag tag--yellow">~ OCR</span>';
+              return '<span class="tag">✗ OCR</span>';
+            })()}
+          </div>
+        </div>
+        ${detail && detail.documentation ? `
+        <div class="detail-section">
+          <h3>Documentation</h3>
+          <span class="tag">${esc(detail.documentation)}</span>
+        </div>` : ''}
+        <div class="detail-links">
+          ${detail && detail.glottocode ? `<a class="pill" href="https://glottolog.org/resource/languoid/id/${encodeURIComponent(detail.glottocode)}" target="_blank" rel="noopener">Glottolog</a>` : ''}
+          <a class="pill" href="https://www.ethnologue.com/language/${encodeURIComponent(lang.i)}" target="_blank" rel="noopener">Ethnologue</a>
+          <a class="pill" href="https://en.wikipedia.org/wiki/${wiki}" target="_blank" rel="noopener">Wikipedia</a>
+        </div>
+      `;
+
+      panel.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDetail() {
+      document.getElementById('lang-detail').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function getFiltered(search) {
+      if (!search) return allLanguages;
+      return allLanguages.filter(l =>
+        l.n.toLowerCase().includes(search) ||
+        l.i.toLowerCase().includes(search) ||
+        (l.f || '').toLowerCase().includes(search) ||
+        (l.m || '').toLowerCase().includes(search)
+      );
+    }
+
+    function renderPager(total, page) {
+      const pages = Math.ceil(total / PER_PAGE);
+      if (pages <= 1) { document.getElementById('lang-pager').innerHTML = ''; return; }
+      let html = `<button ${page <= 1 ? 'disabled' : ''} onclick="goPage(${page - 1})">← Prev</button>`;
+      const start = Math.max(1, page - 3);
+      const end = Math.min(pages, page + 3);
+      if (start > 1) html += `<button onclick="goPage(1)">1</button>`;
+      if (start > 2) html += `<span style="padding:4px">…</span>`;
+      for (let i = start; i <= end; i++) {
+        html += `<button class="${i === page ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+      }
+      if (end < pages - 1) html += `<span style="padding:4px">…</span>`;
+      if (end < pages) html += `<button onclick="goPage(${pages})">${pages}</button>`;
+      html += `<button ${page >= pages ? 'disabled' : ''} onclick="goPage(${page + 1})">Next →</button>`;
+      document.getElementById('lang-pager').innerHTML = html;
+    }
+
+    function renderTable(search) {
+      const filtered = getFiltered(search);
+      document.getElementById('lang-count').textContent = `Showing ${filtered.length} of ${allLanguages.length} languages`;
+
+      const tbody = document.getElementById('lang-tbody');
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="loading">No languages match your search.</td></tr>';
+        document.getElementById('lang-pager').innerHTML = '';
+        return;
+      }
+
+      const start = (currentPage - 1) * PER_PAGE;
+      const page = filtered.slice(start, start + PER_PAGE);
+      renderPager(filtered.length, currentPage);
+
+      tbody.innerHTML = page.map(l => {
+        const tools = l.t || '';
+        return `
+        <tr style="cursor:pointer;" data-iso="${esc(l.i)}">
+          <td><strong>${esc(l.n)}</strong></td>
+          <td><code>${esc(l.i)}</code></td>
+          <td>${esc(l.f)}</td>
+          <td>${esc(l.m)}</td>
+          <td>${formatNumber(l.p)}</td>
+          <td>
+            <span class="coverage-dot ${tools.includes('L') ? 'yes' : 'no'}" title="GlotLID"></span>
+            <span class="coverage-dot ${tools.includes('S') ? 'yes' : 'no'}" title="GlotScript"></span>
+            <span class="coverage-dot ${tools.includes('G') ? 'yes' : 'no'}" title="GlotCC"></span>
+          </td>
+        </tr>`;
+      }).join('');
+
+      // Click handlers for table rows
+      tbody.querySelectorAll('tr[data-iso]').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const iso = tr.dataset.iso;
+          const lang = allLanguages.find(l => l.i === iso);
+          if (lang) showDetail(lang);
+        });
+      });
+    }
+
+    window._showLangDetail = function(iso) {
+      const lang = allLanguages.find(l => l.i === iso);
+      if (lang) {
+        if (window._langMap) window._langMap.closePopup();
+        showDetail(lang);
+      }
+    };
+
+    window.goPage = function(p) {
+      currentPage = p;
+      const search = document.getElementById('lang-search').value.toLowerCase().trim();
+      renderTable(search);
+      document.getElementById('lang-table').scrollIntoView({ behavior: 'smooth' });
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('detail-close').addEventListener('click', closeDetail);
+      document.getElementById('lang-detail').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeDetail();
+      });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+      try {
+        const base = getBasePath();
+        const [langData, scriptsData] = await Promise.all([
+          loadJSON(base + 'data/languages/index.json'),
+          loadJSON(base + 'data/scripts.json').catch(() => [])
+        ]);
+        allLanguages = langData;
+
+        // Build script → best CER lookup
+        scriptsData.forEach(s => {
+          if (s.ocr && s.ocr.best) scriptCerMap[s.code] = s.ocr.best.cer;
+        });
+
+        // Normalize search keys
+        allLanguages.forEach(l => { l._k = (l.n + ' ' + l.i + ' ' + (l.f || '')).toLowerCase(); });
+
+        // Stats
+        const statsEl = document.getElementById('lang-stats');
+        const lid = allLanguages.filter(l => (l.t || '').includes('L')).length;
+        const script = allLanguages.filter(l => (l.t || '').includes('S')).length;
+        const endang = allLanguages.filter(l => l.e >= 3 && l.e <= 5).length;
+        statsEl.innerHTML = `
+          <div class="stat-item"><b>${allLanguages.length.toLocaleString()}</b><span>Languages</span></div>
+          <div class="stat-item"><b>${lid.toLocaleString()}</b><span>GlotLID</span></div>
+          <div class="stat-item"><b>${script.toLocaleString()}</b><span>GlotScript</span></div>
+          <div class="stat-item"><b>${endang.toLocaleString()}</b><span>Endangered</span></div>
+        `;
+
+        // Map legend from data
+        const legendEl = document.getElementById('map-legend');
+        legendEl.innerHTML = Object.entries(macroareaColors).map(([name, color]) =>
+          `<span>${name} <i style="background:${color};"></i></span>`
+        ).join('');
+
+        // Map — CARTO basemap with theme-aware tiles (key from runtime.json)
+        const runtime = await loadJSON(base + 'data/runtime.json').catch(() => ({}));
+        const cartoKey = String(runtime.carto_basemaps_key || '').trim();
+
+        function getTileUrl(dark) {
+          if (cartoKey) {
+            const style = dark ? 'dark_all' : 'light_all';
+            return `https://basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}.png?key=${encodeURIComponent(cartoKey)}`;
+          }
+          return 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+        }
+        const tileAttribution = cartoKey
+          ? '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const map = L.map('lang-map', { preferCanvas: true, worldCopyJump: true, minZoom: 2 }).setView([20, 0], 2);
+        window._langMap = map;
+        let tileLayer = L.tileLayer(getTileUrl(isDark), { attribution: tileAttribution, maxZoom: 12 }).addTo(map);
+
+        // Update tiles on theme change
+        const observer = new MutationObserver(() => {
+          const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+          map.removeLayer(tileLayer);
+          tileLayer = L.tileLayer(getTileUrl(dark), { attribution: tileAttribution, maxZoom: 12 }).addTo(map);
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+        const ring = () => document.documentElement.getAttribute('data-theme') === 'dark' ? '#15110d' : '#fffdf8';
+
+        allLanguages.forEach(lang => {
+          if (lang.y == null || lang.x == null) return;
+          const color = macroareaColors[lang.m] || '#8a8073';
+          const marker = L.circleMarker([lang.y, lang.x], {
+            radius: 5, fillColor: color, color: ring(), weight: 1.5, fillOpacity: 0.85, opacity: 0.95
+          }).addTo(map);
+          marker.bindPopup(`
+            <h3>${esc(lang.n)}</h3>
+            <p><strong>${esc(lang.i)}</strong> · ${esc(lang.f)}</p>
+            <p>${formatNumber(lang.p)} speakers</p>
+            <p><a href="#" onclick="event.preventDefault(); window._showLangDetail('${lang.i}')">Details →</a></p>
+          `);
+        });
+
+        renderTable('');
+        setupSearch('lang-search', search => { currentPage = 1; renderTable(search); });
+        setupTableSort('lang-table');
+      } catch (e) {
+        console.error('Failed to load languages:', e);
+      }
+    });
+  </script>
+</body>
+</html>

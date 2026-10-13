@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project — CommonGlot</title>
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/glotsuite-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <!-- Header rendered by main.js -->
+
+  <div class="wrap" id="project-page">
+    <div class="loading" style="padding:4rem 0;">Loading project…</div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const params = new URLSearchParams(window.location.search);
+      const projectId = params.get('id');
+      const container = document.getElementById('project-page');
+
+      if (!projectId) {
+        container.innerHTML = '<p>No project specified. <a href="../index.html">Go back home</a>.</p>';
+        return;
+      }
+
+      try {
+        const base = getBasePath();
+        const projects = await loadJSON(base + 'data/projects.json');
+        const p = projects.find(pr => pr.id === projectId);
+
+        if (!p) {
+          container.innerHTML = `<p>Project "${projectId}" not found. <a href="../index.html">Go back home</a>.</p>`;
+          return;
+        }
+
+        document.title = `${p.name} — CommonGlot`;
+
+        // Build pills
+        const pills = [];
+        if (p.venue) pills.push(`<span class="pill pill--venue">${p.venue} ${p.year}</span>`);
+        if (p.paperUrl) pills.push(`<a class="pill" href="${p.paperUrl}" target="_blank" rel="noopener">${svgIcon('paper')} Paper</a>`);
+        if (p.codeUrl) pills.push(`<a class="pill" href="${p.codeUrl}" target="_blank" rel="noopener">${svgIcon('code')} Code</a>`);
+        if (p.demoUrl) pills.push(`<a class="pill" href="${p.demoUrl}" target="_blank" rel="noopener">${svgIcon('demo')} Demo</a>`);
+        if (p.modelUrl) pills.push(`<a class="pill" href="${p.modelUrl}" target="_blank" rel="noopener">${svgIcon('model')} Model</a>`);
+        if (p.dataUrl) pills.push(`<a class="pill" href="${p.dataUrl}" target="_blank" rel="noopener">${svgIcon('data')} Data</a>`);
+        if (p.codeUrl && p.stars) pills.push(`<a class="pill pill--stars" href="${p.codeUrl}/stargazers" target="_blank" rel="noopener">★ ${p.stars}</a>`);
+
+        // Find related projects (same category or linking)
+        const related = projects.filter(r => r.id !== p.id).slice(0, 3);
+
+        container.innerHTML = `
+          <div class="page-header" style="padding-bottom:0;border-bottom:none;">
+            <a href="../index.html" class="back-link">← Back to home</a>
+          </div>
+
+          <article class="project" style="padding-top:1rem;border-bottom:none;">
+            <div class="project-head" style="margin-bottom:1rem;">
+              <img src="../assets/img/${p.logoFull || p.logo}" alt="${p.name}" class="project-logo" style="width:56px;height:56px;">
+              <div>
+                <div class="project-title" style="font-size:1.8rem;">${p.name}</div>
+                <div class="project-tagline" style="font-size:1.05rem;">${p.tagline}</div>
+              </div>
+            </div>
+            <p class="project-desc" style="font-size:1rem;line-height:1.7;max-width:650px;">${p.description}</p>
+            <div class="project-links" style="margin-top:1.2rem;">${pills.join('')}</div>
+          </article>
+
+          ${related.length ? `
+          <section class="explore" style="margin-top:1rem;">
+            <h2>Other Projects</h2>
+            <div class="explore-grid">
+              ${related.map(r => `
+                <a href="project.html?id=${r.id}" class="explore-card">
+                  <h3>${r.name}</h3>
+                  <p>${r.tagline}</p>
+                </a>
+              `).join('')}
+            </div>
+          </section>
+          ` : ''}
+        `;
+      } catch (e) {
+        console.error('Failed to load project:', e);
+        container.innerHTML = '<p>Failed to load project data. <a href="../index.html">Go back home</a>.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

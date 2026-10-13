@@ -1,0 +1,13 @@
+{
+  "generated": "2026-10-04",
+  "languages_in_directory": 7567,
+  "languages_with_coordinates": 7460,
+  "glotlid_labels": 2102,
+  "glotlid_languages": 1876,
+  "glot500_labels": 534,
+  "glotscript_languages": 8035,
+  "scripts_in_glotscript": 175,
+  "scripts_in_ocr_bench": 157,
+  "ocr_models": 14,
+  "families": 242
+}

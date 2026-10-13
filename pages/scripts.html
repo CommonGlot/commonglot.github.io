@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Writing Systems — CommonGlot</title>
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/glotsuite-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <!-- Header rendered by main.js -->
+
+  <div class="wrap">
+    <div class="page-header">
+      <a href="../index.html" class="back-link">← Back to home</a>
+      <h1>Writing Systems</h1>
+      <p>Explore the world's scripts and CommonGlot tool support</p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-filter="all">All</button>
+        <button class="filter-tab" data-filter="alphabet">Alphabets</button>
+        <button class="filter-tab" data-filter="abugida">Abugidas</button>
+        <button class="filter-tab" data-filter="abjad">Abjads</button>
+        <button class="filter-tab" data-filter="syllabary">Syllabaries</button>
+        <button class="filter-tab" data-filter="logographic">Logographic</button>
+      </div>
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="script-search" placeholder="Search scripts…">
+      </div>
+    </div>
+    <div class="result-count" id="script-count"></div>
+
+    <!-- Script cards -->
+    <div class="card-grid" id="scripts-grid">
+      <div class="loading">Loading scripts…</div>
+    </div>
+  </div>
+
+  <!-- Detail overlay for scripts -->
+  <div class="detail-overlay" id="script-detail">
+    <div class="detail-card" id="script-detail-card">
+      <button class="close-btn" id="script-close" aria-label="Close">&times;</button>
+      <div id="script-detail-content"></div>
+    </div>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    let allScripts = [];
+    const dirLabels = { ltr: 'Left to Right', rtl: 'Right to Left', ttb: 'Top to Bottom' };
+    const ocrTierLabels = { high: 'High resource', mid: 'Mid resource', low: 'Low resource' };
+
+    // Lazy-load Noto fonts from Google Fonts
+    const loadedFonts = new Set();
+    function loadFont(fontName) {
+      if (!fontName || loadedFonts.has(fontName)) return;
+      loadedFonts.add(fontName);
+      // Google Fonts — works for most Noto fonts
+      const gf = document.createElement('link');
+      gf.rel = 'stylesheet';
+      gf.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontName)}&display=swap`;
+      document.head.appendChild(gf);
+      // Fontsource via jsDelivr — fallback for fonts not on Google Fonts
+      const pkg = fontName.toLowerCase().replace(/[^a-z0-9 ]/g, '').replace(/ +/g, '-');
+      const fs = document.createElement('link');
+      fs.rel = 'stylesheet';
+      fs.href = `https://cdn.jsdelivr.net/npm/@fontsource/${pkg}/400.css`;
+      fs.onerror = () => {
+        // Some fonts are Serif-only; try the serif variant
+        if (pkg.includes('noto-sans-')) {
+          const serifPkg = pkg.replace('noto-sans-', 'noto-serif-');
+          const sf = document.createElement('link');
+          sf.rel = 'stylesheet';
+          sf.href = `https://cdn.jsdelivr.net/npm/@fontsource/${serifPkg}/400.css`;
+          document.head.appendChild(sf);
+        }
+      };
+      document.head.appendChild(fs);
+    }
+    function fontStyle(fontName) {
+      return fontName ? `font-family:'${fontName}',sans-serif` : '';
+    }
+
+    function esc(str) {
+      const d = document.createElement('div');
+      d.textContent = str || '';
+      return d.innerHTML;
+    }
+
+    function showScriptDetail(idx) {
+      const s = allScripts[idx];
+      if (!s) return;
+      const panel = document.getElementById('script-detail');
+      const content = document.getElementById('script-detail-content');
+
+      const langCount = (s.languages || []).length + (s.languages_aux || []).length;
+      const ocrHtml = s.ocr && s.ocr.best ? `
+        <div class="detail-section">
+          <h3>OCR Performance</h3>
+          <div class="detail-grid">
+            <div class="detail-field"><label>Tier</label><span>${esc(ocrTierLabels[s.ocr.tier] || s.ocr.tier)}</span></div>
+            <div class="detail-field"><label>Best Model</label><span>${esc(s.ocr.best.model)}</span></div>
+            <div class="detail-field"><label>CER</label><span>${s.ocr.best.cer.toFixed(1)}% ${s.ocr.best.cer <= 30 ? '(good)' : s.ocr.best.cer <= 70 ? '(limited)' : '(poor)'}</span></div>
+            <div class="detail-field"><label>Samples</label><span>${s.ocr.samples}</span></div>
+          </div>
+        </div>` : '';
+
+      content.innerHTML = `
+        <h2>${esc(s.name)}</h2>
+        <div class="subtitle">${esc(s.code)} · ${esc(s.type)}</div>
+        <div class="detail-grid">
+          <div class="detail-field"><label>Direction</label><span>${dirLabels[s.direction] || s.direction}</span></div>
+          <div class="detail-field"><label>Languages</label><span>${langCount}</span></div>
+          <div class="detail-field"><label>Characters</label><span>${s.characters || '—'}</span></div>
+          <div class="detail-field"><label>GlotLID Labels</label><span>${s.glotlid_labels || 0}</span></div>
+        </div>
+        ${s.ranges && s.ranges.length ? `
+        <div class="detail-section">
+          <h3>Unicode Ranges</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            ${s.ranges.map(r => `<span class="tag">${esc(r)}</span>`).join('')}
+          </div>
+        </div>` : ''}
+        ${s.specimen ? `
+        <div class="detail-section">
+          <h3>Specimen</h3>
+          <div style="font-size:1.4rem;padding:12px 16px;background:var(--bg-alt);border-radius:var(--radius-sm);line-height:1.5;word-break:break-all;${fontStyle(s.font)}"
+               ${s.direction === 'rtl' ? 'dir="rtl"' : ''}>${esc(s.specimen)}</div>
+        </div>` : ''}
+        ${s.sample ? `
+        <div class="detail-section">
+          <h3>Sample Text</h3>
+          <div style="font-size:1.1rem;padding:12px 16px;background:var(--bg-alt);border-radius:var(--radius-sm);line-height:1.6;${fontStyle(s.font)}"
+               ${s.direction === 'rtl' ? 'dir="rtl"' : ''}>${esc(s.sample)}</div>
+        </div>` : ''}
+        ${ocrHtml}
+        <div class="detail-links">
+          <a class="pill" href="https://scriptsource.org/scr/${encodeURIComponent(s.code)}" target="_blank" rel="noopener">ScriptSource</a>
+          <a class="pill" href="https://en.wikipedia.org/wiki/ISO_15924:${encodeURIComponent(s.code)}" target="_blank" rel="noopener">Wikipedia</a>
+          <a class="pill" href="https://www.unicode.org/charts/" target="_blank" rel="noopener">Unicode Charts</a>
+        </div>
+      `;
+
+      if (s.font) loadFont(s.font);
+      panel.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeScriptDetail() {
+      document.getElementById('script-detail').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function renderScripts(filter, search) {
+      let filtered = allScripts;
+      if (filter && filter !== 'all') filtered = filtered.filter(s => s.type === filter);
+      if (search) {
+        filtered = filtered.filter(s =>
+          (s.name || '').toLowerCase().includes(search) ||
+          (s.code || '').toLowerCase().includes(search) ||
+          (s.type || '').toLowerCase().includes(search)
+        );
+      }
+
+      document.getElementById('script-count').textContent = `Showing ${filtered.length} of ${allScripts.length} scripts`;
+
+      const grid = document.getElementById('scripts-grid');
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="loading">No scripts match your filter.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(s => {
+        const idx = allScripts.indexOf(s);
+        const langCount = (s.languages || []).length + (s.languages_aux || []).length;
+        return `
+        <div class="data-card" style="cursor:pointer;" onclick="showScriptDetail(${idx})">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <h3>${esc(s.name)}</h3>
+              <span class="meta">${esc(s.code)}</span>
+            </div>
+            <span class="tag tag--accent">${esc(s.type)}</span>
+          </div>
+          ${s.specimen ? `<div class="sample" ${s.direction === 'rtl' ? 'dir="rtl"' : ''} style="${fontStyle(s.font)}">${esc(s.specimen)}</div>` : ''}
+          <div class="tags">
+            <span class="tag">${dirLabels[s.direction] || s.direction}</span>
+            <span class="tag">${langCount} language${langCount !== 1 ? 's' : ''}</span>
+            ${s.glotlid_labels ? `<span class="tag tag--green">${s.glotlid_labels} GlotLID</span>` : ''}
+            ${s.ocr && s.ocr.best ? (() => {
+              const cer = s.ocr.best.cer;
+              if (cer <= 30) return `<span class="tag tag--green">OCR ${cer.toFixed(0)}% CER</span>`;
+              if (cer <= 70) return `<span class="tag tag--yellow">OCR ${cer.toFixed(0)}% CER</span>`;
+              return `<span class="tag">OCR ${cer.toFixed(0)}% CER</span>`;
+            })() : ''}
+          </div>
+        </div>`;
+      }).join('');
+
+      // Load fonts for visible specimens
+      filtered.forEach(s => { if (s.specimen && s.font) loadFont(s.font); });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      document.getElementById('script-close').addEventListener('click', closeScriptDetail);
+      document.getElementById('script-detail').addEventListener('click', e => {
+        if (e.target === e.currentTarget) closeScriptDetail();
+      });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScriptDetail(); });
+
+      try {
+        const base = getBasePath();
+        allScripts = await loadJSON(base + 'data/scripts.json');
+        renderScripts('all', '');
+
+        let currentFilter = 'all';
+        setupFilterTabs('filter-tabs', filter => {
+          currentFilter = filter;
+          renderScripts(currentFilter, document.getElementById('script-search').value.toLowerCase().trim());
+        });
+        setupSearch('script-search', search => renderScripts(currentFilter, search));
+      } catch (e) {
+        console.error('Failed to load scripts:', e);
+      }
+    });
+  </script>
+</body>
+</html>
