@@ -12,6 +12,7 @@ Live at <https://commonglot.github.io>.
 | Languages | `pages/languages.html` — browse 7,500+ languages with map and coverage data |
 | Writing Systems | `pages/scripts.html` — explore 175 scripts with specimens and OCR benchmarks |
 | Project detail | `pages/project.html?id=glotlid` — one page per GlotSuite project |
+| ByteFast | `/ByteFast/` — served from the `gh-pages` branch of [CommonGlot/ByteFast](https://github.com/CommonGlot/ByteFast) |
 | Privacy | `pages/privacy.html` |
 | Terms | `pages/terms.html` |
 | 404 | `404.html` |
