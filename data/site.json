@@ -606,7 +606,7 @@
           },
           {
             "label": "GitHub · cisnlp",
-            "href": "https://github.com/cisnlp"
+            "href": "https://github.com/CommonGlot"
           },
           {
             "label": "Hugging Face · cis-lmu",
@@ -768,7 +768,7 @@
       "same_as": [
         "https://github.com/CommonGlot",
         "https://huggingface.co/CommonGlot",
-        "https://github.com/cisnlp",
+        "https://github.com/CommonGlot",
         "https://huggingface.co/cis-lmu"
       ],
       "alternate_name": "CommonGlot"

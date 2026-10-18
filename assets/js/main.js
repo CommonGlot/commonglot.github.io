@@ -136,7 +136,7 @@ function renderHeader() {
     { href: `${base}pages/languages.html`, label: 'Languages', page: 'languages.html' },
     { href: `${base}pages/scripts.html`, label: 'Scripts', page: 'scripts.html' },
     { href: `${base}blog/index.html`, label: 'Blog', page: 'blog' },
-    { href: 'https://github.com/cisnlp', label: 'GitHub', ext: true }
+    { href: 'https://github.com/CommonGlot', label: 'GitHub', ext: true }
   ];
 
   const theme = document.documentElement.getAttribute('data-theme') || 'light';
