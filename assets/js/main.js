@@ -7,7 +7,8 @@ async function loadJSON(url) {
 
 /* ===== Base path ===== */
 function getBasePath() {
-  return window.location.pathname.includes('/pages/') ? '../' : './';
+  const path = window.location.pathname;
+  return path.includes('/pages/') || path.includes('/blog/') ? '../' : './';
 }
 
 /* ===== Dark mode ===== */
@@ -126,7 +127,9 @@ function setupFilterTabs(containerId, callback) {
 /* ===== Header ===== */
 function renderHeader() {
   const base = getBasePath();
-  const page = window.location.pathname.split('/').pop() || 'index.html';
+  const page = window.location.pathname.includes('/blog/')
+    ? 'blog'
+    : window.location.pathname.split('/').pop() || 'index.html';
 
   const links = [
     { href: `${base}index.html`, label: 'Home', page: 'index.html' },
@@ -134,6 +137,7 @@ function renderHeader() {
     { href: `${base}pages/scripts.html`, label: 'Scripts', page: 'scripts.html' },
     // Served from the gh-pages branch of github.com/CommonGlot/ByteFast
     { href: '/ByteFast/', label: 'ByteFast', page: 'ByteFast' },
+    { href: `${base}blog/index.html`, label: 'Blog', page: 'blog' },
     { href: 'https://github.com/cisnlp', label: 'GitHub', ext: true }
   ];
 
@@ -206,9 +210,7 @@ function renderFooter() {
   const base = getBasePath();
   footer.innerHTML = `
     <div class="wrap">
-      &copy; ${new Date().getFullYear()} CommonGlot &middot;
-      <a href="https://www.cis.lmu.de/" target="_blank" rel="noopener">CIS-LMU Munich</a> &middot;
-      <a href="https://www.sorbonne-universite.fr/" target="_blank" rel="noopener">Sorbonne Universit&eacute;</a>
+      &copy; ${new Date().getFullYear()} CommonGlot
       <span class="footer-legal">
         &middot; <a href="${base}pages/privacy.html">Privacy</a>
         &middot; <a href="${base}pages/terms.html">Terms</a>

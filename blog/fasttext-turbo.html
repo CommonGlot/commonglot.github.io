@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fastText-turbo: the same fastText, 4x faster prediction — CommonGlot</title>
+  <meta name="description" content="Where fastText spends its time when it predicts a language, what fastText-turbo changes, and what is left to speed up.">
+  <link rel="canonical" href="https://commonglot.github.io/blog/fasttext-turbo.html">
+  <meta property="og:title" content="fastText-turbo: the same fastText, 4x faster prediction">
+  <meta property="og:description" content="Same models and labels as fastText, about 4x faster GlotLID prediction on x86 and 1.7x on Apple silicon.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://commonglot.github.io/blog/fasttext-turbo.html">
+  <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#161616" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="../assets/img/glotsuite-mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <!-- Header rendered by main.js -->
+
+  <div class="wrap">
+    <div class="page-header">
+      <a href="index.html" class="back-link">← All posts</a>
+      <h1>fastText-turbo: the same fastText, 4x faster prediction</h1>
+      <p>October 18, 2026</p>
+    </div>
+
+    <article class="post">
+      <p>
+        <a href="https://github.com/cisnlp/GlotLID" target="_blank" rel="noopener">GlotLID</a> is a fastText model.
+        Projects like FineWeb2 run it over billions of documents, so every bit of prediction speed counts.
+        <a href="https://github.com/CommonGlot/fastText-turbo" target="_blank" rel="noopener">fastText-turbo</a>
+        is a small fork of fastText that predicts about <strong>4x faster on x86</strong> and
+        <strong>1.7x faster on Apple silicon</strong>, on one core, with the same models and the same labels.
+      </p>
+      <ul>
+        <li>Trained models are byte-identical to fastText's, and model files load in either one.</li>
+        <li>On ARM, prediction output is byte-identical. On x86, labels are the same and probabilities differ by at most about 1e-5.</li>
+        <li>It is still <code>import fasttext</code> and the <code>fasttext</code> command, with wheels for NumPy 1 and 2.</li>
+      </ul>
+<pre><code>pip uninstall fasttext      # both packages provide the `fasttext` module
+pip install fasttext-turbo</code></pre>
+
+      <h2>Where the time goes</h2>
+      <p>
+        To label one sentence, fastText hashes each word and its character n-grams (2 to 5 characters for GlotLID)
+        into rows of a big table. It averages those rows into one vector of 256 numbers. Then it scores that vector
+        against each of the 2,102 labels, and softmax turns the scores into probabilities.
+      </p>
+      <figure>
+        <div class="fig-scroll"><img src="figures/fasttext-turbo/pipeline.svg" alt="Pipeline: sentence, hash words and n-grams, average about 650 rows, score 2,102 labels, softmax and top-k" width="970" height="213" loading="lazy"></div>
+        <figcaption>Fractions from a profile of fastText on GlotLID v3 (one x86 core, 20,000 sentences).</figcaption>
+      </figure>
+      <p>
+        Two steps take almost all the time:
+      </p>
+      <ul>
+        <li><strong>Scoring the labels (72%).</strong> Each label is a dot product of 256 numbers. With 2,102 labels, that is about 538,000 multiply-adds per sentence.</li>
+        <li><strong>Averaging the rows (21%).</strong> An average GlotLID sentence has about 650 n-gram rows. Each row is 1 KB, read from a 1.7 GB table. This step is limited by memory, not arithmetic.</li>
+      </ul>
+      <p>Everything else (reading, hashing, softmax, top-k) adds up to 7%. The output layer was the place to start.</p>
+
+      <h2>Why the output layer was slow</h2>
+      <p>
+        fastText computes each label's score as one running total: add <code>a[0]·b[0]</code>, then <code>a[1]·b[1]</code>,
+        and so on, 256 times.
+      </p>
+      <figure>
+        <div class="fig-scroll"><img src="figures/fasttext-turbo/sum-fasttext.svg" alt="fastText adds 256 products one after another into one running total" width="950" height="175" loading="lazy"></div>
+      </figure>
+      <p>
+        The multiplications are cheap. The trouble is that each addition needs the result of the one before it.
+        A modern core can start several floating-point additions per cycle, but an addition takes about 4 cycles
+        to finish. With only one chain of additions, the core spends most of its time waiting.
+      </p>
+
+      <h3>Fix 1: eight labels at once, exactly</h3>
+      <p>
+        fastText-turbo scores 8 labels together. Each label still has its own running total, added in exactly
+        fastText's order, so every score is the same number, bit for bit. The 8 chains don't depend on each
+        other, so the core can keep 8 additions in flight instead of 1.
+      </p>
+      <figure>
+        <div class="fig-scroll"><img src="figures/fasttext-turbo/sum-exact.svg" alt="Eight labels are scored side by side, each in fastText's order" width="910" height="250" loading="lazy"></div>
+      </figure>
+      <p>
+        One detail matters here: clang on macOS fuses a multiply and an add into one FMA instruction by default.
+        That rounds differently from fastText built elsewhere, so this loop turns FMA contraction off. The
+        <em>training</em> code uses only this exact path, which is why trained models stay byte-identical.
+      </p>
+
+      <h3>Fix 2: eight lanes inside one label (x86, prediction only)</h3>
+      <p>
+        On x86, an AVX register holds 8 floats. Instead of one total per label, fastText-turbo keeps 8 partial
+        totals for each label: lane 0 adds products 0, 8, 16, …, lane 1 adds 1, 9, 17, …, and so on. One
+        instruction advances all 8 lanes, and at the end the lanes are added together.
+      </p>
+      <figure>
+        <div class="fig-scroll"><img src="figures/fasttext-turbo/sum-lanes.svg" alt="Eight lanes add every eighth product of one label, then the lanes are summed" width="1020" height="345" loading="lazy"></div>
+      </figure>
+      <p>
+        This adds the same numbers in a different order, so the last bits of a score can change. On GlotLID v3
+        the largest change to any probability was 1.1e-5. A probability of 0.99 still prints as 0.99, and on
+        20,000 test sentences every top-1 label matched fastText. The lane version runs only when predicting;
+        training never uses it.
+      </p>
+      <p>
+        On Apple silicon the exact 8-label version was already the fastest, so ARM builds keep it, and their
+        output is byte-identical to fastText.
+      </p>
+
+      <h3>Smaller exact changes</h3>
+      <ul>
+        <li><strong>Top-k:</strong> labels whose score is too low to make the top k are skipped before the <code>log</code> is computed.</li>
+        <li><strong>Hashing:</strong> each n-gram's hash is extended from the previous one instead of being recomputed from its first character.</li>
+        <li><strong>Threads:</strong> <code>fasttext predict model.bin input.txt k th threads</code> splits the input across threads and writes the output in input order.</li>
+      </ul>
+
+      <h2>After: where the time goes now</h2>
+      <figure>
+        <div class="fig-scroll"><img src="figures/fasttext-turbo/bottleneck.svg" alt="fastText: 12.7 s output layer, 3.6 s averaging, 1.3 s rest, 17.6 s total. fastText-turbo: 2.0 s, 3.5 s, and the rest, 6.3 s total" width="1087" height="338" loading="lazy"></div>
+        <figcaption>Profile on one x86 core, GlotLID v3, 20,000 sentences.</figcaption>
+      </figure>
+      <p>
+        The output layer went from 12.7 s to 2.0 s, 6.5x faster. Averaging the rows did not change, so it is
+        now the biggest cost: 3.5 s of 6.3 s, or 56%.
+      </p>
+
+      <h3>Where the next speedups are</h3>
+      <p>
+        Averaging is bound by memory. The ~650 rows of a sentence are scattered across a 1.7 GB table, so most
+        reads miss the CPU cache and wait for main memory. Faster arithmetic won't help much here. Reading fewer
+        bytes will:
+      </p>
+      <ul>
+        <li><strong>Smaller rows:</strong> a smaller dimension, or rows stored in 16 or 8 bits, cuts the bytes read per sentence.</li>
+        <li><strong>A smaller table:</strong> fewer hash buckets, or dropping rare n-grams, keeps more of the table in cache.</li>
+        <li><strong>Prefetching:</strong> all of a sentence's row numbers are known before any row is read, so the CPU can be told to fetch them early.</li>
+      </ul>
+      <p>
+        Each of these changes the model or its storage, not only the code, so none of them is in fastText-turbo.
+        They are candidates for future GlotLID models.
+      </p>
+
+      <h2>Two training options</h2>
+      <p>
+        We use fastText-turbo to train the next GlotLID, so it has two training options, both off by default.
+        Real inputs are often short, or have been lowercased and stripped of punctuation before language
+        identification. These options show the model such lines during training.
+      </p>
+      <figure>
+        <div class="fig-scroll"><img src="figures/fasttext-turbo/train-options.svg" alt="-cropProb trains on a random span of the line; -normProb trains on the lowercased line without punctuation and digits" width="860" height="373" loading="lazy"></div>
+      </figure>
+      <ul>
+        <li><code>-cropProb P -cropMin A -cropMax B -cropUnit char|word</code>: with probability P, train on a random span of A to B characters or words of the line.</li>
+        <li><code>-normProb P</code>: with probability P, train on the line lowercased and without punctuation and digits, like the CommonLID input cleaner.</li>
+      </ul>
+      <p>
+        Both are drawn again for each line in each epoch, and the label is kept. They are not saved in the model,
+        so the result is an ordinary fastText model. With both at 0, training is byte-identical to fastText.
+      </p>
+
+      <h2>Benchmarks</h2>
+      <p>
+        All numbers are lines per second for GlotLID v3 on 20,000 sentences, on one core unless noted.
+        <strong>1x is fastText just before kpu's commits</strong> (<code>6c2204b</code>), measured separately
+        for the command line and for Python, and on each machine. Ubuntu is an x86-64 server; Mac is Apple silicon.
+      </p>
+
+      <h3>Command line</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Version</th><th class="num">Ubuntu</th><th class="num">Mac</th><th>Output vs fastText</th></tr></thead>
+          <tbody>
+            <tr><td>fastText before kpu (<code>6c2204b</code>)</td><td class="num">1,327 · 1.00x</td><td class="num">4,593 · 1.00x</td><td>reference</td></tr>
+            <tr><td>fastText v0.9.2</td><td class="num">1,341 · 1.01x</td><td class="num">4,581 · 1.00x</td><td>identical</td></tr>
+            <tr><td><a href="https://github.com/kpu/fasterText" target="_blank" rel="noopener">kpu/fasterText</a></td><td class="num">1,370 · 1.03x</td><td class="num">4,486 · 0.98x</td><td>identical</td></tr>
+            <tr><td>fastText main (<code>1142dc4</code>)</td><td class="num">1,382 · 1.04x</td><td class="num">4,559 · 0.99x</td><td>identical</td></tr>
+            <tr><td><a href="https://github.com/tshev/faster-FastText" target="_blank" rel="noopener">tshev/faster-FastText</a></td><td class="num">4,468 · 3.37x</td><td class="num">7,093 · 1.54x</td><td>same labels, probabilities differ</td></tr>
+            <tr><td>tshev/faster-FastText, giphy branch</td><td class="num">1,159 · 0.87x</td><td class="num">7,145 · 1.56x</td><td>same labels, probabilities differ</td></tr>
+            <tr class="ours"><td>fastText-turbo</td><td class="num">5,486 · 4.13x</td><td class="num">7,907 · 1.72x</td><td>Ubuntu: same labels, probabilities within 1.1e-5; Mac: identical</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">tshev's forks are built with <code>-ffast-math -march=native</code>, so their binaries only run on the CPU they were built for. fastText-turbo uses neither, so the same wheel runs everywhere.</p>
+
+      <h3>Python</h3>
+      <p><code>model.predict(list)</code> and one sentence at a time, each package in a fresh virtual environment.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>PyPI package</th><th>NumPy</th><th class="num">Ubuntu, list</th><th class="num">Ubuntu, one by one</th><th class="num">Mac, list</th><th class="num">Mac, one by one</th></tr></thead>
+          <tbody>
+            <tr><td>fastText before kpu (built from source)</td><td>1</td><td class="num">1,137 · 1.00x</td><td class="num">1,125 · 1.00x</td><td class="num">3,945 · 1.00x</td><td class="num">3,988 · 1.00x</td></tr>
+            <tr><td><code>fasttext</code> 0.9.3</td><td>1</td><td class="num">1,292 · 1.14x</td><td class="num">1,281 · 1.14x</td><td class="num">3,904 · 0.99x</td><td class="num">3,808 · 0.95x</td></tr>
+            <tr><td><code>fasttext</code> 0.9.3</td><td>2</td><td class="num">1,289 · 1.13x</td><td class="num">fails</td><td class="num">3,998 · 1.01x</td><td class="num">fails</td></tr>
+            <tr><td><code>fasttext-wheel</code></td><td>1</td><td class="num">1,263 · 1.11x</td><td class="num">1,239 · 1.10x</td><td class="num">3,991 · 1.01x</td><td class="num">3,931 · 0.99x</td></tr>
+            <tr><td><code>fasttext-numpy2</code></td><td>2</td><td class="num">1,386 · 1.22x</td><td class="num">1,367 · 1.22x</td><td class="num">3,941 · 1.00x</td><td class="num">3,927 · 0.98x</td></tr>
+            <tr><td><code>fasttext-numpy2-wheel</code></td><td>2</td><td class="num">1,352 · 1.19x</td><td class="num">1,332 · 1.18x</td><td class="num">3,972 · 1.01x</td><td class="num">3,948 · 0.99x</td></tr>
+            <tr><td><code>fasttext-predict</code></td><td>none</td><td class="num">fails</td><td class="num">1,230 · 1.09x</td><td class="num">fails</td><td class="num">3,980 · 1.00x</td></tr>
+            <tr class="ours"><td><code>fasttext-turbo</code></td><td>2</td><td class="num">3,652 · 3.21x</td><td class="num">3,576 · 3.18x</td><td class="num">6,698 · 1.70x</td><td class="num">6,655 · 1.67x</td></tr>
+            <tr class="ours"><td><code>fasttext-turbo</code></td><td>1</td><td class="num">3,452 · 3.04x</td><td class="num">3,415 · 3.04x</td><td class="num">6,765 · 1.71x</td><td class="num">6,699 · 1.68x</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">"fails": <code>fasttext</code> 0.9.3 raises a ValueError on single strings under NumPy 2, and <code>fasttext-predict</code> does not accept lists. Every package that ran gave the same top-1 label as fastText on all 20,000 sentences.</p>
+
+      <h3>Threads</h3>
+      <p>Command line, 200,000 sentences, compared with fastText before kpu on one thread.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Threads</th><th class="num">Ubuntu, lines/s</th><th class="num">Ubuntu</th><th class="num">Mac, lines/s</th><th class="num">Mac</th></tr></thead>
+          <tbody>
+            <tr><td>fastText, 1</td><td class="num">1,326</td><td class="num">1.00x</td><td class="num">3,986</td><td class="num">1.00x</td></tr>
+            <tr><td>turbo, 1</td><td class="num">5,525</td><td class="num">4.17x</td><td class="num">6,816</td><td class="num">1.71x</td></tr>
+            <tr><td>turbo, 2</td><td class="num">12,158</td><td class="num">9.17x</td><td class="num">13,852</td><td class="num">3.48x</td></tr>
+            <tr><td>turbo, 4</td><td class="num">23,580</td><td class="num">17.8x</td><td class="num">27,359</td><td class="num">6.86x</td></tr>
+            <tr><td>turbo, 8</td><td class="num">45,878</td><td class="num">34.6x</td><td class="num">51,982</td><td class="num">13.0x</td></tr>
+            <tr><td>turbo, 12</td><td class="num">–</td><td class="num">–</td><td class="num">59,094</td><td class="num">14.8x</td></tr>
+            <tr><td>turbo, 16</td><td class="num">90,166</td><td class="num">68.0x</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td>turbo, 32</td><td class="num">121,693</td><td class="num">91.7x</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr class="ours"><td>turbo, 44</td><td class="num">160,688</td><td class="num">121x</td><td class="num">–</td><td class="num">–</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Try it</h2>
+<pre><code>pip install fasttext-turbo
+
+import fasttext
+model = fasttext.load_model("model.bin")
+model.predict("Hello, how are you?", k=3)</code></pre>
+      <p>
+        The code is at <a href="https://github.com/CommonGlot/fastText-turbo" target="_blank" rel="noopener">github.com/CommonGlot/fastText-turbo</a>
+        and the package is <a href="https://pypi.org/project/fasttext-turbo/" target="_blank" rel="noopener">fasttext-turbo</a> on PyPI.
+        It changes fastText in four commits on top of upstream, so it is easy to review.
+      </p>
+    </article>
+  </div>
+
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

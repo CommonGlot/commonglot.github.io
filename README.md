@@ -1,6 +1,6 @@
 # commonglot.github.io
 
-The website for **CommonGlot**: open tools, corpora and benchmarks so that NLP technology reaches every language. A non-profit initiative from CIS-LMU Munich and Sorbonne Université.
+The website for **CommonGlot**: open tools, corpora and benchmarks so that NLP technology reaches every language. A non-profit initiative.
 
 Live at <https://commonglot.github.io>.
 
