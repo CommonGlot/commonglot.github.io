@@ -411,6 +411,7 @@ th.sorted .sort-arrow { opacity: 1; color: var(--accent); }
 .post figcaption { font-size: 0.85rem; color: var(--fg-muted); margin-top: 0.5rem; }
 @media (max-width: 720px) {
   .post figure img { min-width: 600px; }
+  .post figure.fit img { min-width: 0; max-width: 400px; margin: 0 auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {
