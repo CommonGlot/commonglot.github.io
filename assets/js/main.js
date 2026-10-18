@@ -135,8 +135,6 @@ function renderHeader() {
     { href: `${base}index.html`, label: 'Home', page: 'index.html' },
     { href: `${base}pages/languages.html`, label: 'Languages', page: 'languages.html' },
     { href: `${base}pages/scripts.html`, label: 'Scripts', page: 'scripts.html' },
-    // Served from the gh-pages branch of github.com/CommonGlot/ByteFast
-    { href: '/ByteFast/', label: 'ByteFast', page: 'ByteFast' },
     { href: `${base}blog/index.html`, label: 'Blog', page: 'blog' },
     { href: 'https://github.com/cisnlp', label: 'GitHub', ext: true }
   ];
