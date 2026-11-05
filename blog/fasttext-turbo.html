@@ -7,7 +7,7 @@
   <meta name="description" content="Where fastText spends its time when it predicts a language, what fastText-turbo changes, and what is left to speed up.">
   <link rel="canonical" href="https://commonglot.github.io/blog/fasttext-turbo.html">
   <meta property="og:title" content="fastText-turbo: Fast Inference for fastText">
-  <meta property="og:description" content="Same models and labels as fastText, about 4x faster GlotLID prediction on x86 and 1.7x on Apple silicon.">
+  <meta property="og:description" content="Same models and labels as fastText: about 4x faster GlotLID prediction on one x86 core, 1.7x on Apple silicon, and Python lists on every core or a GPU.">
   <meta property="og:type" content="article">
   <meta property="og:url" content="https://commonglot.github.io/blog/fasttext-turbo.html">
   <meta name="theme-color" content="#faf8f4" media="(prefers-color-scheme: light)">
@@ -25,12 +25,12 @@
     <div class="page-header">
       <a href="index.html" class="back-link">← All posts</a>
       <h1>fastText-turbo: Fast Inference for fastText</h1>
-      <p>October 18, 2026</p>
+      <p>October 18, 2026 · updated November 5, 2026 for fastText-turbo 0.1.1</p>
     </div>
 
     <article class="post">
       <figure class="fit">
-        <div class="fig-scroll"><picture><source media="(max-width: 720px)" srcset="figures/fasttext-turbo/speedup-narrow.svg" width="377" height="531"><img src="figures/fasttext-turbo/speedup.svg" alt="Speed relative to fastText: x86 command line 4.13x, x86 Python 3.21x, Mac command line 1.72x, Mac Python 1.70x" width="811" height="441"></picture></div>
+        <div class="fig-scroll"><picture><source media="(max-width: 720px)" srcset="figures/fasttext-turbo/speedup-narrow.svg" width="389" height="539"><img src="figures/fasttext-turbo/speedup.svg" alt="Speed relative to fastText on one core, GlotLID v3, fastText-turbo 0.1.1: x86 command line 4.22x, x86 Python 4.58x, Mac command line 1.72x, Mac Python 1.84x" width="811" height="441"></picture></div>
       </figure>
       <p>
         <a href="https://github.com/cisnlp/GlotLID" target="_blank" rel="noopener">GlotLID</a> is a fastText model.
@@ -38,11 +38,13 @@
         <a href="https://github.com/CommonGlot/fastText-turbo" target="_blank" rel="noopener">fastText-turbo</a>
         is a small fork of fastText that predicts about <strong>4x faster on x86</strong> and
         <strong>1.7x faster on Apple silicon</strong>, on one core, with the same models and the same labels.
+        Since version 0.1.1 it also uses <strong>every core from Python</strong> and can run on a <strong>GPU</strong>.
       </p>
       <ul>
         <li>Trained models are byte-identical to fastText's, and model files load in either one.</li>
         <li>On ARM, prediction output is byte-identical. On x86, labels are the same and probabilities differ by at most about 1e-5.</li>
-        <li>It is still <code>import fasttext</code> and the <code>fasttext</code> command, with wheels for NumPy 1 and 2.</li>
+        <li>It is still <code>import fasttext</code> and the <code>fasttext</code> command, with wheels for Python 3.9 to 3.15 and NumPy 1 and 2.</li>
+        <li><code>model.predict(lines, threads=N)</code> scores a list on N threads, and <code>device="cuda"</code> or <code>device="mps"</code> runs it on a GPU.</li>
       </ul>
 <pre><code>pip uninstall fasttext      # both packages provide the `fasttext` module
 pip install fasttext-turbo</code></pre>
@@ -121,11 +123,18 @@ pip install fasttext-turbo</code></pre>
         <li><strong>Hashing:</strong> each n-gram's hash is extended from the previous one instead of being recomputed from its first character.</li>
         <li><strong>Threads:</strong> <code>fasttext predict model.bin input.txt k th threads</code> splits the input across threads and writes the output in input order.</li>
       </ul>
+      <p>Version 0.1.1 adds more, all with the same output:</p>
+      <ul>
+        <li><strong>Batches:</strong> a Python list is scored 256 lines at a time, so each block of label rows is read once per batch instead of once per line. With <code>threads=N</code> the batches are shared among threads, without the GIL.</li>
+        <li><strong>Any width:</strong> the rows of a line are summed in registers for every model width up to 320, not only for 16, 32, 64, 96, 128, 256 and 512, so fastText's default width of 100 gets it too.</li>
+        <li><strong>Bucket numbers:</strong> each n-gram's <code>hash % buckets</code> is computed with a multiplication instead of a division (Lemire, Kaser and Kurz, 2019), exact for every hash.</li>
+        <li><strong>Quantized models:</strong> a <code>.ftz</code> model's rows are summed one subquantizer at a time, with its 256 centroids in the L1 cache: 7.2k to 8.6k lines/s for a GlotLID <code>.ftz</code> on one x86 core with the PyPI wheel.</li>
+      </ul>
 
       <h2>After: where the time goes now</h2>
       <figure>
         <div class="fig-scroll"><img src="figures/fasttext-turbo/bottleneck.svg" alt="fastText: 12.7 s output layer, 3.6 s averaging, 1.3 s rest, 17.6 s total. fastText-turbo: 2.0 s, 3.5 s, and the rest, 6.3 s total" width="1087" height="338" loading="lazy"></div>
-        <figcaption>Profile on one x86 core, GlotLID v3, 20,000 sentences.</figcaption>
+        <figcaption>Profile on one x86 core, GlotLID v3, 20,000 sentences, fastText-turbo 0.1.0 (0.1.1 is within 4% of it on this model).</figcaption>
       </figure>
       <p>
         The output layer went from 12.7 s to 2.0 s, 6.5x faster. Averaging the rows did not change, so it is
@@ -144,8 +153,13 @@ pip install fasttext-turbo</code></pre>
         <li><strong>Prefetching:</strong> all of a sentence's row numbers are known before any row is read, so the CPU can be told to fetch them early.</li>
       </ul>
       <p>
-        Each of these changes the model or its storage, not only the code, so none of them is in fastText-turbo.
-        They are candidates for future GlotLID models.
+        Each of these changes the model or its storage, not only the code, so they belong to the model.
+        <a href="https://huggingface.co/cis-lmu/glotlid" target="_blank" rel="noopener">GlotLID v4</a> takes the
+        first two: 96 dimensions instead of 256 and a minimum word count of 20,000, so each row a sentence reads is
+        about a third of the size. With fastText-turbo it predicts 2.2x faster than v3 on one x86 core (12,012 vs. 5,538 lines/s)
+        and 2.6x on the Mac (19,229 vs. 7,496), and it is also more accurate. GlotLID v4 small has 16 dimensions and
+        a hierarchical softmax, which scores a path of a tree over the labels instead of all 2,060 of them: 46,458
+        lines/s on one x86 core and 121,073 on the Mac.
       </p>
 
       <h2>Two training options</h2>
@@ -166,11 +180,40 @@ pip install fasttext-turbo</code></pre>
         so the result is an ordinary fastText model. With both at 0, training is byte-identical to fastText.
       </p>
 
+      <h2>New in 0.1.1: every core, and GPUs</h2>
+      <p>
+        fastText's Python <code>predict</code> runs on one thread. In fastText-turbo 0.1.1,
+        <code>model.predict(lines, threads=N)</code> scores a list on N threads, so one Python process uses the
+        whole machine:
+      </p>
+      <figure class="fit">
+        <div class="fig-scroll"><picture><source media="(max-width: 720px)" srcset="figures/fasttext-turbo/throughput-narrow.svg" width="416" height="705"><img src="figures/fasttext-turbo/throughput.svg" alt="Lines per second from Python on one machine. x86 server, 44 threads: GlotLID v3 with fastText 1,130 (one thread), with turbo 85,226; GlotLID v4 with turbo 146,400; GlotLID v4 small with turbo 329,098. Mac, 12 threads: 4,165; 62,944; 142,784; 582,239." width="886" height="508" loading="lazy"></picture></div>
+        <figcaption>20,000 CommonLID sentences, <code>model.predict(list)</code>; fastText on one thread, fastText-turbo 0.1.1 on all threads.</figcaption>
+      </figure>
+      <p>
+        On a GPU, <code>model.predict(lines, device="cuda")</code> builds each line's features on the CPU and does the
+        rest (averaging the rows, scoring the labels and the top k) with PyTorch, with the same labels as the CPU. The
+        batch size follows the GPU's free memory, a batch that runs out of memory is split, and a list of devices
+        (<code>device=["cuda:0", "cuda:1"]</code>) shares the batches. On GlotLID v4 and 1.49 million CommonLID lines:
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Machine</th><th class="num">CPU, all threads</th><th class="num">GPU</th></tr></thead>
+          <tbody>
+            <tr><td>x86 server, 48 threads, Tesla T4</td><td class="num">141,000</td><td class="num">290,000 (one T4) · 392,000 (two)</td></tr>
+            <tr><td>Mac, Apple M4 Pro, 12 threads</td><td class="num">149,000</td><td class="num">258,000 (<code>device="mps"</code>)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">GPU prediction needs PyTorch (<code>pip install fasttext-turbo[gpu]</code>) and a softmax model that is not quantized.</p>
+
       <h2>Benchmarks</h2>
       <p>
-        All numbers are lines per second for GlotLID v3 on 20,000 sentences, on one core unless noted.
+        All numbers are lines per second for GlotLID v3 on 20,000 CommonLID sentences, on one core unless noted.
         <strong>1x is fastText just before kpu's commits</strong> (<code>6c2204b</code>), measured separately
-        for the command line and for Python, and on each machine. Ubuntu is an x86-64 server; Mac is Apple silicon.
+        for the command line and for Python, and on each machine. Ubuntu is an x86-64 server; Mac is an Apple M4 Pro.
+        The fastText and fastText-turbo rows were measured on November 5, 2026, in one session per machine; the
+        other forks were measured on October 18 against the same baseline.
       </p>
 
       <h3>Command line</h3>
@@ -178,13 +221,14 @@ pip install fasttext-turbo</code></pre>
         <table>
           <thead><tr><th>Version</th><th class="num">Ubuntu</th><th class="num">Mac</th><th>Output vs fastText</th></tr></thead>
           <tbody>
-            <tr><td>fastText before kpu (<code>6c2204b</code>)</td><td class="num">1,327 · 1.00x</td><td class="num">4,593 · 1.00x</td><td>reference</td></tr>
+            <tr><td>fastText before kpu (<code>6c2204b</code>)</td><td class="num">1,311 · 1.00x</td><td class="num">4,369 · 1.00x</td><td>reference</td></tr>
             <tr><td>fastText v0.9.2</td><td class="num">1,341 · 1.01x</td><td class="num">4,581 · 1.00x</td><td>identical</td></tr>
             <tr><td><a href="https://github.com/kpu/fasterText" target="_blank" rel="noopener">kpu/fasterText</a></td><td class="num">1,370 · 1.03x</td><td class="num">4,486 · 0.98x</td><td>identical</td></tr>
             <tr><td>fastText main (<code>1142dc4</code>)</td><td class="num">1,382 · 1.04x</td><td class="num">4,559 · 0.99x</td><td>identical</td></tr>
             <tr><td><a href="https://github.com/tshev/faster-FastText" target="_blank" rel="noopener">tshev/faster-FastText</a></td><td class="num">4,468 · 3.37x</td><td class="num">7,093 · 1.54x</td><td>same labels, probabilities differ</td></tr>
             <tr><td>tshev/faster-FastText, giphy branch</td><td class="num">1,159 · 0.87x</td><td class="num">7,145 · 1.56x</td><td>same labels, probabilities differ</td></tr>
-            <tr class="ours"><td>fastText-turbo</td><td class="num">5,486 · 4.13x</td><td class="num">7,907 · 1.72x</td><td>Ubuntu: same labels, probabilities within 1.1e-5; Mac: identical</td></tr>
+            <tr><td>fastText-turbo 0.1.0</td><td class="num">5,340 · 4.07x</td><td class="num">7,548 · 1.73x</td><td>Ubuntu: same labels, probabilities within 1.1e-5; Mac: identical</td></tr>
+            <tr class="ours"><td>fastText-turbo 0.1.1</td><td class="num">5,538 · 4.22x</td><td class="num">7,496 · 1.72x</td><td>Ubuntu: same labels, probabilities within 1.1e-5; Mac: identical</td></tr>
           </tbody>
         </table>
       </div>
@@ -196,49 +240,72 @@ pip install fasttext-turbo</code></pre>
         <table>
           <thead><tr><th>PyPI package</th><th>NumPy</th><th class="num">Ubuntu, list</th><th class="num">Ubuntu, one by one</th><th class="num">Mac, list</th><th class="num">Mac, one by one</th></tr></thead>
           <tbody>
-            <tr><td>fastText before kpu (built from source)</td><td>1</td><td class="num">1,137 · 1.00x</td><td class="num">1,125 · 1.00x</td><td class="num">3,945 · 1.00x</td><td class="num">3,988 · 1.00x</td></tr>
+            <tr><td>fastText before kpu (built from source)</td><td>1</td><td class="num">1,130 · 1.00x</td><td class="num">1,123 · 1.00x</td><td class="num">4,165 · 1.00x</td><td class="num">4,104 · 1.00x</td></tr>
             <tr><td><code>fasttext</code> 0.9.3</td><td>1</td><td class="num">1,292 · 1.14x</td><td class="num">1,281 · 1.14x</td><td class="num">3,904 · 0.99x</td><td class="num">3,808 · 0.95x</td></tr>
             <tr><td><code>fasttext</code> 0.9.3</td><td>2</td><td class="num">1,289 · 1.13x</td><td class="num">fails</td><td class="num">3,998 · 1.01x</td><td class="num">fails</td></tr>
             <tr><td><code>fasttext-wheel</code></td><td>1</td><td class="num">1,263 · 1.11x</td><td class="num">1,239 · 1.10x</td><td class="num">3,991 · 1.01x</td><td class="num">3,931 · 0.99x</td></tr>
             <tr><td><code>fasttext-numpy2</code></td><td>2</td><td class="num">1,386 · 1.22x</td><td class="num">1,367 · 1.22x</td><td class="num">3,941 · 1.00x</td><td class="num">3,927 · 0.98x</td></tr>
             <tr><td><code>fasttext-numpy2-wheel</code></td><td>2</td><td class="num">1,352 · 1.19x</td><td class="num">1,332 · 1.18x</td><td class="num">3,972 · 1.01x</td><td class="num">3,948 · 0.99x</td></tr>
             <tr><td><code>fasttext-predict</code></td><td>none</td><td class="num">fails</td><td class="num">1,230 · 1.09x</td><td class="num">fails</td><td class="num">3,980 · 1.00x</td></tr>
-            <tr class="ours"><td><code>fasttext-turbo</code></td><td>2</td><td class="num">3,652 · 3.21x</td><td class="num">3,576 · 3.18x</td><td class="num">6,698 · 1.70x</td><td class="num">6,655 · 1.67x</td></tr>
-            <tr class="ours"><td><code>fasttext-turbo</code></td><td>1</td><td class="num">3,452 · 3.04x</td><td class="num">3,415 · 3.04x</td><td class="num">6,765 · 1.71x</td><td class="num">6,699 · 1.68x</td></tr>
+            <tr><td><code>fasttext-turbo</code> 0.1.0</td><td>2</td><td class="num">4,087 · 3.62x</td><td class="num">3,953 · 3.52x</td><td class="num">7,225 · 1.73x</td><td class="num">7,158 · 1.74x</td></tr>
+            <tr class="ours"><td><code>fasttext-turbo</code> 0.1.1</td><td>2</td><td class="num">5,179 · 4.58x</td><td class="num">4,106 · 3.66x</td><td class="num">7,677 · 1.84x</td><td class="num">7,334 · 1.79x</td></tr>
+            <tr class="ours"><td><code>fasttext-turbo</code> 0.1.1</td><td>1</td><td class="num">5,212 · 4.61x</td><td class="num">4,237 · 3.77x</td><td class="num">7,612 · 1.83x</td><td class="num">7,421 · 1.81x</td></tr>
           </tbody>
         </table>
       </div>
-      <p class="note">"fails": <code>fasttext</code> 0.9.3 raises a ValueError on single strings under NumPy 2, and <code>fasttext-predict</code> does not accept lists. Every package that ran gave the same top-1 label as fastText on all 20,000 sentences.</p>
+      <p class="note">"fails": <code>fasttext</code> 0.9.3 raises a ValueError on single strings under NumPy 2, and <code>fasttext-predict</code> does not accept lists. Every package that ran gave the same top-1 label as fastText on all 20,000 sentences. 0.1.1 is faster than 0.1.0 on lists because it scores them in batches. With <code>threads=44</code> on Ubuntu, 0.1.1 reaches 85,226 lines/s (75x), and with <code>threads=12</code> on the Mac 62,944 (15x).</p>
 
       <h3>Threads</h3>
-      <p>Command line, 200,000 sentences, compared with fastText before kpu on one thread.</p>
+      <p>Command line, 200,000 sentences, fastText-turbo 0.1.1, compared with fastText before kpu on one thread.</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Threads</th><th class="num">Ubuntu, lines/s</th><th class="num">Ubuntu</th><th class="num">Mac, lines/s</th><th class="num">Mac</th></tr></thead>
           <tbody>
-            <tr><td>fastText, 1</td><td class="num">1,326</td><td class="num">1.00x</td><td class="num">3,986</td><td class="num">1.00x</td></tr>
-            <tr><td>turbo, 1</td><td class="num">5,525</td><td class="num">4.17x</td><td class="num">6,816</td><td class="num">1.71x</td></tr>
-            <tr><td>turbo, 2</td><td class="num">12,158</td><td class="num">9.17x</td><td class="num">13,852</td><td class="num">3.48x</td></tr>
-            <tr><td>turbo, 4</td><td class="num">23,580</td><td class="num">17.8x</td><td class="num">27,359</td><td class="num">6.86x</td></tr>
-            <tr><td>turbo, 8</td><td class="num">45,878</td><td class="num">34.6x</td><td class="num">51,982</td><td class="num">13.0x</td></tr>
-            <tr><td>turbo, 12</td><td class="num">–</td><td class="num">–</td><td class="num">59,094</td><td class="num">14.8x</td></tr>
-            <tr><td>turbo, 16</td><td class="num">90,166</td><td class="num">68.0x</td><td class="num">–</td><td class="num">–</td></tr>
-            <tr><td>turbo, 32</td><td class="num">121,693</td><td class="num">91.7x</td><td class="num">–</td><td class="num">–</td></tr>
-            <tr class="ours"><td>turbo, 44</td><td class="num">160,688</td><td class="num">121x</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td>fastText, 1</td><td class="num">1,311</td><td class="num">1.00x</td><td class="num">4,369</td><td class="num">1.00x</td></tr>
+            <tr><td>turbo, 1</td><td class="num">5,696</td><td class="num">4.34x</td><td class="num">7,495</td><td class="num">1.72x</td></tr>
+            <tr><td>turbo, 2</td><td class="num">11,875</td><td class="num">9.06x</td><td class="num">14,709</td><td class="num">3.37x</td></tr>
+            <tr><td>turbo, 4</td><td class="num">21,186</td><td class="num">16.2x</td><td class="num">28,304</td><td class="num">6.48x</td></tr>
+            <tr><td>turbo, 8</td><td class="num">42,892</td><td class="num">32.7x</td><td class="num">53,797</td><td class="num">12.3x</td></tr>
+            <tr><td>turbo, 12</td><td class="num">58,725</td><td class="num">44.8x</td><td class="num">63,879</td><td class="num">14.6x</td></tr>
+            <tr><td>turbo, 16</td><td class="num">74,619</td><td class="num">56.9x</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td>turbo, 32</td><td class="num">95,710</td><td class="num">73.0x</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr class="ours"><td>turbo, 44</td><td class="num">120,023</td><td class="num">91.6x</td><td class="num">–</td><td class="num">–</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="note">On October 18 the same server gave 160,688 lines/s at 44 threads. 0.1.0 gives 119,632 today, about the same as 0.1.1, so the difference is the machine, not the code.</p>
+
+      <h3>GlotLID v4 and v4 small</h3>
+      <p>The same 20,000 sentences, fastText before kpu (1x) and fastText-turbo 0.1.1. "All threads" is 44 on Ubuntu and 12 on the Mac.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Model, mode</th><th class="num">Ubuntu, fastText</th><th class="num">Ubuntu, turbo</th><th class="num">Mac, fastText</th><th class="num">Mac, turbo</th></tr></thead>
+          <tbody>
+            <tr><td>GlotLID v4, command line, 1 thread</td><td class="num">3,712</td><td class="num">12,012 · 3.24x</td><td class="num">12,656</td><td class="num">19,229 · 1.52x</td></tr>
+            <tr><td>GlotLID v4, command line, all threads</td><td class="num">–</td><td class="num">227,409</td><td class="num">–</td><td class="num">150,106</td></tr>
+            <tr><td>GlotLID v4, Python list</td><td class="num">2,929</td><td class="num">9,682 · 3.31x</td><td class="num">12,541</td><td class="num">18,933 · 1.51x</td></tr>
+            <tr class="ours"><td>GlotLID v4, Python list, all threads</td><td class="num">–</td><td class="num">146,400</td><td class="num">–</td><td class="num">142,784</td></tr>
+            <tr><td>GlotLID v4 small, command line, 1 thread</td><td class="num">29,986</td><td class="num">46,458 · 1.55x</td><td class="num">78,783</td><td class="num">121,073 · 1.54x</td></tr>
+            <tr><td>GlotLID v4 small, command line, all threads</td><td class="num">–</td><td class="num">648,703</td><td class="num">–</td><td class="num">505,320</td></tr>
+            <tr><td>GlotLID v4 small, Python list</td><td class="num">22,386</td><td class="num">46,753 · 2.09x</td><td class="num">75,345</td><td class="num">126,875 · 1.68x</td></tr>
+            <tr class="ours"><td>GlotLID v4 small, Python list, all threads</td><td class="num">–</td><td class="num">329,098</td><td class="num">–</td><td class="num">582,239</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note">fastText-turbo gains less on these models than on v3: the output layer, which turbo speeds up most, is a smaller share of the work at 96 dimensions, and v4 small's hierarchical softmax does not score every label. On the Mac, v4 small's command line is fastest at 8 threads (513,475 lines/s).</p>
 
       <h2>Try it</h2>
 <pre><code>pip install fasttext-turbo
 
 import fasttext
 model = fasttext.load_model("model.bin")
-model.predict("Hello, how are you?", k=3)</code></pre>
+model.predict("Hello, how are you?", k=3)
+model.predict(lines, k=1, threads=8)        # a list on 8 threads
+model.predict(lines, k=1, device="cuda")    # on a GPU: pip install fasttext-turbo[gpu]</code></pre>
       <p>
         The code is at <a href="https://github.com/CommonGlot/fastText-turbo" target="_blank" rel="noopener">github.com/CommonGlot/fastText-turbo</a>
         and the package is <a href="https://pypi.org/project/fasttext-turbo/" target="_blank" rel="noopener">fasttext-turbo</a> on PyPI.
-        It changes fastText in four commits on top of upstream, so it is easy to review.
+        It changes fastText in 16 commits on top of upstream, each describing what it changes, so it is easy to review.
       </p>
     </article>
   </div>
